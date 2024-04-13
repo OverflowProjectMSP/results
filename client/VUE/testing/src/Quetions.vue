@@ -68,7 +68,7 @@ export default {
         </div>
     </div>
 
-    <vid-quetions :quetion="quetion" v-for="quetion in quetions" />
+    <vid-quetions :quetion="quetion" v-for="quetion in quetions" role="button"/>
 
 </template>
 
