@@ -30,12 +30,12 @@ export default {
                 },
                 {
                     name: `kenmaxd`,
-                    role: `Фронтенд разработчик`,
+                    role: `Дизайнер/Фронтенд разработчик`,
                     imageProfileDS: `kenma.gif`
                 },
                 {
                     name: `garleenn`,
-                    role: `Фронтенд разработчик`,
+                    role: `Лучший фронтенд разработчик`,
                     imageProfileDS: `garleen.png`
                 },
                 {

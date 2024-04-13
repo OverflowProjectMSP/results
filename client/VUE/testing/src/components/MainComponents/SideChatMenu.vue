@@ -61,7 +61,7 @@ export default {
                         </ul>
                         <div class="down-block d-flex gap-3 align-items-center">
                             <textarea v-model="message" class="form-control" row-1 placeholder="Введите ваше сообщение"></textarea>
-                            <button class="arrow-send border border-black rounded-circle p-2 fw-bold fs-4 d-flex align-items-center
+                            <button class="arrow-send border border-black rounded-circle fw-bold fs-4 d-flex align-items-center
                             justify-content-center" @click="addMessage"> > </button>
                         </div>
                         <span v-if="this.nogoodMes != ``" class="text-danger">{{ nogoodMes }}</span>
@@ -78,8 +78,11 @@ export default {
     right: 60px;
 }
 .chat-container {
+    width: 650px;
     max-width: 100%;
     max-height: 90%;
+    min-width: 10%;
+    min-height: 9%;
     resize: both;
     overflow: hidden;
     transform: scale(-1, -1);
@@ -102,7 +105,7 @@ h2 span:hover {
 }
 .arrow-send {
     width: 80px;
-    height: 65px;
+    height: 80px;
     transition: all 250ms;
     cursor: pointer;
 }
@@ -112,9 +115,6 @@ h2 span:hover {
 .profile-info img {
     width: 35px;
     height: 35px; 
-}
-ul li {
-    max-width: 600px;
 }
 @media (max-width: 1236px) {
     .wrapper-chat {

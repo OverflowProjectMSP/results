@@ -1,5 +1,7 @@
 <script>
+import SideChatMenu from '../MainComponents/SideChatMenu.vue';
 export default {
+    components: { SideChatMenu },
     data() {
         return {
             posts: [
@@ -74,6 +76,7 @@ export default {
 
     </div>
 
+    <SideChatMenu />
 
 </template>
 
