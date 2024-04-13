@@ -29,7 +29,7 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
             host=localhost
             dbname=postgres
             user=postgres
-            password=kos120675
+            password=***
             port=5432
         """)
 
@@ -69,7 +69,7 @@ def login_user(email, pas):
             host=localhost
             dbname=postgres
             user=postgres
-            password=kos120675
+            password=***
             port=5432
         """)
 
@@ -109,7 +109,7 @@ def db_get():
             host=localhost
             dbname=postgres
             user=postgres
-            password=kos120675
+            password=***
             port=5432
         """)
 
@@ -142,7 +142,7 @@ def add_user_todb(name, email, pas):
             host=localhost
             dbname=postgres
             user=postgres
-            password=kos120675
+            password=***
             port=5432
         """)
 
@@ -182,7 +182,7 @@ def add_question(discriptions='', details='', dificulty='', tag='', id=''):
             host=localhost
             dbname=postgres
             user=postgres
-            password=kos120675
+            password=***
             port=5432
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -246,7 +246,7 @@ def change_password(password, old_password, email):
                 host=localhost
                 dbname=postgres
                 user=postgres
-                password=kos120675
+                password=***
                 port=5432
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -278,7 +278,7 @@ def check_old_password(email, password):
             host=localhost
             dbname=postgres
             user=postgres
-            password=kos120675
+            password=***
             port=5432
         """)
 
@@ -307,7 +307,7 @@ def change_password_send(password, email):
                     host=localhost
                     dbname=postgres
                     user=postgres
-                    password=kos120675
+                    password=***
                     port=5432
                 """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -369,7 +369,7 @@ def chat(id, time, msg):
             host=localhost
             dbname=postgres
             user=postgres
-            password=kos120675
+            password=***
             port=5432
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
