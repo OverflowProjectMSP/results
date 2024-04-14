@@ -15,35 +15,38 @@ export default {
 </script>
 
 <template>
-    <div class="vid">
-        <div class="left">
-            <div class="top-1">
-                <div class="name">
-                    <p><img src="" alt="" class="t">{{ quetion.language }}</p>
+    <a :href="`#/QuestionItem?id=` + this.quetion.id">
+        <div class="vid">
+            <div class="left">
+                <div class="top-1">
+                    <div class="name">
+                        <p><img src="" alt="" class="t">{{ quetion.language }}</p>
+                    </div>
+                    <div class="id middle">
+                        <p><img src="" alt="" class="t">{{ quetion.complexity }}</p>
+                    </div>
                 </div>
-                <div class="id middle">
-                    <p><img src="" alt="" class="t">{{ quetion.complexity }}</p>
+                <div class="mid-1">
+                    <p class="name-limit">{{ quetion.title }}</p>
+                </div>
+                <div class="bottom-1">
+                    <div class="el">{{ quetion.subscribers }} подписчика(ов)</div>
+                    <div class="el">{{ quetion.hours }} час(ов) назад</div>
+                    <div class="el -d">{{ quetion.views }} просмотр(ов)</div>
                 </div>
             </div>
-            <div class="mid-1">
-                <p class="name-limit">{{ quetion.title }}</p>
-            </div>
-            <div class="bottom-1">
-                <div class="el">{{ quetion.subscribers }} подписчика(ов)</div>
-                <div class="el">{{ quetion.hours }} час(ов) назад</div>
-                <div class="el -d">{{ quetion.views }} просмотр(ов)</div>
+            <div class="right">
+                <div class="right-in">
+                    <p class="t-alig-c">{{ quetion.answers }}</p>
+                    <p>Ответ(ов)</p>
+                </div>
             </div>
         </div>
-        <div class="right">
-            <div class="right-in">
-                <p class="t-alig-c">{{ quetion.answers }}</p>
-                <p>Ответ(ов)</p>
-            </div>
-        </div>
-    </div>
+    </a>
 </template>
 
 <style scoped>
+/* Щедевропеременные Константина */
 :root {
     --size-20: 20px;
     --size-26: 26px;

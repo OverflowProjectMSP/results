@@ -30,9 +30,7 @@ export default {
         }
     },
     methods: {
-        async sendQuestion(index) {
-            await axios.post('/');
-        }
+
     }
 }
 </script>
@@ -76,7 +74,7 @@ export default {
                 </div>
             </div>
             <div class="answer">
-                <a :href="`#/QuestionItem?id=` + post.id"><button @click="sendQuestion(index)"><img :src="'src/assets/comments.svg'" alt=""><span>{{ post.answers }}</span>
+                <a :href="`#/QuestionItem?id=` + post.id"><button><img :src="'src/assets/comments.svg'" alt=""><span>{{ post.answers }}</span>
                         Ответов</button></a>
             </div>
         </div>

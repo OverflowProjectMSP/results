@@ -8,12 +8,21 @@ for (let i = 0; i < elList.length; i++) {
 export default {
     data() {
         return {
-            
+            item: {
+                title: `Как создать переменную?`,
+                    subscribers: 50,
+                    hours: 43,
+                    views: 43,
+                    answers: 423,
+                    language: 'Python',
+                    complexity: 'Средне',
+                    id: 0
+            }
         }
 
     },
     props: {
-        item: Object,
+        itema: Object,
         Show: Boolean,
     }
 
@@ -21,7 +30,7 @@ export default {
 </script>
 
 <template>
-    <div class="vid">
+    <div class="vid" role="button">
         <div class="left">
             <div class="top-1">
                 <div class="name">
@@ -35,7 +44,7 @@ export default {
                 <p class="name-limit">{{ item.title }}</p>
             </div>
             <div class="bottom-1">
-                <div class="el">{{ item.sub }} подписчика(ов)</div>
+                <div class="el">{{ item.subscribers }} подписчика(ов)</div>
                 <div class="el">{{ item.hours }} час(ов) назад</div>
                 <div class="el -d">{{ item.views }} просмотр(ов)</div>
             </div>

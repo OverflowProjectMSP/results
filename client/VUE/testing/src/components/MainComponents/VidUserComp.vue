@@ -12,6 +12,7 @@ export default {
 </script>
 
 <template>
+    <a :href="`#/QuestionItem?id=` + this.quetion.id">
     <div class="vid">
         <div class="left">
             <div class="top-1">
@@ -38,9 +39,14 @@ export default {
             </div>
         </div>
     </div>
+    </a>
 </template>
 
 <style scoped>
+a {
+    text-decoration: none;
+    color: #000;
+}
 :root {
     --size-20: 20px;
     --size-26: 26px;

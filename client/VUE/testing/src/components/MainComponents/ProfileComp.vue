@@ -15,6 +15,7 @@ export default {
                     answers: 423,
                     language: 'Python',
                     complexity: 'Средне',
+                    id: 52
 
                 },
                 {
@@ -25,6 +26,7 @@ export default {
                     answers: 423,
                     language: 'C++',
                     complexity: 'Средне',
+                    id: 53
                 },
                 {
                     title: `Как создать переменную?`,
@@ -34,6 +36,7 @@ export default {
                     answers: 423,
                     language: 'Асембелер',
                     complexity: 'Ебать тяжело',
+                    id: 54
                 },
             ],
         }

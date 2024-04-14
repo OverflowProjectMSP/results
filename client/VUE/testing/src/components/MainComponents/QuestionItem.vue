@@ -4,9 +4,9 @@ axios.defaults.baseURL = 'http://localhost:5234';
 export default {
     data() {
         return {
-            question: {
-
-            }
+            userInfo: {},
+            question: {},
+            answers: [],
         }
     },
     mounted() {
@@ -19,10 +19,10 @@ export default {
         async loadQuestion() {
             let responce = await axios.get(`/questions`, {
                 params: {
-                    id: id
+                    id: this.question.id
                 }
             });
-            this.question = responce.data.get('all');
+            this.question = responce.data;
         }
     }
 }
@@ -30,7 +30,7 @@ export default {
 
 <template>
 <div class="container">
-    Never Gonna Give You Up!
+    Never Gonna Give You Up! {{ question.id }}
 </div>
 </template>
 

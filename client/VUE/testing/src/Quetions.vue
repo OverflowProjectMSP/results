@@ -17,6 +17,7 @@ export default {
                     answers: 423,
                     language: 'Python',
                     complexity: 'Средне',
+                    id: 0
 
                 },
                 {
@@ -27,6 +28,7 @@ export default {
                     answers: 423,
                     language: 'C++',
                     complexity: 'Средне',
+                    id: 1
                 },
                 {
                     title: `Как создать переменную?`,
@@ -36,6 +38,7 @@ export default {
                     answers: 423,
                     language: 'Асембелер',
                     complexity: 'Средне',
+                    id: 2
                 },
             ],
 
@@ -68,11 +71,15 @@ export default {
         </div>
     </div>
 
-    <vid-quetions :quetion="quetion" v-for="quetion in quetions" role="button"/>
+        <vid-quetions :quetion="quetion" role="button" v-for="quetion in quetions"></vid-quetions>
 
 </template>
 
 <style scoped>
+a {
+    text-decoration: none;
+    color: #000;
+}
 .quest-menu {
     margin: 0 20% 15px 20%;
 }
