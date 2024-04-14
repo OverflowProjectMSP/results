@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios';
 import SideChatMenu from '../MainComponents/SideChatMenu.vue';
 export default {
     components: { SideChatMenu },
@@ -12,7 +13,7 @@ export default {
                     description: 'Подскажите, пожалуйста, как сделать регистрацию пользователя на сайте? Сайт у меня на node.js. Я первый раз такую форму делаю и не знаю какой путь выбрать. Какой вариант лучше? Просто к кнопке "зарегистрироваться" подвязать эвент и в нем делать функцию? Или как-то использовать method="post" у формы?',
                     answers: 28,
                     Decided: true,
-
+                    id: 123,
                 },
                 {
                     accountIcon: 'person1.svg',
@@ -21,10 +22,16 @@ export default {
                     description: 'Пытаюсь добавить асинхронную подгрузку, но на данный момент она работает не правильно, при первом открытии списка отображается 15 тегов при прокрутке происходит скачек и подгружается еще 10, после закрытия списка и повторного открытия догружаются остальные теги, в чем может быть проблема? (сейчас с бека не приходит длина всех тегов, пока это захардкодил, зная длину 38)',
                     answers: 34,
                     Decided: false,
+                    id: 124,
                 },
 
             ],
             plusImg: 'src/assets/plus.svg',
+        }
+    },
+    methods: {
+        async sendQuestion(index) {
+            await axios.post('/');
         }
     }
 }
@@ -69,7 +76,7 @@ export default {
                 </div>
             </div>
             <div class="answer">
-                <a href="#"><button><img src="../assets/comments.svg" alt=""><span>{{ post.answers }}</span>
+                <a :href="`#/QuestionItem?id=` + post.id"><button @click="sendQuestion(index)"><img :src="'src/assets/comments.svg'" alt=""><span>{{ post.answers }}</span>
                         Ответов</button></a>
             </div>
         </div>
