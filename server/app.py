@@ -136,7 +136,6 @@ def db_get():
 
 # Регистрация пользователя
 def add_user_todb(name, email, pas):
-
     try:
         pg = psycopg2.connect("""
             host=localhost
@@ -392,6 +391,57 @@ def chat(id, time, msg):
             pg.close
             print("Соединение с PostgreSQL закрыто")
             return return_data
+
+# Добоволение статьи
+def add_states(discriptions='', details='', id=''):
+    try: 
+        pg = psycopg2.connect("""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password=***
+            port=5432
+        """)
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        print(id)
+        send_question = []
+        cursor.execute(f"SELECT COUNT(*) FROM states WHERE discriptions=$${discriptions}$$")  
+        send_question.append(cursor.fetchone())
+        # Существует ли такой же вопрос
+        if send_question[0][0]==0:
+            print(details, 1)
+            question_to_write = (uuid.uuid4().hex, discriptions, details, id)
+            cursor.execute(f"INSERT INTO states(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
+            pg.commit()
+            
+            
+        return_data = "Вопрос добавлен"
+    except (Exception, Error) as error:
+        print(f'DB ERROR: ', error)
+        return_data = f"Ошибка обращения к базе данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
+
+# Показ статей
+def show_st():
+    pass
+
+# Все вопросы/статьи от одного юзера
+def show_all_by_user():
+    pass
+
+# Фильтр статей
+def filtre(filtres, category):
+    pass
+
+# Вопросы форума
+def show_forum(filtre):
+    pass
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -464,7 +514,7 @@ def login():
 
 #Новый вопрос
 @app.route('/new-question', methods=['POST'])
-def new_question():
+def new_question(): 
     print(session.get('id')) #Debug
     response_object = {'status': 'success'} #БаZа
     post_data = request.get_json()
@@ -515,7 +565,114 @@ def chat_forum():
         pass
     else: 
         responce_object['id_question'] = chat(session.get('id'), datetime.now(), post_data.get('msg')) #   Возвращает id сообщения и добовляет его в бд (сообщение)       
-    return responce_object
+    return jsonify(responce_object)
+
+# Новая статья
+app.route('/new-state', methods = ['POST'])
+def create_state(): 
+    responce_object = {'status' : 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    print(add_states(post_data.get('discriptions'), post_data.get('details'), session.get('id'))) #Вызов и debug функции добавления вопроса в бд
+    
+    return jsonify(responce_object)
+
+# Показ вопрос
+app.route('/show-states', methods=['GET'])
+def show_states():
+    responce_object = {'status' : 'success'} #БаZа
+    responce_object['states'] = show_st()
+    return jsonify(responce_object)
+
+# Все от ожного юзера
+app.route('/show-all-by-user', methods = ['GET'])
+def show_by_user():
+    responce_object = {'status' : 'success'} #БаZа
+
+    responce_object['all'] = show_all_by_user(session.get('id'))
+
+    return jsonify(responce_object)
+
+# Фильтр статей
+app.route("/filtre-states", methods=['GET'])
+def filtre_states():
+    responce_object = {'status' : 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    responce_object['all'] = filtre(post_data.get('filters'), 'Стать')
+
+    return jsonify(responce_object)
+
+# Фильтр вопросов
+app.route("/filtre-questions", methods=['GET'])
+def filtre_states():
+    responce_object = {'status' : 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    responce_object['all'] = filtre(post_data.get('filters'), 'Вопрос')
+
+    return jsonify(responce_object)
+
+# Вопросы форума
+app.route('/show-forum', methods=['GET'])
+def show_f():
+    responce_object = {'status' : 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    responce_object['all'] = show_forum(post_data.get('filters'))
+
+    return jsonify(responce_object)
+
+# Один вопрос
+app.route(f'/questions/?{id}', methods=['POST', 'DELETE'])
+def one_question(id):
+    pass
+
+# Одна статья
+app.route(f'/states/?{id}', methods=['POST', 'DELETE'])
+def one_state(id):
+    pass
+
+# может ли юзер удалять/менять или нет
+app.route('/check-user',methods=['POST'])
+def check_user():
+    responce_object = {'status' : 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    if  post_data.get('id')==session.get('id'):
+        responce_object['user'] = True
+    else: 
+        responce_object['user']=True
+
+    return jsonify(responce_object)
+
+# Удаление чего-то
+app.route('/delete',methods=['DELETE'])
+def delete():
+    responce_object = {'status' : 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    responce_object['all'] = delete() # а что - решим потом (название поменять надо)
+
+    return jsonify(responce_object)
+
+# Изменение чего-то
+app.route('/change',methods=['PUT'])
+def change():
+    responce_object = {'status' : 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    responce_object['all'] = change() # а что - решим потом (название поменять надо)
+
+    return jsonify(responce_object)
+
 
 if __name__ == '__main__':
     app.run()
