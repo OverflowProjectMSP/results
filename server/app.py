@@ -453,6 +453,68 @@ def filtre(filtres, category):
     pass
 
 
+# удалить что-то
+def delete(id, isQ):
+    if isQ:
+        try: 
+            pg = psycopg2.connect("""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password=***
+                port=5432
+            """)
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+            cursor.excute(f'''DELETE FROM questions 
+                          WHEREE id=$${id}$$''')
+
+            pg.commit()
+            return_data = 'ok'
+            
+        except (Exception, Error) as error:
+            print(f'DB ERROR: ', error)
+            return_data = f"Ошибка обращения к базе данных: {error}" 
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                print("Соединение с PostgreSQL закрыто")
+                return return_data
+    else:
+        try: 
+            pg = psycopg2.connect("""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password=***
+                port=5432
+            """)
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+            cursor.excute(f'''DELETE FROM states
+                          WHEREE id=$${id}$$''')
+            pg.commit()
+            return_data = 'ok'
+        except (Exception, Error) as error:
+            print(f'DB ERROR: ', error)
+            return_data = f"Ошибка обращения к базе данных: {error}" 
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                print("Соединение с PostgreSQL закрыто")
+                return return_data
+
+
+
+# удалить что-то
+def change(id, info, isQ):
+    pass
+
+
 # Вопросы форума
 def show_forum(filtre):
     try:
@@ -667,13 +729,13 @@ def show_f():
     return jsonify(responce_object)
 
 # Один вопрос
-app.route(f'/questions/?{id}', methods=['POST', 'DELETE'])
-def one_question(id):
+app.route('/questions', methods=['POST', 'DELETE'])
+def one_question():
     pass
 
 # Одна статья
-app.route(f'/states/?{id}', methods=['POST', 'DELETE'])
-def one_state(id):
+app.route('/states', methods=['POST', 'DELETE'])
+def one_state():
     pass
 
 # может ли юзер удалять/менять или нет
@@ -686,29 +748,35 @@ def check_user():
     if  post_data.get('id')==session.get('id'):
         responce_object['user'] = True
     else: 
-        responce_object['user']=True
+        responce_object['user']=False
 
     return jsonify(responce_object)
 
 # Удаление чего-то
 app.route('/delete',methods=['DELETE'])
-def delete():
+def delete_():
     responce_object = {'status' : 'success'} #БаZа
 
     post_data = request.get_json()
-
-    responce_object['all'] = delete() # а что - решим потом (название поменять надо)
+    if post_data.get('question'):
+        responce_object['all'] = delete(post_data.get('id'), True) # а что - решим потом (название поменять надо)
+    else:
+        responce_object['all'] = delete(post_data.get('id'), False) # а что - решим потом (название поменять надо)
 
     return jsonify(responce_object)
 
 # Изменение чего-то
 app.route('/change',methods=['PUT'])
-def change():
+def change_():
     responce_object = {'status' : 'success'} #БаZа
 
     post_data = request.get_json()
 
-    responce_object['all'] = change() # а что - решим потом (название поменять надо)
+    if post_data.get('question'):
+        responce_object['all'] = change(post_data.get('id'), post_data.get('all'), True) # а что - решим потом (название поменять надо)
+    else: 
+        responce_object['all'] = change(post_data.get('id'), post_data.get('all'), False) # а что - решим потом (название поменять надо)
+
 
     return jsonify(responce_object)
 
