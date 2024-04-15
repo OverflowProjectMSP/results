@@ -509,13 +509,67 @@ def delete(id, isQ):
                 return return_data
 
 
-
 # удалить что-то
 def change(id, info, isQ):
-    pass
+    infor = info # без for
+    if isQ:
+        try: 
+            pg = psycopg2.connect("""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password=***
+                port=5432
+            """)
+        
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+            cursor.excute(f'''UPDATE questions
+                        SET (information)
+                          WHEREE id=$${id}$$''')
+
+            pg.commit()
+            return_data = 'ok'
+            
+        except (Exception, Error) as error:
+            print(f'DB ERROR: ', error)
+            return_data = f"Ошибка обращения к базе данных: {error}" 
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                print("Соединение с PostgreSQL закрыто")
+                return return_data
+    else:
+        try: 
+            pg = psycopg2.connect("""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password=***
+                port=5432
+            """)
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+            cursor.excute(f'''UPDATE states
+                        SET (information)
+                          WHEREE id=$${id}$$''')
+            pg.commit()
+            return_data = 'ok'
+        except (Exception, Error) as error:
+            print(f'DB ERROR: ', error)
+            return_data = f"Ошибка обращения к базе данных: {error}" 
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                print("Соединение с PostgreSQL закрыто")
+                return return_data
 
 
-# Вопросы форума
+# Вопросы форума    
 def show_forum(filtre):
     try:
         pg = psycopg2.connect("""
