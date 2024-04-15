@@ -74,21 +74,20 @@ export default {
 
 <template>
     <div class="faq-container d-flex flex-column align-items-center gap-2 px-4 py-2">
-        <h1 class="my-2 fw-bold">FAQ: </h1>
-        <div class="faq d-flex flex-column border border-dark rounded-3 p-4 mx-5 transition-all"
+        <h1 class="mb-4 fw-bold">Часто задаваемые вопросы</h1>
+        <div class="faq d-flex flex-column p-4 mx-5 transition-all"
             v-for="(faq, index) in faqs">
-            <div class="quest-block d-flex flex-row justify-content-between mx-2 p-1 align-items-center user-select-none"
+            <div class="quest-block d-flex flex-row justify-content-between p-1 align-items-center user-select-none"
                 @click="openAnswer(index)">
-                <img :class="{ 'rotate-right': faq.isHide }" class="transition-all" :src="imgClose" alt="close">
                 <span class="fw-bold fs-3 text-center">{{ faq.question }}</span>
                 <img :class="{ 'rotate-left': faq.isHide }" class="transition-all" :src="imgClose" alt="close">
             </div>
-            <p class="text-center fs-4" :class="{ 'd-none': faq.isHide }">
+            <p class="fs-4" :class="{ 'd-none': faq.isHide }">
                 {{ faq.answer }}
             </p>
         </div>
     </div>
-    <Form />
+    <!-- <Form /> -->
 </template>
 
 <style scoped>
@@ -105,15 +104,11 @@ export default {
 }
 
 .quest-block img {
-    transition: all 850ms;
+    transition: all 500ms;
 }
 
 .rotate-left {
-    rotate: 180deg;
-}
-
-.rotate-right {
-    rotate: -180deg;
+    rotate: 45deg;
 }
 
 @media (max-width: 1024px) {

@@ -17,6 +17,8 @@ export default {
                     level: `Лёгкий`,
                     imageInQuetion: 'test',
                     answer: 28,
+                    views: 473,
+                    data: `05.01.2024 12:31`,
                     Decided: true,
                 },
                 answers: [
@@ -87,8 +89,7 @@ export default {
                 <img class="accountIcon" :src="'src/assets/' + question.accountInfo.accountIcon" width="70px" alt="">
                 <div class="name-ring">
                     <div>
-                        <a href="#!"><span class="name">{{ question.accountInfo.accountName }}</span></a><a href="#!"
-                            class="more">+2 ЕЩЁ</a>
+                        <a href="#!"><span class="name">{{ question.accountInfo.accountName }}</span></a>
                     </div>
                     <p>Уровень: <span class="difficult">{{ question.questionInfo.level }}</span></p>
                 </div>
@@ -102,14 +103,13 @@ export default {
                     alt="">
             </div>
             <div class="about">
-                <p>15 подписчиков</p>
-                <p>5.01.2024 12:31</p>
-                <p>473 просмотра</p>
+                <p>{{ question.questionInfo.data }}</p>
+                <p>{{ question.questionInfo.views }} просмотра</p>
             </div>
         </div>
-        <a class="answer-a" href="#"><button class="answer-btn">Ответов: {{ question.questionInfo.answer }}</button></a>
+        <a class="answer-a" href="#"><button class="answer-btn user-select-none">Ответов: {{ question.questionInfo.answer }}</button></a>
 
-        <div class="content-2" v-for="answer in question.answers">
+        <div class="content-2" v-for="answer in question.answers" v-if="this.question.answers.length != 0">
             <div class="account">
                 <img class="accountIcon" :src="'src/assets/' + answer.answerUserInfo.accountIcon" width="70px" alt="">
                 <div class="name-ring">
@@ -128,11 +128,11 @@ export default {
                     <button class="comm-add btgr">Добавить комментарий</button>
                     <div class="like-bc bc">
                         <button class="like btgr"><img :src="'src/assets/Like.svg'" alt=""></button>
-                        <p class="like-count">{{ answer.answerInfo.likes }}</p>
+                        <p class="like-count user-select-none">{{ answer.answerInfo.likes }}</p>
                     </div>
                     <div class="dislike-bc bc">
                         <button class="dislike btgr"><img :src="'src/assets/Dislike.svg'" alt=""></button>
-                        <p class="dislike-count">{{ answer.answerInfo.dislike }}</p>
+                        <p class="dislike-count user-select-none">{{ answer.answerInfo.dislike }}</p>
                     </div>
                 </div>
                 <div class="right">
@@ -140,13 +140,17 @@ export default {
                 </div>
             </div>
         </div>
+        <div class="content p-2" v-else>
+            <h2 class="d-flex justify-content-center my-5 user-select-none">Будь первым, кто даст ответ на этот вопрос!</h2>
+        </div>
+
+
         <div class="content-3">
             <div class="account">
                 <img class="accountIcon" :src="'src/assets/' + inputUserInfo.accountIcon" width="70px" alt="">
                 <div class="name-ring">
                     <div>
-                        <a href="#!"><span class="name">{{ inputUserInfo.accountName }}</span></a><a href="#"
-                            class="more">+2 ЕЩЁ</a>
+                        <a href="#!"><span class="name">{{ inputUserInfo.accountName }}</span></a>
                     </div>
                     <p>Звание: <span class="difficult-ans">{{ inputUserInfo.rang }}</span></p>
                 </div>
@@ -171,6 +175,9 @@ export default {
 </template>
 
 <style scoped>
+img {
+    user-select: none;
+}
 /* CONTENT-1 */
 
 .content-1 {

@@ -57,7 +57,7 @@ export default {
 <h4 class="text">Поиск статьи</h4>
 
 <div class="content d-flex align-items-center">
-    <input type="text" class="form-control" placeholder="Название проблемы" aria-label="First name">
+    <input type="text" class="form-control" placeholder="Название статьи" aria-label="First name">
     <input type="text" class="form-control" placeholder="Автор" aria-label="Last name">
    <!-- селект -->
   <div class="down-menu d-flex align-items-center">
@@ -66,9 +66,13 @@ export default {
         <img src="./assets/js.jpg" alt="" class="image"><span>JavaScript</span>
       </button>
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>JavaScript</span></a></li>
-        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>JavaScript</span></a></li>
-        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>JavaScript</span></a></li>
+          <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>JavaScript</span></a></li>
+          <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>TS</span></a></li>
+        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>Python</span></a></li>
+        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>PHP</span></a></li>
+        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>C++</span></a></li>
+        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>Java</span></a></li>
+        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>C#</span></a></li>
       </ul>
       </div>
       <!-- плюсик -->
