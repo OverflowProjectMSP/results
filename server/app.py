@@ -61,6 +61,7 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
             print("Соединение с PostgreSQL закрыто")
             return return_data
 
+
 # LogIn
 def login_user(email, pas):
 
@@ -102,6 +103,7 @@ def login_user(email, pas):
             print("Соединение с PostgreSQL закрыто")
             return return_data
 
+
 # Get шифы с бд
 def db_get():
     try:
@@ -133,6 +135,7 @@ def db_get():
             pg.close
             print("Соединение с PostgreSQL закрыто")
             return return_data
+
 
 # Регистрация пользователя
 def add_user_todb(name, email, pas):
@@ -174,6 +177,7 @@ def add_user_todb(name, email, pas):
             print("Соединение с PostgreSQL закрыто")
             return return_data
 
+
 # Новый вопрос
 def add_question(discriptions='', details='', dificulty='', tag='', id=''):
     try: 
@@ -209,6 +213,7 @@ def add_question(discriptions='', details='', dificulty='', tag='', id=''):
             print("Соединение с PostgreSQL закрыто")
             return return_data
 
+
 # Отображение всех вапросов на frontend
 def render_questions():
     try: 
@@ -236,6 +241,7 @@ def render_questions():
             pg.close
             print("Соединение с PostgreSQL закрыто")
             return return_data
+
 
 # Изменения пороля, если user знает страый
 def change_password(password, old_password, email):
@@ -361,6 +367,7 @@ def check_password(password, true_password):
     session.pop('sent-password', None)
     return return_data
 
+
 # Добавление сообщения в бд (чат форума)
 def chat(id, time, msg):
     try: 
@@ -392,6 +399,7 @@ def chat(id, time, msg):
             print("Соединение с PostgreSQL закрыто")
             return return_data
 
+
 # Добоволение статьи
 def add_states(discriptions='', details='', id=''):
     try: 
@@ -403,7 +411,9 @@ def add_states(discriptions='', details='', id=''):
             port=5432
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
         print(id)
+
         send_question = []
         cursor.execute(f"SELECT COUNT(*) FROM states WHERE discriptions=$${discriptions}$$")  
         send_question.append(cursor.fetchone())
@@ -427,21 +437,50 @@ def add_states(discriptions='', details='', id=''):
             print("Соединение с PostgreSQL закрыто")
             return return_data
 
+
 # Показ статей
 def show_st():
     pass
+
 
 # Все вопросы/статьи от одного юзера
 def show_all_by_user():
     pass
 
+
 # Фильтр статей
 def filtre(filtres, category):
     pass
 
+
 # Вопросы форума
 def show_forum(filtre):
-    pass
+    try:
+        pg = psycopg2.connect("""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password=***
+            port=5432
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        return_data = cursor.excute(f'''SELECT (*) FROM states WHERE tag=$${filtre}$$''')
+        return_data += cursor.excute(f'''SELECT (*) FROM questions WHERE tag=$${filtre}$$''')
+        
+
+        pg.commit()
+    except (Exception, Error) as error:
+        print(f'DB ERROR: ', error)
+        return_data = f"Ошибка обращения к базе данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
