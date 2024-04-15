@@ -607,7 +607,7 @@ def filtre_states():
 
 # Фильтр вопросов
 app.route("/filtre-questions", methods=['GET'])
-def filtre_states():
+def filtre_questions():
     responce_object = {'status' : 'success'} #БаZа
 
     post_data = request.get_json()
