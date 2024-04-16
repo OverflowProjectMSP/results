@@ -34,7 +34,6 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
             password={os.getenv('PASSWORD_PG')}
             port={os.getenv('PASSWORD_PG')}
         """)
-        print()
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         # UPDATE user-info
