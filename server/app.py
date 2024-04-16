@@ -866,5 +866,20 @@ def show_sates():
     
     return jsonify(response_object)
 
+# проверка может ли юзер исправлять что-то
+@app.route('/check-user', methods=['GET'])
+def check():
+    response_object = {'status': 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    if post_data.get('id') == session.get('id'):
+        response_object['isEdit'] = True
+    else:
+        response_object['isEdit'] = False
+
+    return  jsonify(response_object)
+
+
 if __name__ == '__main__':
     app.run()
