@@ -10,7 +10,7 @@ import random
 from datetime import datetime
 from dotenv import load_dotenv
 
-
+load_dotenv()
 # instantiate the app
 app = Flask(__name__)
 
