@@ -1,3 +1,4 @@
+import os
 import uuid
 import psycopg2
 from psycopg2 import extras, Error
@@ -7,12 +8,15 @@ import smtplib
 from email.mime.text import MIMEText
 import random
 from datetime import datetime
+from dotenv import load_dotenv
+import base64
 
 
+load_dotenv()
 # instantiate the app
 app = Flask(__name__)
 
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.secret_key = os.getenv('SECERET_KEY')
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] =  True
@@ -21,18 +25,54 @@ app.config["SESSION_COOKIE_SECURE"] =  True
 CORS(app, resources={r"*": {"origins": "http://localhost:5173", 'supports_credentials': True}})
 
 
+# Добавление в картинки в БД
+def push_image(image, user_id):
+    pg = psycopg2.connect(f"""
+        host=localhost
+        dbname=postgres
+        user=postgres
+        password={os.getenv('PASSWORD_PG')}
+        port={os.getenv('PASSWORD_PG')}
+    """)
+
+
+    cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute(f"""
+    UPDATE users
+    SET avatar = decode('{image}', 'base64')
+    WHERE id = $$user_id$$
+""")
+    pg.commit()
+    cursor.close
+    pg.close
+
+
+# Получение картинки из БД
+def get_image(user_id):
+    pg = psycopg2.connect(f"""
+        host=localhost
+        dbname=postgres
+        user=postgres
+        password={os.getenv('PASSWORD_PG')}
+        port={os.getenv('PASSWORD_PG')}
+    """)
+
+    cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute(f"SELECT avatar from users WHERE id=$${user_id}$$")
+    to_encode = bytes(cursor.fetchone()[0])
+    return base64.b64encode(to_encode)
+
 
 # Обновление доп данных о 
 def refresh_data(name = '', surname='', interestings='', about='', contacts='', country='', region='', city='', id=''):
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
-
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         # UPDATE user-info
@@ -66,21 +106,22 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
 def login_user(email, pas):
 
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cursor.execute(f"SELECT COUNT(*) FROM users WHERE email=$${email}$$")
         # Проверка есть ли такой пользователь 
         if cursor.fetchone()[0] == 1:
-            print(1)
+
             cursor.execute(f"SELECT * FROM users WHERE email=$${email}$$")
             user = cursor.fetchone()
+
             # Проверка пороля
             if user[3] == pas: 
                 # res.set_cookie(f'{user[0]}', f'{user[1]}', max_age = 3600)
@@ -107,12 +148,12 @@ def login_user(email, pas):
 # Get шифы с бд
 def db_get():
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -140,12 +181,12 @@ def db_get():
 # Регистрация пользователя
 def add_user_todb(name, email, pas):
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -159,10 +200,13 @@ def add_user_todb(name, email, pas):
         # Проверка существует ли такой пользователь
         if send_user[0][0] == 0 and send_user[1][0] == 0:
             user_to_write = (uuid.uuid4().hex, name, email, pas, False)
+            
             cursor.execute(f"INSERT INTO users(id, nickname, email, password, admin) VALUES {user_to_write}")      
+            
             pg.commit()
             
             return_data = "Пользователь зарегестрирован!"
+
         else:
             return_data = "Пользователь с таким именем или почтой уже существует!"
 
@@ -181,17 +225,19 @@ def add_user_todb(name, email, pas):
 # Новый вопрос
 def add_question(discriptions='', details='', dificulty='', tag='', id=''):
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        print(id)
+
         send_question = []
+
         cursor.execute(f"SELECT COUNT(*) FROM questions WHERE discriptions=$${discriptions}$$")  
+        
         send_question.append(cursor.fetchone())
         # Существует ли такой же вопрос
         if send_question[0][0]==0:
@@ -217,20 +263,22 @@ def add_question(discriptions='', details='', dificulty='', tag='', id=''):
 # Отображение всех вапросов на frontend
 def render_questions():
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=8533
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         cursor.execute(f"SELECT * from questions")
+
         all_questions = cursor.fetchall()  
 
         return_data = all_questions
+
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
@@ -247,12 +295,12 @@ def render_questions():
 def change_password(password, old_password, email):
     try: 
         if check_old_password(old_password, email): # Вернет True если пороли стовпадает со старым 
-            pg = psycopg2.connect("""
+            pg = psycopg2.connect(f"""
                 host=localhost
                 dbname=postgres
                 user=postgres
-                password=***
-                port=5432
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PASSWORD_PG')}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -263,7 +311,9 @@ def change_password(password, old_password, email):
             pg.commit()
 
             return_data = True
+
         else: return_data = False
+
     except (Exception, Error) as error:
         return_data = f"Ошибка получения данных: {error}" 
 
@@ -277,14 +327,13 @@ def change_password(password, old_password, email):
 
 # Проверка совпадениеия старого пороля с ныненшним
 def check_old_password(email, password):
-    
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -292,7 +341,9 @@ def check_old_password(email, password):
 
         if password_to_check == password:
             return_data = True
+
         else: return_data = False
+
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
@@ -308,12 +359,12 @@ def check_old_password(email, password):
 # Измения пороля с праолем на email
 def change_password_send(password, email):
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
                     host=localhost
                     dbname=postgres
                     user=postgres
-                    password=***
-                    port=5432
+                    password{os.getenv('PASSWORD_PG')}*
+                    port={os.getenv('PORT_PG')}
                 """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -371,12 +422,12 @@ def check_password(password, true_password):
 # Добавление сообщения в бд (чат форума)
 def chat(id, time, msg):
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -403,21 +454,23 @@ def chat(id, time, msg):
 # Добоволение статьи
 def add_states(discriptions='', details='', id=''):
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         print(id)
 
         send_question = []
+
         cursor.execute(f"SELECT COUNT(*) FROM states WHERE discriptions=$${discriptions}$$")  
         send_question.append(cursor.fetchone())
-        # Существует ли такой же вопрос
+
+        # Существует ли таккая же
         if send_question[0][0]==0:
             print(details, 1)
             question_to_write = (uuid.uuid4().hex, discriptions, details, id)
@@ -438,14 +491,39 @@ def add_states(discriptions='', details='', id=''):
             return return_data
 
 
-# Показ статей
-def show_st():
-    pass
-
-
 # Все вопросы/статьи от одного юзера
-def show_all_by_user():
-    pass
+def show_all_by_user(id):
+    try: 
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        questions = cursor.execute(f'''SELECT * FROM questions
+                                WHERE id=$${id}$$''')
+        
+        states = cursor.execute(f'''SELEСT * FROM states
+                                WHERE id=$${id}$$''')
+        
+        return_data = {
+                'questions': questions,
+                'states': states
+                }
+    except (Exception, Error) as error:
+        print(f'DB ERROR: ', error)
+        return_data = f"Ошибка обращения к базе данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
 
 
 # Фильтр статей
@@ -457,12 +535,12 @@ def filtre(filtres, category):
 def delete(id, isQ):
     if isQ:
         try: 
-            pg = psycopg2.connect("""
+            pg = psycopg2.connect(f"""
                 host=localhost
                 dbname=postgres
                 user=postgres
-                password=***
-                port=5432
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PASSWORD_PG')}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -484,12 +562,12 @@ def delete(id, isQ):
                 return return_data
     else:
         try: 
-            pg = psycopg2.connect("""
+            pg = psycopg2.connect(f"""
                 host=localhost
                 dbname=postgres
                 user=postgres
-                password=***
-                port=5432
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PASSWORD_PG')}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -509,28 +587,86 @@ def delete(id, isQ):
                 return return_data
 
 
-
-# удалить что-то
+# обновить что-то
 def change(id, info, isQ):
-    pass
+    infor = info # без for
+    if isQ:
+        try: 
+            pg = psycopg2.connect(f"""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PASSWORD_PG')}
+            """)
+        
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+            cursor.excute(f'''UPDATE questions
+                        SET (information)
+                          WHEREE id=$${id}$$''')
+
+            pg.commit()
+            return_data = 'ok'
+            
+        except (Exception, Error) as error:
+            print(f'DB ERROR: ', error)
+            return_data = f"Ошибка обращения к базе данных: {error}" 
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                print("Соединение с PostgreSQL закрыто")
+                return return_data
+    else:
+        try: 
+            pg = psycopg2.connect(f"""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PASSWORD_PG')}
+            """)
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+            cursor.excute(f'''UPDATE states
+                        SET (information)
+                          WHEREE id=$${id}$$''')
+            pg.commit()
+            return_data = 'ok'
+        except (Exception, Error) as error:
+            print(f'DB ERROR: ', error)
+            return_data = f"Ошибка обращения к базе данных: {error}" 
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                print("Соединение с PostgreSQL закрыто")
+                return return_data
 
 
-# Вопросы форума
+# Вопросы форума    
 def show_forum(filtre):
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        return_data = cursor.excute(f'''SELECT (*) FROM states WHERE tag=$${filtre}$$''')
-        return_data += cursor.excute(f'''SELECT (*) FROM questions WHERE tag=$${filtre}$$''')
+        states = cursor.excute(f'''SELECT * FROM states WHERE tag=$${filtre}$$''')
+        questions = cursor.excute(f'''SELECT * FROM questions WHERE tag=$${filtre}$$''')
         
+        return_data = {
+            "states": states,
+            "questions": questions
+        }
 
         pg.commit()
     except (Exception, Error) as error:
@@ -543,6 +679,39 @@ def show_forum(filtre):
             pg.close
             print("Соединение с PostgreSQL закрыто")
             return return_data
+
+
+# Отображение всех вапросов на frontend
+def render_states():
+    try: 
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cursor.execute(f"SELECT * from states")
+        
+        all_states = cursor.fetchall()  
+
+        return_data = all_states
+
+    except (Exception, Error) as error:
+        print(f'DB ERROR: ', error)
+        return_data = f"Ошибка обращения к базе данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
+        
+
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -573,12 +742,6 @@ def user_info():
     response_object = {'status': 'success'} #БаZа
 
     if request.method == 'PUT':
-
-        #------------ я хз че это ---------------------------------------------------------------------
-        s = session.get('id')
-        print(s)
-        #----------------------------------------------------------------------------------------------
-        
         #Вызов функции обновления бд
         post_data = request.get_json()
         refresh_data(post_data.get('Name'), 
@@ -599,27 +762,32 @@ def user_info():
 #Вход
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print(session.get('id'))
     response_object = {'status': 'success'} #БаZа
-    resp = make_response('Cookie set!')
+    resp = make_response('Cookie set!') #куки-заготовка
+
     if request.method == 'POST':
-        print(1) # Debug Константина
         post_data = request.get_json()
+
         resp.set_cookie('my_persistent_cookie', value='some_value', max_age=60*60*24)
+        
         print(login_user(post_data.get('user'), post_data.get('password'))) #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
+        
         return resp
         
     else:
         response_object['message'] = db_get()
+        
         return jsonify(response_object)
 
 #Новый вопрос
 @app.route('/new-question', methods=['POST'])
 def new_question(): 
-    print(session.get('id')) #Debug
     response_object = {'status': 'success'} #БаZа
+
     post_data = request.get_json()
+
     print(add_question(post_data.get('discriptions'), post_data.get('details'), post_data.get('dificulty'), post_data.get('tag'), session.get('id'))) #Вызов и debug функции добавления вопроса в бд
+    
     return jsonify(response_object)
 
 #Страница со всеми вопросами
@@ -627,11 +795,13 @@ def new_question():
 def show_questions():
     response_object = {'status': 'success'} #БаZа
     response_object['message'] = render_questions() #Вызов и возврат ответа на клиент функции для получения всех вопросов
+    
     return jsonify(response_object)
 
 #Обновление пароля
 @app.route('/new-password-old', methods=['PUT'])
 def new_password_with_old():
+
     response_object = {'status': 'success'} #БаZа
     post_data = request.get_json()
 
@@ -639,6 +809,7 @@ def new_password_with_old():
     if request.method=='PUT':
         response_object['changeable'] = change_password(post_data.get('new-password'),post_data.get('old_passord') ,post_data.get('email'))
         print(response_object['changeable'])
+    
     return jsonify(response_object)
 
 #Восстановление пароля
@@ -646,15 +817,19 @@ def new_password_with_old():
 def new_password_with_email():
     response_object = {'status': 'success'} #БаZа
     post_data = request.get_json()
+
     if request.method=='PUT':
         #Восстановление пароля если мы в аккаунте
         change_password_send(post_data('new-password'), session.get('email'))
+    
     elif request.method == 'POST' and post_data.get('email'):
         #Восстановление пароля если мы НЕ в аккаунте
         print(send_code(post_data.get('email')))
+    
     else:
         # ХЗ, вроде проверка кода подтверждения
         response_object['status'] = check_password(post_data.get('password'), session.get('code'))
+    
     return jsonify(response_object)
 
 # Чат форума
@@ -662,10 +837,12 @@ def new_password_with_email():
 def chat_forum():
     responce_object = {'status' : 'success'} #БаZа
     post_data = request.get_json()
+
     if request.method == 'PUT': # Обновка вопроса
         pass
     else: 
         responce_object['id_question'] = chat(session.get('id'), datetime.now(), post_data.get('msg')) #   Возвращает id сообщения и добовляет его в бд (сообщение)       
+    
     return jsonify(responce_object)
 
 # Новая статья
@@ -677,13 +854,6 @@ def create_state():
 
     print(add_states(post_data.get('discriptions'), post_data.get('details'), session.get('id'))) #Вызов и debug функции добавления вопроса в бд
     
-    return jsonify(responce_object)
-
-# Показ вопрос
-app.route('/show-states', methods=['GET'])
-def show_states():
-    responce_object = {'status' : 'success'} #БаZа
-    responce_object['states'] = show_st()
     return jsonify(responce_object)
 
 # Все от ожного юзера
@@ -780,6 +950,40 @@ def change_():
 
     return jsonify(responce_object)
 
+#Страница со всеми статьями
+@app.route('/show-states', methods=['GET'])
+def show_sates():
+    response_object = {'status': 'success'} #БаZа
+
+    response_object['message'] = render_states() #Вызов и возврат ответа на клиент функции для получения всех вопросов
+    
+    return jsonify(response_object)
+
+# проверка может ли юзер исправлять что-то
+@app.route('/check-user', methods=['GET'])
+def check():
+    response_object = {'status': 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    if post_data.get('id') == session.get('id'):
+        response_object['isEdit'] = True
+
+    else:
+        response_object['isEdit'] = False
+
+    return  jsonify(response_object)
+
+# проверка может ли юзер исправлять что-то
+@app.route('/show-all-by-user', methods=['GET'])
+def check():
+    response_object = {'status': 'success'} #БаZа
+
+    post_data = request.get_json()
+
+    response_object['all'] = show_all_by_user(post_data.get('id'))
+
+    return  jsonify(response_object)
 
 if __name__ == '__main__':
     app.run()
