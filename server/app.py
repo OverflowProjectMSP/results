@@ -221,16 +221,18 @@ def render_questions():
             host=localhost
             dbname=postgres
             user=postgres
-            password=8533
+            password=***
             port=5432
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         cursor.execute(f"SELECT * from questions")
+
         all_questions = cursor.fetchall()  
 
         return_data = all_questions
+
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
@@ -597,6 +599,39 @@ def show_forum(filtre):
             pg.close
             print("Соединение с PostgreSQL закрыто")
             return return_data
+
+
+# Отображение всех вапросов на frontend
+def render_states():
+    try: 
+        pg = psycopg2.connect("""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password=***
+            port=5432
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cursor.execute(f"SELECT * from states")
+        
+        all_states = cursor.fetchall()  
+
+        return_data = all_states
+
+    except (Exception, Error) as error:
+        print(f'DB ERROR: ', error)
+        return_data = f"Ошибка обращения к базе данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
+        
+
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -834,6 +869,14 @@ def change_():
 
     return jsonify(responce_object)
 
+#Страница со всеми статьями
+@app.route('/show-states', methods=['GET'])
+def show_sates():
+    response_object = {'status': 'success'} #БаZа
+
+    response_object['message'] = render_states() #Вызов и возврат ответа на клиент функции для получения всех вопросов
+    
+    return jsonify(response_object)
 
 if __name__ == '__main__':
     app.run()
