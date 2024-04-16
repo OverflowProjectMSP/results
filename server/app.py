@@ -9,6 +9,8 @@ from email.mime.text import MIMEText
 import random
 from datetime import datetime
 from dotenv import load_dotenv
+import base64
+
 
 load_dotenv()
 # instantiate the app
@@ -22,6 +24,43 @@ app.config["SESSION_COOKIE_SECURE"] =  True
 # enable CORS
 CORS(app, resources={r"*": {"origins": "http://localhost:5173", 'supports_credentials': True}})
 
+
+# Добавление в картинки в БД
+def push_image(image, user_id):
+    pg = psycopg2.connect(f"""
+        host=localhost
+        dbname=postgres
+        user=postgres
+        password={os.getenv('PASSWORD_PG')}
+        port={os.getenv('PASSWORD_PG')}
+    """)
+
+
+    cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute(f"""
+    UPDATE users
+    SET avatar = decode('{image}', 'base64')
+    WHERE id = $$user_id$$
+""")
+    pg.commit()
+    cursor.close
+    pg.close
+
+
+# Получение картинки из БД
+def get_image(user_id):
+    pg = psycopg2.connect(f"""
+        host=localhost
+        dbname=postgres
+        user=postgres
+        password={os.getenv('PASSWORD_PG')}
+        port={os.getenv('PASSWORD_PG')}
+    """)
+
+    cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute(f"SELECT avatar from users WHERE id=$${user_id}$$")
+    to_encode = bytes(cursor.fetchone()[0])
+    return base64.b64encode(to_encode)
 
 
 # Обновление доп данных о 
