@@ -465,10 +465,10 @@ def show_all_by_user(id):
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        questions = cursor.execute(f'''SELEST FROM questions
+        questions = cursor.execute(f'''SELECT * FROM questions
                                 WHERE id=$${id}$$''')
         
-        states = cursor.execute(f'''SELEST FROM states
+        states = cursor.execute(f'''SELEСT * FROM states
                                 WHERE id=$${id}$$''')
         
         return_data = {
@@ -548,7 +548,7 @@ def delete(id, isQ):
                 return return_data
 
 
-# удалить что-то
+# обновить что-то
 def change(id, info, isQ):
     infor = info # без for
     if isQ:
@@ -621,9 +621,13 @@ def show_forum(filtre):
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        return_data = cursor.excute(f'''SELECT (*) FROM states WHERE tag=$${filtre}$$''')
-        return_data += cursor.excute(f'''SELECT (*) FROM questions WHERE tag=$${filtre}$$''')
+        states = cursor.excute(f'''SELECT * FROM states WHERE tag=$${filtre}$$''')
+        questions = cursor.excute(f'''SELECT * FROM questions WHERE tag=$${filtre}$$''')
         
+        return_data = {
+            "states": states,
+            "questions": questions
+        }
 
         pg.commit()
     except (Exception, Error) as error:
