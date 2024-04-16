@@ -924,6 +924,7 @@ def check():
 
     if post_data.get('id') == session.get('id'):
         response_object['isEdit'] = True
+        
     else:
         response_object['isEdit'] = False
 
