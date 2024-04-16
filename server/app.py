@@ -440,11 +440,6 @@ def add_states(discriptions='', details='', id=''):
             return return_data
 
 
-# Показ статей
-def show_st():
-    pass
-
-
 # Все вопросы/статьи от одного юзера
 def show_all_by_user():
     pass
@@ -766,13 +761,6 @@ def create_state():
 
     print(add_states(post_data.get('discriptions'), post_data.get('details'), session.get('id'))) #Вызов и debug функции добавления вопроса в бд
     
-    return jsonify(responce_object)
-
-# Показ вопрос
-app.route('/show-states', methods=['GET'])
-def show_states():
-    responce_object = {'status' : 'success'} #БаZа
-    responce_object['states'] = show_st()
     return jsonify(responce_object)
 
 # Все от ожного юзера
