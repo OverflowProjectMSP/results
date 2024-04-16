@@ -7,7 +7,7 @@ import smtplib
 from email.mime.text import MIMEText
 import random
 from datetime import datetime
-
+from config import Config
 
 # instantiate the app
 app = Flask(__name__)
@@ -25,12 +25,12 @@ CORS(app, resources={r"*": {"origins": "http://localhost:5173", 'supports_creden
 # Обновление доп данных о 
 def refresh_data(name = '', surname='', interestings='', about='', contacts='', country='', region='', city='', id=''):
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
         print()
 
@@ -66,12 +66,12 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
 def login_user(email, pas):
 
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -108,12 +108,12 @@ def login_user(email, pas):
 # Get шифы с бд
 def db_get():
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -141,12 +141,12 @@ def db_get():
 # Регистрация пользователя
 def add_user_todb(name, email, pas):
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -185,12 +185,12 @@ def add_user_todb(name, email, pas):
 # Новый вопрос
 def add_question(discriptions='', details='', dificulty='', tag='', id=''):
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -223,12 +223,12 @@ def add_question(discriptions='', details='', dificulty='', tag='', id=''):
 # Отображение всех вапросов на frontend
 def render_questions():
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -255,12 +255,12 @@ def render_questions():
 def change_password(password, old_password, email):
     try: 
         if check_old_password(old_password, email): # Вернет True если пороли стовпадает со старым 
-            pg = psycopg2.connect("""
+            pg = psycopg2.connect(f"""
                 host=localhost
                 dbname=postgres
                 user=postgres
-                password=***
-                port=5432
+                password={Config.PASSWORD_PG}
+                port={Config.PORT_PG}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -288,12 +288,12 @@ def change_password(password, old_password, email):
 # Проверка совпадениеия старого пороля с ныненшним
 def check_old_password(email, password):
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -319,12 +319,12 @@ def check_old_password(email, password):
 # Измения пороля с праолем на email
 def change_password_send(password, email):
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
                     host=localhost
                     dbname=postgres
                     user=postgres
-                    password=***
-                    port=5432
+                    password{Config.PASSWORD_PG}*
+                    port={Config.PORT_PG}
                 """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -382,12 +382,12 @@ def check_password(password, true_password):
 # Добавление сообщения в бд (чат форума)
 def chat(id, time, msg):
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -414,12 +414,12 @@ def chat(id, time, msg):
 # Добоволение статьи
 def add_states(discriptions='', details='', id=''):
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -454,12 +454,12 @@ def add_states(discriptions='', details='', id=''):
 # Все вопросы/статьи от одного юзера
 def show_all_by_user(id):
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -495,12 +495,12 @@ def filtre(filtres, category):
 def delete(id, isQ):
     if isQ:
         try: 
-            pg = psycopg2.connect("""
+            pg = psycopg2.connect(f"""
                 host=localhost
                 dbname=postgres
                 user=postgres
-                password=***
-                port=5432
+                password={Config.PASSWORD_PG}
+                port={Config.PORT_PG}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -522,12 +522,12 @@ def delete(id, isQ):
                 return return_data
     else:
         try: 
-            pg = psycopg2.connect("""
+            pg = psycopg2.connect(f"""
                 host=localhost
                 dbname=postgres
                 user=postgres
-                password=***
-                port=5432
+                password={Config.PASSWORD_PG}
+                port={Config.PORT_PG}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -552,12 +552,12 @@ def change(id, info, isQ):
     infor = info # без for
     if isQ:
         try: 
-            pg = psycopg2.connect("""
+            pg = psycopg2.connect(f"""
                 host=localhost
                 dbname=postgres
                 user=postgres
-                password=***
-                port=5432
+                password={Config.PASSWORD_PG}
+                port={Config.PORT_PG}
             """)
         
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -581,12 +581,12 @@ def change(id, info, isQ):
                 return return_data
     else:
         try: 
-            pg = psycopg2.connect("""
+            pg = psycopg2.connect(f"""
                 host=localhost
                 dbname=postgres
                 user=postgres
-                password=***
-                port=5432
+                password={Config.PASSWORD_PG}
+                port={Config.PORT_PG}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -610,12 +610,12 @@ def change(id, info, isQ):
 # Вопросы форума    
 def show_forum(filtre):
     try:
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -640,12 +640,12 @@ def show_forum(filtre):
 # Отображение всех вапросов на frontend
 def render_states():
     try: 
-        pg = psycopg2.connect("""
+        pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password=***
-            port=5432
+            password={Config.PASSWORD_PG}
+            port={Config.PORT_PG}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -924,7 +924,7 @@ def check():
 
     if post_data.get('id') == session.get('id'):
         response_object['isEdit'] = True
-        
+
     else:
         response_object['isEdit'] = False
 
