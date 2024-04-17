@@ -526,7 +526,7 @@ def show_all_by_user(id):
             return return_data
 
 
-# Фильтр статей
+# Фильтр 
 def filtre(filtres, category):
     pass
 
@@ -712,6 +712,62 @@ def render_states():
             return return_data
         
 
+def show_one(id, isQ):
+    if isQ:
+        try: 
+            pg = psycopg2.connect(f"""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PASSWORD_PG')}
+            """)
+
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+            cursor.execute(f"SELECT * from states WHERE id = $${id}$$")
+            
+            all_states = cursor.fetchall()  
+
+            return_data = all_states
+
+        except (Exception, Error) as error:
+            print(f'DB ERROR: ', error)
+            return_data = f"Ошибка обращения к базе данных: {error}" 
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                print("Соединение с PostgreSQL закрыто")
+                return return_data
+    try: 
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cursor.execute(f"SELECT * from states WHERE id = $${id}$$")
+        
+        all_states = cursor.fetchall()  
+
+        return_data = all_states
+
+    except (Exception, Error) as error:
+        print(f'DB ERROR: ', error)
+        return_data = f"Ошибка обращения к базе данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -898,15 +954,20 @@ def show_f():
 
     return jsonify(responce_object)
 
-# Один вопрос
-app.route('/questions', methods=['POST', 'DELETE'])
-def one_question():
-    pass
+# Одино что-то
+app.route('/question', methods=['GET'])
+def one_something():
+    responce_object = {'status': 'success'}
 
-# Одна статья
-app.route('/states', methods=['POST', 'DELETE'])
-def one_state():
-    pass
+    post_data = request.get_json()
+
+    if post_data.get('question'):
+        responce_object['all'] = show_one(post_data.get('id'), True)
+    else:
+        responce_object['all'] = show_one(post_data.get('id'), True)
+
+
+    return jsonify(responce_object)
 
 # может ли юзер удалять/менять или нет
 app.route('/check-user',methods=['POST'])
