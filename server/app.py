@@ -27,40 +27,62 @@ CORS(app, resources={r"*": {"origins": "http://localhost:5173", 'supports_creden
 
 # Добавление в картинки в БД
 def push_image(image, user_id):
-    pg = psycopg2.connect(f"""
-        host=localhost
-        dbname=postgres
-        user=postgres
-        password={os.getenv('PASSWORD_PG')}
-        port={os.getenv('PASSWORD_PG')}
-    """)
+    try: 
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
+        """)
 
 
-    cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cursor.execute(f"""
-    UPDATE users
-    SET avatar = decode('{image}', 'base64')
-    WHERE id = $$user_id$$
-""")
-    pg.commit()
-    cursor.close
-    pg.close
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute(f"""
+            UPDATE users
+            SET avatar = decode('{image}', 'base64')
+            WHERE id = $$user_id$$
+                """)
+        pg.commit()
+        cursor.close
+        pg.close
+    except (Exception, Error) as error:
+        print(f'DB ERROR: ', error)
+        return_data = f"Ошибка обращения к базе данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
 
 
 # Получение картинки из БД
 def get_image(user_id):
-    pg = psycopg2.connect(f"""
-        host=localhost
-        dbname=postgres
-        user=postgres
-        password={os.getenv('PASSWORD_PG')}
-        port={os.getenv('PASSWORD_PG')}
-    """)
+    try: 
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
+        """)
 
-    cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    cursor.execute(f"SELECT avatar from users WHERE id=$${user_id}$$")
-    to_encode = bytes(cursor.fetchone()[0])
-    return base64.b64encode(to_encode)
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute(f"SELECT avatar from users WHERE id=$${user_id}$$")
+        to_encode = bytes(cursor.fetchone()[0])
+        return base64.b64encode(to_encode)
+    except (Exception, Error) as error:
+        print(f'DB ERROR: ', error)
+        return_data = f"Ошибка обращения к базе данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
 
 
 # Обновление доп данных о 
