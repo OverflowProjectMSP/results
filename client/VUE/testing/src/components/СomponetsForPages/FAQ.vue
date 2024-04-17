@@ -77,9 +77,9 @@ export default {
         <h1 class="mb-4 fw-bold">Часто задаваемые вопросы</h1>
         <div class="faq d-flex flex-column p-4 mx-5 transition-all"
             v-for="(faq, index) in faqs">
-            <div class="quest-block d-flex flex-row justify-content-between p-1 align-items-center user-select-none"
+            <div class="quest-block d-flex flex-row justify-content-between p-1 gap-2 align-items-center user-select-none"
                 @click="openAnswer(index)">
-                <span class="fw-bold fs-3 text-center">{{ faq.question }}</span>
+                <span class="fw-bold fs-3">{{ faq.question }}</span>
                 <img :class="{ 'rotate-left': faq.isHide }" class="transition-all" :src="imgClose" alt="close">
             </div>
             <p class="fs-4" :class="{ 'd-none': faq.isHide }">
@@ -113,12 +113,20 @@ export default {
 
 @media (max-width: 1024px) {
     .faq-container {
-        margin: 17.5px !important;
+        margin: 17.5px 10px !important;
     }
 
     .faq {
         width: 100%;
         padding: 12px !important;
+    }
+
+    .quest-block span {
+        font-size: 20px !important;
+    }
+
+    .faq p {
+        font-size: 16px !important;
     }
 }
 

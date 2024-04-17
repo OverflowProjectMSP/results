@@ -4,7 +4,7 @@ axios.defaults.baseURL = 'http://localhost:5234';
 export default {
     data() {
         return {
-            question: {
+            question: { //структура получения всех данных с сервера
                 id: 123,
                 accountInfo: {
                     accountIcon: 'person.svg',
@@ -29,7 +29,7 @@ export default {
                             rang: `Решала`,
                         },
                         answerInfo: {
-                            description: `123123123, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
+                            text: `123123123, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
                             comment: 52,
                             likes: 52,
                             dislike: 36,
@@ -37,15 +37,24 @@ export default {
                     },
                 ],
 
-                text: '',
-                symbols: 0,
-                symbCount: false,
+            },
+            text: '',
+            symbols: 0,
+            symbCount: false,
+            inputAnswer: {
+                textAnswer: ``,
+                comment: 52,
+                likes: 52,
+                dislike: 36,
             },
             inputUserInfo: {
                 accountIcon: 'ava.png',
                 accountName: 'Your',
                 rang: `ИИ`,
             },
+            isBold: false,
+            isItalic: false,
+
         }
     },
     // mounted() {
@@ -54,18 +63,18 @@ export default {
     //         this.loadQuestion();
     //     }, 20000);
     // },
-    // methods: {
-    //     async loadQuestion() {
-    //         let responce = await axios.get(`/questions`, {
-    //             params: {
-    //                 id: id
-    //             }
-    //         });
-    //         this.question = responce.data;
-    //     }
-    // }
 
     methods: {
+        // async loadQuestion() {
+        //     let responce = await axios.get(`/delete`, {
+        //         params: {
+        //             id: this.question.id
+        //             question: this.question.question
+        //         }
+        //     });
+        //     this.question = responce.data;
+        // },
+
         breakLines(text) {
             return text.replace(/\n/g, "<br>");
         },
@@ -77,6 +86,31 @@ export default {
             } else {
                 this.question.symbCount = false;
             }
+        },
+
+        async addComment() {
+            this.question.answers.push({
+                answerUserInfo: this.inputUserInfo,
+                answerInfo: {
+                    text: this.inputAnswer.textAnswer,
+                    comment: this.inputAnswer.comment,
+                    likes: this.inputAnswer.likes,
+                    dislike: this.inputAnswer.dislike,
+                },
+            });
+            await axios.post(`/delete`,
+                {
+                    id: this.question.id,
+                    answerUserInfo: this.inputUserInfo,
+                    answerInfo: {
+                        text: this.inputAnswer.textAnswer,
+                        comment: this.inputAnswer.comment,
+                        likes: this.inputAnswer.likes,
+                        dislike: this.inputAnswer.dislike,
+                    },
+                },
+            );
+            this.inputAnswer.textAnswer = ``;
         }
     }
 }
@@ -107,7 +141,8 @@ export default {
                 <p>{{ question.questionInfo.views }} просмотра</p>
             </div>
         </div>
-        <a class="answer-a" href="#"><button class="answer-btn user-select-none">Ответов: {{ question.questionInfo.answer }}</button></a>
+        <a class="answer-a" href="#"><button class="answer-btn user-select-none">Ответов: {{
+            question.questionInfo.answer }}</button></a>
 
         <div class="content-2" v-for="answer in question.answers" v-if="this.question.answers.length != 0">
             <div class="account">
@@ -121,7 +156,7 @@ export default {
                 <h3>{{ question.questionInfo.title }}</h3>
             </div> -->
             <div class="description mt-3">
-                <p v-html="breakLines(answer.answerInfo.description)"></p>
+                <p v-html="breakLines(answer.answerInfo.text)"></p>
             </div>
             <div class="btn-group">
                 <div class="left">
@@ -141,7 +176,8 @@ export default {
             </div>
         </div>
         <div class="content p-2" v-else>
-            <h2 class="d-flex justify-content-center my-5 user-select-none">Будь первым, кто даст ответ на этот вопрос!</h2>
+            <h2 class="d-flex justify-content-center my-5 user-select-none">Будь первым, кто даст ответ на этот вопрос!
+            </h2>
         </div>
 
 
@@ -156,21 +192,15 @@ export default {
                 </div>
             </div>
             <div class="content-3-without mb-3">
-                <textarea v-model="question.text" @input="symbolsCount" maxlength="2000" class="comm-input" name=""
-                    id="" placeholder="Оставь свой ответ:"></textarea>
+                <textarea v-model="inputAnswer.textAnswer" @input="symbolsCount" maxlength="2000" class="comm-input"
+                    placeholder="Оставь свой ответ:" :class="{ 'fw-bold': isBold, 'fst-italic': isItalic }"></textarea>
                 <p :class="{ 'red-text': this.question.symbCount }">{{ question.symbols }} / 2000</p>
-                <div class="wrapper d-flex justify-content-between align-items-center my-5 gap-3">
-                    <div class="btn-class-container border border-dark-subtle fs-3 rounded-2 d-flex">
-                        <span @click="this.isBold = !this.isBold" role="button"
-                            class="word fw-bold border-end p-3 px-4 user-select-none">B</span>
-                        <span @click="this.isItalic = !this.isItalic" role="button"
-                            class="word fst-italic border-end p-3 user-select-none px-4">i</span>
-                        <span role="button" class="word border-end p-3 px-4 user-select-none">...</span>
-                    </div>
-                    <button @click="addComment()" type="submit" class="toMain btgr p-4 fs-4">Отправить!</button>
-                </div>
+            </div>
+            <div class="send-ans d-flex justify-content-end">
+                <button @click="addComment()" type="submit" class="toMain btgr p-4 fs-4">Отправить!</button>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -178,7 +208,37 @@ export default {
 img {
     user-select: none;
 }
+
 /* CONTENT-1 */
+
+@media (max-width: 768px) {
+    .wrapper {
+        margin: 10px 0 !important;
+    }
+
+    .comment-container {
+        margin: 5rem 1.5rem !important;
+    }
+
+    .info-block {
+        flex-direction: column !important;
+        align-items: start !important;
+    }
+
+    .word {
+        padding: 6px 15px !important;
+    }
+
+    .send-btn {
+        padding: 10px 10px !important;
+        font-size: 20px !important;
+    }
+
+    .comment-container {
+        margin: 0 !important;
+        padding: 20px !important;
+    }
+}
 
 .content-1 {
     /* background-color: rgb(225, 225, 225); */
