@@ -44,7 +44,7 @@ def push_image(image, user_id):
             WHERE id = $$user_id$$
                 """)
         pg.commit()
-
+        print('Изобрадение было добавлено')
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
@@ -71,6 +71,7 @@ def get_image(user_id):
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cursor.execute(f"SELECT avatar from users WHERE id=$${user_id}$$")
         to_encode = bytes(cursor.fetchone()[0])
+        print('base64 успешно отправлен')
         return base64.b64encode(to_encode)
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
@@ -108,7 +109,7 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
                         city=$${city}$$
                     WHERE id=$${id}$$;""")
         pg.commit()
-            
+
         return_data = "Данные изменены"
 
     except (Exception, Error) as error:
@@ -143,13 +144,13 @@ def login_user(email, pas):
             cursor.execute(f"SELECT * FROM users WHERE email=$${email}$$")
             user = cursor.fetchone()
 
-            # Проверка пороля
+            # Проверка пароля
             if user[3] == pas: 
                 # res.set_cookie(f'{user[0]}', f'{user[1]}', max_age = 3600)
                 session['id'] = user[0] # инициализация сессии
                 session.modified = True
-                return_data = f"Вход выполнен! Здравствуйте, {session['id']}"
 
+                return_data = f"Вход выполнен! Здравствуйте, {session['id']}"
 
             else: return_data = "Неверный пароль!"
         else: return_data = "Аккаунта с такой почтой не существует!"
@@ -298,6 +299,8 @@ def render_questions():
 
         all_questions = cursor.fetchall()  
 
+        print('Вопросы отображены')
+
         return_data = all_questions
 
     except (Exception, Error) as error:
@@ -312,10 +315,10 @@ def render_questions():
             return return_data
 
 
-# Изменения пороля, если user знает страый
+# Изменения пароля, если user знает страый
 def change_password(password, old_password, email):
     try: 
-        if check_old_password(old_password, email): # Вернет True если пороли стовпадает со старым 
+        if check_old_password(old_password, email): # Вернет True если пароли стовпадает со старым 
             pg = psycopg2.connect(f"""
                 host=localhost
                 dbname=postgres
@@ -330,6 +333,8 @@ def change_password(password, old_password, email):
                             WHERE email=$${email}$$;
                             ''')
             pg.commit()
+
+            print('Пароль изменен')
 
             return_data = True
 
@@ -346,7 +351,7 @@ def change_password(password, old_password, email):
             return return_data
 
 
-# Проверка совпадениеия старого пороля с ныненшним
+# Проверка совпадениеия старого пароля с ныненшним
 def check_old_password(email, password):
     try:
         pg = psycopg2.connect(f"""
@@ -362,7 +367,7 @@ def check_old_password(email, password):
 
         if password_to_check == password:
             return_data = True
-
+            print('Пароли не совпадают')
         else: return_data = False
 
     except (Exception, Error) as error:
@@ -377,7 +382,7 @@ def check_old_password(email, password):
             return return_data
 
 
-# Измения пороля с праолем на email
+# Измения пароля с праолем на email
 def change_password_send(password, email):
     try: 
         pg = psycopg2.connect(f"""
@@ -412,10 +417,12 @@ def send_code(email):
 
     code_pas = ""
 
+# ------------------------Улучшить бы----------------------------------------------------
     for i in range(4):
         a = random.randint(0, 9)
         code_pas += str(a)
-
+#-----------------------------------------------------------------------------------------
+    
     msg = MIMEText(f"Ваш код для изменения пароля: {code_pas}. Не сообщайте его никому!")
     msg["Subject"] = "Ваш код"
 
@@ -426,16 +433,23 @@ def send_code(email):
 
     server.sendmail(sender, email, msg.as_string())
 
-    # держим пороль в сессии
+    # держим пароль в сессии
     session['code'] = code_pas
     session.modified = True
+
+    print('Пароль отправлен на почту')
+
+    return 0
 
 
 # Проверка совпадения кода с Frontend и реального кода
 def check_password(password, true_password):
     if password == true_password:
         return_data = True
-    else: return_data = True
+        print('Пароли совпали')
+    else: 
+        print('Пароли не совпали')
+        return_data = False
     session.pop('sent-password', None)
     return return_data
 
@@ -457,6 +471,8 @@ def chat(id, time, msg):
         message_to_write = (message_id, id, time, msg)
         cursor.execute(f"INSERT INTO messages(message_id, user_id, time, msg) VALUES {message_to_write}")
         pg.commit()
+
+        print('Сообщение добавлено')
 
         return_data = message_id
 
@@ -498,7 +514,8 @@ def add_states(discriptions='', details='', id=''):
             cursor.execute(f"INSERT INTO states(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
             pg.commit()
             
-            
+        print('Статья добавлена')
+
         return_data = "Вопрос добавлен"
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
@@ -531,10 +548,12 @@ def show_all_by_user(id):
         states = cursor.execute(f'''SELEСT * FROM states
                                 WHERE id=$${id}$$''')
         
+        print('Информация отпраленна')
+
         return_data = {
-                'questions': questions,
-                'states': states
-                }
+            'questions': questions,
+            'states': states
+        }
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
@@ -689,6 +708,7 @@ def show_forum(filtre):
             "questions": questions
         }
 
+        print(f'Вся информация о форуме {filtre} была отправлена')
         pg.commit()
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
@@ -702,7 +722,7 @@ def show_forum(filtre):
             return return_data
 
 
-# Отображение всех вапросов на frontend
+# Отображение всех статей на frontend
 def render_states():
     try: 
         pg = psycopg2.connect(f"""
@@ -718,6 +738,7 @@ def render_states():
         cursor.execute(f"SELECT * from states")
         
         all_states = cursor.fetchall()  
+        print('все статьи отображены')
 
         return_data = all_states
 
@@ -733,6 +754,7 @@ def render_states():
             return return_data
         
 
+# Показываем что-то определенное
 def show_one(id, isQ):
     if isQ:
         try: 
@@ -749,6 +771,7 @@ def show_one(id, isQ):
             cursor.execute(f"SELECT * from states WHERE id = $${id}$$")
             
             all_states = cursor.fetchall()  
+
 
             return_data = all_states
 
@@ -1014,6 +1037,8 @@ def delete_():
         responce_object['all'] = delete(post_data.get('id'), True) # а что - решим потом (название поменять надо)
     else:
         responce_object['all'] = delete(post_data.get('id'), False) # а что - решим потом (название поменять надо)
+    
+    print(responce_object['all'])
 
     return jsonify(responce_object)
 
@@ -1029,6 +1054,7 @@ def change_():
     else: 
         responce_object['all'] = change(post_data.get('id'), post_data.get('all'), False) # а что - решим потом (название поменять надо)
 
+    print(responce_object['all'])
 
     return jsonify(responce_object)
 
@@ -1065,6 +1091,7 @@ def check():
 
     response_object['all'] = show_all_by_user(post_data.get('id'))
 
+    print('Отправлено')
     return  jsonify(response_object)
 
 if __name__ == '__main__':
