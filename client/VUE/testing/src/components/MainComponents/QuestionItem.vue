@@ -37,10 +37,10 @@ export default {
                     },
                 ],
 
-                text: '',
-                symbols: 0,
-                symbCount: false,
             },
+            text: '',
+            symbols: 0,
+            symbCount: false,
             inputAnswer: {
                 textAnswer: ``,
                 comment: 52,
@@ -66,9 +66,10 @@ export default {
 
     methods: {
         // async loadQuestion() {
-        //     let responce = await axios.get(`/questions`, {
+        //     let responce = await axios.get(`/delete`, {
         //         params: {
-        //             id: id
+        //             id: this.question.id
+        //             question: this.question.question
         //         }
         //     });
         //     this.question = responce.data;
@@ -88,9 +89,18 @@ export default {
         },
 
         async addComment() {
-            console.log(this.inputAnswer.textAnswer);
-            await axios.post(`/questions`,
+            this.question.answers.push({
+                answerUserInfo: this.inputUserInfo,
+                answerInfo: {
+                    text: this.inputAnswer.textAnswer,
+                    comment: this.inputAnswer.comment,
+                    likes: this.inputAnswer.likes,
+                    dislike: this.inputAnswer.dislike,
+                },
+            });
+            await axios.post(`/delete`,
                 {
+                    id: this.question.id,
                     answerUserInfo: this.inputUserInfo,
                     answerInfo: {
                         text: this.inputAnswer.textAnswer,
@@ -186,17 +196,11 @@ export default {
                     placeholder="Оставь свой ответ:" :class="{ 'fw-bold': isBold, 'fst-italic': isItalic }"></textarea>
                 <p :class="{ 'red-text': this.question.symbCount }">{{ question.symbols }} / 2000</p>
             </div>
-        </div>
-        <div class="wrapper d-flex justify-content-between align-items-center my-3 gap-3">
-            <div class="btn-class-container border border-dark-subtle fs-3 rounded-2 d-flex">
-                <span @click="this.isBold = !this.isBold" role="button"
-                    class="word fw-bold border-end p-3 px-4 user-select-none">B</span>
-                <span @click="this.isItalic = !this.isItalic" role="button"
-                    class="word fst-italic border-end p-3 user-select-none px-4">i</span>
-                <span role="button" class="word border-end p-3 px-4 user-select-none">...</span>
+            <div class="send-ans d-flex justify-content-end">
+                <button @click="addComment()" type="submit" class="toMain btgr p-4 fs-4">Отправить!</button>
             </div>
-            <button @click="addComment()" type="submit" class="toMain btgr p-4 fs-4">Отправить!</button>
         </div>
+
     </div>
 </template>
 

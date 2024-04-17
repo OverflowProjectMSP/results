@@ -17,7 +17,8 @@ export default {
                     answers: 423,
                     language: 'Python',
                     complexity: 'Средне',
-
+                    id: 0,
+                    question: false,            
                 },
                 {
                     title: `Как создать переменную?`,
@@ -27,6 +28,8 @@ export default {
                     answers: 423,
                     language: 'C++',
                     complexity: 'Средне',
+                    id: 1,
+                    question: false,            
                 },
                 {
                     title: `Как создать переменную?`,
@@ -36,6 +39,8 @@ export default {
                     answers: 423,
                     language: 'Асембелер',
                     complexity: 'Средне',
+                    id: 2,
+                    question: false,                
                 },
             ],
             Show: false,
@@ -86,9 +91,9 @@ export default {
 
 
 <!-- Див с виджетами -->
-<div class="con mt-3">
-<a href="#/CommentsPost">
-    <vid-comp :item="item"  v-for="item in items" role="button" />
+<div class="con mt-3" v-for="item in items">
+<a :href="`#/CommentsPost?id=` + item.id + `&question=` + item.question">
+    <vid-comp :item="item" role="button" />
 </a>
 </div>
 

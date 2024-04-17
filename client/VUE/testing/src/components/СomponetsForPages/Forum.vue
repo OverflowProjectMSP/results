@@ -14,6 +14,7 @@ export default {
                     answers: 28,
                     Decided: true,
                     id: 123,
+                    question: true
                 },
                 {
                     accountIcon: 'person1.svg',
@@ -23,6 +24,7 @@ export default {
                     answers: 34,
                     Decided: false,
                     id: 124,
+                    question: true
                 },
 
             ],
@@ -74,7 +76,7 @@ export default {
                 </div>
             </div>
             <div class="answer">
-                <a :href="`#/QuestionItem?id=` + post.id"><button><img :src="'src/assets/comments.svg'" alt=""><span>{{ post.answers }}</span>
+                <a :href="`#/QuestionItem?id=` + post.id + `&question=${post.question}`"><button><img :src="'src/assets/comments.svg'" alt=""><span>{{ post.answers }}</span>
                         Ответов</button></a>
             </div>
         </div>

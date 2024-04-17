@@ -88,12 +88,7 @@ export default {
     <textarea v-model="comment" class="comment-input w-100 rounded-4 p-3 border-dark-subtle fs-4 mt-3" cols="20" rows="10" 
     placeholder="Оставь свой комментарий" :class="{'fw-bold': isBold, 'fst-italic': isItalic}"></textarea>
     <div class="error fs-4 fw-medium transition-all" type="text" :style="{'color': valid}" :class="{'opacity-0': hideError}">{{ error }}</div>
-    <div class="wrapper d-flex justify-content-between align-items-center my-2 gap-3">
-        <div class="btn-class-container border border-dark-subtle fs-3 rounded-2 d-flex">
-            <span @click="this.isBold = !this.isBold" role="button" class="word fw-bold border-end p-3 px-4 user-select-none">B</span>
-            <span @click="this.isItalic = !this.isItalic" role="button" class="word fst-italic border-end p-3 user-select-none px-4">i</span>
-            <span role="button" class="word border-end p-3 px-4 user-select-none">...</span>
-        </div>
+    <div class="wrapper d-flex justify-content-end my-1">
         <button @click="addComment()" type="submit" class="btn send-btn btn-outline-primary p-4 fs-4">Отправить!</button>
     </div>
 </div>

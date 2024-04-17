@@ -1,56 +1,75 @@
 <script>
+import DeveloperProfile from '../СomponetsForPages/DeveloperProfile.vue';
 export default {
+    components: { DeveloperProfile },
     data() {
         return {
             devolepers: [
                 {
                     name: `kosty_py`,
                     role: `Тимлид/Старший бекенд разработчик`,
-                    imageProfileDS: `kosty-py.png`
+                    imageProfileDS: `kosty-py.png`,
+                    dsProfile: `kosty_py`
                 },
                 {
                     name: `kinestrik`,
                     role: `Заместитель тимлида/Старший фронтенд разработчик`,
-                    imageProfileDS: `Kinestrick.png`
+                    imageProfileDS: `Kinestrick.png`,
+                    dsProfile: `kinestrik`
                 },
                 {
                     name: `therisingdream`,
                     role: `Заместитетель ведущего Фронтенд разработчика`,
-                    imageProfileDS: `therisingdream.png`
+                    imageProfileDS: `therisingdream.png`,
+                    dsProfile: `therisingdream`
                 },
                 {
                     name: `febolo`,
                     role: `Заместитель ведущего Бекенд разработчика`,
-                    imageProfileDS: `febolo.png`
-                },
-                {
-                    name: `habbock`,
-                    role: `Фронтенд разработчик`,
-                    imageProfileDS: `hebber.png`
-                },
-                {
-                    name: `kenmaxd`,
-                    role: `Дизайнер/Фронтенд разработчик`,
-                    imageProfileDS: `kenma.gif`
+                    imageProfileDS: `febolo.png`,
+                    dsProfile: `febolo`
                 },
                 {
                     name: `garleenn`,
                     role: `Лучший фронтенд разработчик`,
-                    imageProfileDS: `garleen.png`
+                    imageProfileDS: `garleen.png`,
+                    dsProfile: `garleenn`,
+                    tgProfile: `@Grandb1s`,
+                    vkProfile: `ivangorbenko52`,
+                },
+                {
+                    name: `habbock`,
+                    role: `Фронтенд разработчик`,
+                    imageProfileDS: `hebber.png`,
+                    dsProfile: `habbock`,
+                    tgProfile: `HaBBeRL`,
+                    vkProfile: `b13hbbr`,
                 },
                 {
                     name: `nikit0_17`,
                     role: `Главный дизайнер`,
-                    imageProfileDS: `disainerImg.png`
+                    imageProfileDS: `disainerImg.png`,
+                    dsProfile: `nikit0_17`
+                },
+                {
+                    name: `kenmaxd`,
+                    role: `Дизайнер/Фронтенд разработчик`,
+                    imageProfileDS: `kenma.gif`,
+                    dsProfile: `kenmaxd`
                 },
             ],
+
             index: 0,
             index1: 1,
             index2: 2,
             index3: 3,
+
             names: [],
             roles: [],
             images: [],
+
+            isHide: false,
+            indexOfDev: null,
         }
     },
     mounted() {
@@ -97,6 +116,11 @@ export default {
             if (this.index3 < 0) {
                 this.index3 = this.roles.length - 1;
             }
+        },
+
+        showDev(index) {
+            this.isHide = !this.isHide;
+            this.indexOfDev = index;
         }
     }
 }
@@ -111,25 +135,25 @@ export default {
                 class="arrow arrow-left mx-5 d-flex justify-content-center align-items-center gap-2 fs-1 fw-bold user-select-none">
                 < </div>
                     <div class="collaps-container d-flex justify-content-center flex-wrap gap-4">
-                        <div class="dev-card d-flex flex-column gap-0 align-items-center">
+                        <div class="dev-card d-flex flex-column gap-0 align-items-center" @click="showDev(this.index)">
                             <img class="rounded-2 user-select-none" :src="`src/assets/` + images[index]"
                                 :alt="names[index]">
                             <h4 class="mt-2">{{ names[index] }}</h4>
                             <span class="text-center">{{ roles[index] }}</span>
                         </div>
-                        <div class="dev-card dev-card-2 d-flex flex-column gap-0 align-items-center">
+                        <div class="dev-card dev-card-2 d-flex flex-column gap-0 align-items-center" @click="showDev(this.index1)">
                             <img class="rounded-2 user-select-none" :src="`src/assets/` + images[index1]"
                                 :alt="names[index1]">
                             <h4 class="mt-2">{{ names[index1] }}</h4>
                             <span class="text-center">{{ roles[index1] }}</span>
                         </div>
-                        <div class="dev-card dev-card-3 d-flex flex-column gap-0 align-items-center">
+                        <div class="dev-card dev-card-3 d-flex flex-column gap-0 align-items-center" @click="showDev(this.index2)">
                             <img class="rounded-2 user-select-none" :src="`src/assets/` + images[index2]"
                                 :alt="names[index2]">
                             <h4 class="mt-2">{{ names[index2] }}</h4>
                             <span class="text-center">{{ roles[index2] }}</span>
                         </div>
-                        <div class="dev-card dev-card-4 d-flex flex-column gap-0 align-items-center">
+                        <div class="dev-card dev-card-4 d-flex flex-column gap-0 align-items-center" @click="showDev(this.index3)">
                             <img class="rounded-2 user-select-none" :src="`src/assets/` + images[index3]"
                                 :alt="names[index3]">
                             <h4 class="mt-2">{{ names[index3] }}</h4>
@@ -145,6 +169,8 @@ export default {
             <h4>UpFollow</h4>
             <span><a class="text-white text-muted" href="#/FAQ">FAQ</a></span>
         </div>
+
+        <DeveloperProfile v-if="this.isHide" :developer="devolepers[indexOfDev]" @showDev="showDev"/>
 
 </template>
 
