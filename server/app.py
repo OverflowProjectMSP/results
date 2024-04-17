@@ -44,8 +44,7 @@ def push_image(image, user_id):
             WHERE id = $$user_id$$
                 """)
         pg.commit()
-        cursor.close
-        pg.close
+
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
@@ -1070,3 +1069,14 @@ def check():
 
 if __name__ == '__main__':
     app.run()
+
+'''
+from flask import jsonify, make_response
+
+@app.route('/your-endpoint')
+def your_function():
+    response = make_response(jsonify(my_dictionary))
+    # Добавляем заголовок Content-Type
+    response.headers['Content-Type'] = 'application/json'
+    return response
+'''
