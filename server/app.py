@@ -125,7 +125,7 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
 
 
 # LogIn
-def login_user(email, pas):
+def login_user(email, pas, responce):
 
     try:
         pg = psycopg2.connect(f"""
@@ -146,14 +146,16 @@ def login_user(email, pas):
 
             # Проверка пароля
             if user[3] == pas: 
-                # res.set_cookie(f'{user[0]}', f'{user[1]}', max_age = 3600)
-                session['id'] = user[0] # инициализация сессии
-                session.modified = True
+                return_data = user[2]
 
-                return_data = f"Вход выполнен! Здравствуйте, {session['id']}"
+                print(f"Вход выполнен! Здравствуйте, {user[2]}")
 
-            else: return_data = "Неверный пароль!"
-        else: return_data = "Аккаунта с такой почтой не существует!"
+            else: 
+                print("Неверный пароль!")
+                return_data = 'Неверный пароль!'
+        else: 
+            print("Аккаунта с такой почтой не существует!")
+            refresh_data = "Аккаунта с такой почтой не существует!"
 
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
@@ -863,21 +865,22 @@ def user_info():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     response_object = {'status': 'success'} #БаZа
-    resp = make_response('Cookie set!') #куки-заготовка
+    resp = make_response(jsonify(response_object)) #куки-заготовка
 
     if request.method == 'POST':
         post_data = request.get_json()
+        
+        a = login_user(post_data.get('user'), post_data.get('password'))
 
-        resp.set_cookie('my_persistent_cookie', value='some_value', max_age=60*60*24)
-        
-        print(login_user(post_data.get('user'), post_data.get('password'))) #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
-        
-        return resp
-        
+        if type(a) == int: #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
+            resp.set_cookie('all', a)
+            resp['info'] = 'ok'
+        else: resp['info'] = a
+
     else:
         response_object['message'] = db_get()
         
-        return jsonify(response_object)
+    return resp
 
 #Новый вопрос
 @app.route('/new-question', methods=['POST'])
@@ -954,15 +957,6 @@ def create_state():
 
     print(add_states(post_data.get('discriptions'), post_data.get('details'), session.get('id'))) #Вызов и debug функции добавления вопроса в бд
     
-    return jsonify(responce_object)
-
-# Все от ожного юзера
-app.route('/show-all-by-user', methods = ['GET'])
-def show_by_user():
-    responce_object = {'status' : 'success'} #БаZа
-
-    responce_object['all'] = show_all_by_user(session.get('id'))
-
     return jsonify(responce_object)
 
 # Фильтр статей
@@ -1084,7 +1078,7 @@ def check():
 
 # проверка может ли юзер исправлять что-то
 @app.route('/show-all-by-user', methods=['GET'])
-def check():
+def check_():
     response_object = {'status': 'success'} #БаZа
 
     post_data = request.get_json()
