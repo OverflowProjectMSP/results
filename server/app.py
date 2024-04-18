@@ -125,7 +125,7 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
 
 
 # LogIn
-def login_user(email, pas, responce):
+def login_user(email, pas):
 
     try:
         pg = psycopg2.connect(f"""
