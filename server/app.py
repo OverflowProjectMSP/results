@@ -872,10 +872,11 @@ def login():
         post_data = request.get_json()
         a = login_user(post_data.get('email'), post_data.get('password'))
         print(a)
-        if type(a) == int: #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
-            # resp.set_cookie('all', a)
+        if a == 'ok': #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
+            resp.set_cookie('all', a)
             session['all'] = a
             session.modified = True
+            print(session.get('all'))
             resp.set_data('ok')
         else: resp.set_data(a)
 
