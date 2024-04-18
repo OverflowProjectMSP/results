@@ -1,4 +1,8 @@
 <script>
+import axios from 'axios';
+axios.defaults.baseURL = 'http://127.0.0.1:5000';
+axios.defaults.withCredentials = true;
+
 export default {
     data() {
         return {
@@ -36,13 +40,15 @@ export default {
             }
         },
         async login() {
+            // console.log(1);
             let res = await axios.post('/login', {    
+                withCredentials : true,
                 email: this.email,
                 password: this.password
             });
-            if(res.data.info != 'ok') {
-                this.error = res.data.info;
-                console.log(res);
+            if(res.data != 'ok') {
+                this.error = res.data;
+                // console.log(res);
             } else {
                 console.log(res);
             }
@@ -55,7 +61,7 @@ export default {
 <template>
     <div class="container">
         <h1>Вход</h1>
-        <form action="#!" @submit.prevent="login">
+        <form @submit.prevent="login">
             <input class="form-item" v-model="email" placeholder="Email" type="email" name="" id="">
             <div class="password">
                 <input class="form-item" v-model="password" :type="showPassword" placeholder="Пароль" type="password"
@@ -69,7 +75,7 @@ export default {
                 <a href="#/Registration">Зарегистрироваться</a>
             </div>
             <p class="error">{{ error }}</p>
-            <button class="btn-reg" @click="check">Войти</button>
+            <button type="submit" class="btn-reg" @click="login">Войти</button>
         </div>
     </div>
 </template>

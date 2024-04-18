@@ -16,10 +16,10 @@ load_dotenv()
 # instantiate the app
 app = Flask(__name__)
 
-app.secret_key = os.getenv('SECERET_KEY')
+app.secret_key = b'eewj'
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
-app.config["SESSION_COOKIE_SECURE"] =  True
+app.config["SESSION_COOKIE_SECURE"] =  'None'
 
 # enable CORS
 CORS(app, resources={r"*": {"origins": "http://localhost:5173", 'supports_credentials': True}})
@@ -126,20 +126,20 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
 
 # LogIn
 def login_user(email, pas):
-
     try:
         pg = psycopg2.connect(f"""
             host=localhost
             dbname=postgres
             user=postgres
-            password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            password=kos120675
+            port=5432
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cursor.execute(f"SELECT COUNT(*) FROM users WHERE email=$${email}$$")
+
         # Проверка есть ли такой пользователь 
-        if cursor.fetchone()[0] == 1:
+        if cursor.fetchall()[0][0]==1:
 
             cursor.execute(f"SELECT * FROM users WHERE email=$${email}$$")
             user = cursor.fetchone()
@@ -149,13 +149,14 @@ def login_user(email, pas):
                 return_data = user[2]
 
                 print(f"Вход выполнен! Здравствуйте, {user[2]}")
+                return_data='ok'
 
             else: 
                 print("Неверный пароль!")
                 return_data = 'Неверный пароль!'
         else: 
             print("Аккаунта с такой почтой не существует!")
-            refresh_data = "Аккаунта с такой почтой не существует!"
+            return_data = "Аккаунта с такой почтой не существует!"
 
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
@@ -866,16 +867,17 @@ def user_info():
 def login():
     response_object = {'status': 'success'} #БаZа
     resp = make_response(jsonify(response_object)) #куки-заготовка
-
+    resp.headers['Content-Type'] = 'text/plain'
     if request.method == 'POST':
         post_data = request.get_json()
-        
-        a = login_user(post_data.get('user'), post_data.get('password'))
-
+        a = login_user(post_data.get('email'), post_data.get('password'))
+        print(a)
         if type(a) == int: #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
-            resp.set_cookie('all', a)
-            resp['info'] = 'ok'
-        else: resp['info'] = a
+            # resp.set_cookie('all', a)
+            session['all'] = a
+            session.modified = True
+            resp.set_data('ok')
+        else: resp.set_data(a)
 
     else:
         response_object['message'] = db_get()
