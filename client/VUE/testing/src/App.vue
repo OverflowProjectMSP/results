@@ -19,7 +19,7 @@ export default {
         ModelWindowVue,
     },
     data() {
-        return { pass } // А где Олег??? Пропал Олежа...
+        return { pass } // А где Олег??? Пропал Олежа... Или не пропал?
     },
     methods: { pass }
 }
