@@ -1,12 +1,6 @@
 <script>
-
-
-
 export default {
-    components: {
-
-
-    },
+    components: {  },
 
     data() {
         return {
