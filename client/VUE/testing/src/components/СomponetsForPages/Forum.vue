@@ -1,5 +1,7 @@
 <script>
-import axios from 'axios';
+import axios from 'axios'
+axios.defaults.baseURL = 'http://127.0.0.1:5000';
+
 import SideChatMenu from '../MainComponents/SideChatMenu.vue';
 export default {
     components: { SideChatMenu },

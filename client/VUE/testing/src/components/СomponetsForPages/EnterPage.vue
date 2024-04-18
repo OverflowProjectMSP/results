@@ -1,4 +1,7 @@
 <script>
+import axios from 'axios'
+axios.defaults.baseURL = 'http://127.0.0.1:5000';
+
 export default {
     data() {
         return {
@@ -35,7 +38,18 @@ export default {
                 this.eyeImg = '/src/assets/eye.svg'
             }
         },
-
+        async login() {
+            let res = await axios.post('/login', {    
+                email: this.email,
+                password: this.password
+            });
+            if(res.data.info != 'ok') {
+                this.error = res.data.info;
+                console.log(res);
+            } else {
+                console.log(res);
+            }
+        },
     }
 }
 
@@ -44,7 +58,7 @@ export default {
 <template>
     <div class="container">
         <h1>Вход</h1>
-        <form action="#!">
+        <form action="#!" @submit.prevent="login">
             <input class="form-item" v-model="email" placeholder="Email" type="email" name="" id="">
             <div class="password">
                 <input class="form-item" v-model="password" :type="showPassword" placeholder="Пароль" type="password"

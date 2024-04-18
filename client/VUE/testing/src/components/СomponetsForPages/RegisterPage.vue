@@ -1,4 +1,6 @@
 <script>
+import axios from 'axios'
+axios.defaults.baseURL = 'http://127.0.0.1:5000';
 
 export default {
     data() {
@@ -69,7 +71,13 @@ export default {
                 this.eyeImg2 = '/src/assets/eye.svg'
             }
         },
-
+        async register() {
+            await axios.post('/registration', {
+                name: this.nickname,
+                email: this.email,
+                password: this.password
+            });
+        }
     }
 }
 
@@ -78,7 +86,7 @@ export default {
 <template>
     <div class="container">
         <h1>Регистрация</h1>
-        <form action="#!">
+        <form action="#!" @submit.prevent="register">
             <input class="form-item form-item-1" v-model="nickname" placeholder="Введите никнейм" type="email" name=""
                 id="">
             <input class="form-item form-item-1" v-model="email" placeholder="Email" type="email" name="" id="">
