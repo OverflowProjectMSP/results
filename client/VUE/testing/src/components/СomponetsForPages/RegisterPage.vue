@@ -1,4 +1,6 @@
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -68,7 +70,9 @@ export default {
                 this.eyeImg2 = '/src/assets/eye.svg'
             }
         },
+        
         async register() {
+            this.check();
             await axios.post('/registration', {
                 name: this.nickname,
                 email: this.email,
@@ -101,7 +105,7 @@ export default {
         <div class="error-end-btn">
             <p class="have_account">Уже есть аккаунт? <a href="#/Login">Войти</a></p>
             <p class="error">{{ error }}</p>
-            <button class="btn-reg" @click="check">Зарегистрироваться</button>
+            <button type="submit" class="btn-reg" @click="register">Зарегистрироваться</button>
         </div>
     </div>
 </template>

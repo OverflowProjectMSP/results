@@ -40,7 +40,8 @@ export default {
             }
         },
         async login() {
-            // console.log(1);
+            this.check();
+
             let res = await axios.post('/login', {    
                 withCredentials : true,
                 email: this.email,
@@ -48,9 +49,8 @@ export default {
             });
             if(res.data != 'ok') {
                 this.error = res.data;
-                // console.log(res);
             } else {
-                console.log(res);
+                // нудно добавить перехрд на след страницу
             }
         },
     }
