@@ -97,6 +97,7 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        print(id)
         # UPDATE user-info
         cursor.execute(f"""UPDATE users 
                     SET name = $${name}$$,
@@ -149,7 +150,7 @@ def login_user(email, pas):
                 return_data = user[2]
 
                 print(f"Вход выполнен! Здравствуйте, {user[2]}")
-                return_data=['ok', user[1]]
+                return_data=['ok', user[0]]
 
             else: 
                 print("Неверный пароль!")
@@ -847,6 +848,7 @@ def user_info():
     if request.method == 'PUT':
         #Вызов функции обновления бд
         post_data = request.get_json()
+        post_data = post_data.get('form')
         refresh_data(post_data.get('Name'), 
                      post_data.get('Surname'), 
                      post_data.get('interestings'), 
@@ -874,7 +876,7 @@ def login():
 
         if a[0] == 'ok': #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
             resp.set_cookie('all', a[1])
-            session['all'] = a[1]
+            session['id'] = a[1]
             session.modified = True
             resp.set_data('ok')
 
