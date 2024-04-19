@@ -893,7 +893,7 @@ def new_question():
     response_object = {'status': 'success'} #БаZа
 
     post_data = request.get_json()
-
+    post_data = post_data.get('form')
     print(add_question(post_data.get('discriptions'), post_data.get('details'), post_data.get('dificulty'), post_data.get('tag'), session.get('id'))) #Вызов и debug функции добавления вопроса в бд
     
     return jsonify(response_object)
