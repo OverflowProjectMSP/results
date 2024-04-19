@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios';
 export default {
     components: {  },
 
@@ -23,7 +24,7 @@ export default {
     },
     methods: {
         prevue() {
-            if (this.Input.length > 0 && this.sloz.length <= 7 && this.language.length >= 3) {
+            if (this.form.descriptions.length > 0 && this.form.dificulty.length <= 7) {
                 this.color = `green`;
                 this.Vid = !this.Vid;
                 this.error = this.good;
@@ -147,14 +148,14 @@ export default {
                         <div class="left">
                             <div class="top-1">
                                 <div class="name">
-                                    <p><img src="" alt="" class="t">{{ language }}</p>
+                                    <p><img src="" alt="" class="t">{{ form.tag }}</p>
                                 </div>
                                 <div class="id middle">
-                                    <p><img src="" alt="" class="t">{{ sloz }}</p>
+                                    <p><img src="" alt="" class="t">{{ form.dificulty }}</p>
                                 </div>
                             </div>
                             <div class="mid-1">
-                                <p>{{ Input }}</p>
+                                <p>{{ form.descriptions }}</p>
                             </div>
                             <div class="bottom-1">
                                 <div class="el">0 подписчика</div>

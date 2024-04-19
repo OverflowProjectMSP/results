@@ -1,8 +1,34 @@
 <script>
+import axios from 'axios';
 import HeaderComp from './components/MainComponents/HeaderComp.vue';
 export default {
     componets: {
         HeaderComp
+    },
+
+    data() {
+        return {
+            form: {
+                descriptions: ``,
+                details: ``,
+                tag: ``,   
+            },
+
+            error: ``,
+        }
+    },
+
+    methods: {
+        async addState() {
+            if (this.form.descriptions.length > 40 && this.form.details.length >= 0 && this.form.tag) {
+                await axios.post('/new-state', {
+                    form: this.form
+                });
+                this.error = ``;
+            } else {
+                this.error = `Введите больше информации`;
+            };
+        }
     }
 }
 </script>
@@ -19,11 +45,11 @@ export default {
         <h4>
             Название статьи
         </h4>
-        <p class="transparent">
+        <p class="transparent mb-0">
             Сформулируйте название так, чтобы сразу было понятно, о чём речь.
         </p>
         <form>
-            <input type="email" class="form-control" id="inputlg">
+            <input type="email" class="form-control" id="inputlg" v-model="form.descriptions">
         </form>
     </div>
     <div class="text">
@@ -45,16 +71,9 @@ export default {
                 <button type="button" class="btn btn-secondary">&#11015; <b>Добавить файл</b></button>
                 <button type="button" class="btn btn-secondary">&#11014; <b>Добавить фото</b></button>
             </div>
-            <div class="forms">
+            <div class="forms"> 
                 <div class="form1">
-                    <select class="form-select" style="border-color: #B3B3B3;" aria-label="Default select example">
-                        <option selected class="main">Простой</option>
-                        <option value="1" class="first">Средний</option>
-                        <option value="2" class="second">Сложный</option>
-                    </select>
-                </div>
-                <div class="form2">
-                    <select class="form-select" style="border-color: #B3B3  3;" aria-label="Default select example">
+                    <select class="form-select" style="border-color: #B3B3  3;" aria-label="Default select example" v-model="form.tag">
                         <option selected class="python"><b>Python</b></option>
                         <option value="1" class="js"><b>JS</b></option>
                         <option value="2" class="php"><b>PHP</b></option>
@@ -63,7 +82,7 @@ export default {
             </div>
         </div>
         <div class="form-floating">
-            <textarea class="form-control" id="formchik" style="border-color: #B3B3B3;"></textarea>
+            <textarea class="form-control" id="formchik" style="border-color: #B3B3B3;" v-model="form.details"></textarea>
         </div>
 
     </div>
@@ -72,7 +91,8 @@ export default {
 
     <div class="row pt-5 block">
         <div class="col-6">
-            <button id="save"><b>Опубликовать</b></button>
+            <button id="save" @click="addState"><b>Опубликовать</b></button>
+            <span class="text-danger" v-if="this.error">{{ error }}</span>
         </div>
         <div class="col-6">
             <button id="preview"><b>Предпосмотр</b></button>
