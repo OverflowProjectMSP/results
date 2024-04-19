@@ -12,8 +12,14 @@ export default {
             greenlabel: true,
             color: `green`,
             language: ``,
-            error: ''
+            error: '',
 
+            form: {
+                descriptions: ``,
+                details: ``,
+                dificulty: ``,
+                tag: ``,
+            }
         }
     },
     methods: {
@@ -22,18 +28,20 @@ export default {
                 this.color = `green`;
                 this.Vid = !this.Vid;
                 this.error = this.good;
-
-
             } else {
                 console.log(`Ошибка`)
                 this.Vid = this.Vid;
                 this.error = this.nogood;
                 this.color = `red`;
-
-
-
             }
 
+        }
+    },
+    methods: {
+        async addQuestion() {
+            await axios.post('/new-question', {
+                form: this.form,
+            })
         }
     }
 }
@@ -43,7 +51,7 @@ export default {
     <HeaderComp />
     <main>
 
-        <div class="container">
+        <form class="container" @submit.prevent="addQuestion">
             <div class="row pt-4">
                 <div class="col-12">
                     <h3>Новый вопрос</h3>
@@ -126,7 +134,7 @@ export default {
                 </div>
                 <div class="row pt-5 block">
                     <div class="col-6">
-                        <button id="save"><b>Опубликовать</b></button>
+                        <button id="save" type="submit"><b>Опубликовать</b></button>
                     </div>
                     <div class="col-6">
                         <button id="preview" @click="prevue"><b>Предпосмотр</b></button>
@@ -165,7 +173,7 @@ export default {
 
                 </div>
             </div>
-        </div>
+        </form>
 
 
 
