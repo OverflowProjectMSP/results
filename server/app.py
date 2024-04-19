@@ -131,8 +131,8 @@ def login_user(email, pas):
             host=localhost
             dbname=postgres
             user=postgres
-            password=kos120675
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -210,8 +210,8 @@ def add_user_todb(name, email, pas):
             host=localhost
             dbname=postgres
             user=postgres
-            password=kos120675
-            port=5432
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PASSWORD_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
