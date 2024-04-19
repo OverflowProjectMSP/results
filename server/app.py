@@ -849,9 +849,9 @@ def user_info():
         post_data = request.get_json()
         refresh_data(post_data.get('Name'), 
                      post_data.get('Surname'), 
-                     post_data.get('inrestings'), 
+                     post_data.get('interestings'), 
                      post_data.get('about'), 
-                     post_data.get('contacts'), 
+                     post_data.get('contacts'), # contactsType 
                      post_data.get('Country'), 
                      post_data.get('Region'), 
                      post_data.get('City'),
