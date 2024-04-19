@@ -3,112 +3,83 @@
 </script>
 
 <template>
-    <footer class="help_end">
 
-        <div class="support">
-            <h2 class="contact_us">Свяжитесь с нами:</h2>
-
-            <div class="social_media">
-                <a target="_blank" href="https://vk.com/javascript_forum" style="--i:5;"><i class='bx bxl-vk'></i></a>
-                <a target="_blank" href="https://discord.com/channels/1070066941177368677/1070092178690416830"
-                    style="--i:7;"><i class='bx bxl-discord-alt'></i></a>
-                <a target="_blank" class="telegram" href="https://t.me/js_universe" style="--i:8;"><i
-                        class='bx bxl-telegram'></i></a>
+<div class="footer">
+    <div class="d-flex flex-column align-items-center"> 
+            <div class="d-flex flex-row">
+                <a href="#" style="--i:7"><img class="link" :src="'src/assets/Telegram.png'" alt="telegram"></a>
+                <a href="#" style="--i:8"><img class="link" :src="'src/assets/Vk.png'" alt="vk"></a>
             </div>
-
-        </div>
-
-
-        <div class="image_above">
-            <img class="image_above_number_two" src="../../assets/Vector_9.png" alt="Error image">
-        </div>
-
-        <div class="team">
-            <div class="self_deference_content">
-                <p class="self_deference">©️ Разработано составом OWERFLOW</p>
-            </div>
-        </div>
-
-    </footer>
+            <p class="text">Upfollow</p>
+            <hr class="hr">
+            <p class="text_FAQ"><a href="#/FAQ">FAQ</a></p>
+            <a href="#/Main"><img class="arrow" src="@/assets/arrows.png" alt="arrows"></a>
+    </div>
+</div>  
 </template>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;1,500&display=swap');
-
-
+<style scoped>
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    list-style: none;
     text-decoration: none;
 }
-
-html {
-    scroll-behavior: smooth
+a {
+    text-decoration: none;
+    color: #fff;
 }
-
-.help_end {
-    max-width: 100%;
-    padding-bottom: 10px;
-    background-color: #75A3ED;
-    height: 270px;
-    padding: 0 10px;
-    margin: 0 auto;
-    border-radius: 10px 10px 0px 0px;
-
+.footer{    
+    background: url('@/assets/back.png'); 
+    background-repeat: no-repeat;   
+    height: 370px;
+    width: 100%;
+    display: flex;
+    justify-content: center;      
+    align-content: center;  
+    flex-wrap: wrap;
+    padding-top: 60px;
 }
-
-.support {
+.link {
+    width: 42px;
+    height: 42px;
+    margin-right: 5px;
+    padding: 8px;
+    animation: slideLeft 1s ease forwards;
+    animation-delay: calc(.1s * var(--i));
+}
+.text{
+    margin: 8px 0;
+    font-size: 24px;
+    color: white;
+}
+.hr {
+    /* background: #000; */
+    height: 2px;
+    width: 100%;
+}
+.logo{
+    text-align: center;
+    margin: 10px 0px;
+    color: white;
+    font-size: 24px;
+}
+.text_FAQ{
+    margin: 8px 0;
+    font-size: 24px;
+    color: white;
     text-align: center;
 }
-
-.contact_us {
-    font-size: 24px;
-    font-weight: 400;
-    color: #fff;
-    padding-top: 10px;
-    margin-bottom: 10px;
+.arrow{
+/* padding: 15px 20px 0 20px; */
 }
 
-.self_deference {
-    font-size: 20px;
-    font-weight: 300;
-    color: #fff;
-    margin: 0px;
+
+@media (max-width: 400px) {
+    .footer{
+        padding-top: 30px;
+    }
+    
 }
-
-.social_media a {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    background: transparent;
-    border: 3px solid #fff;
-    border-radius: 50%;
-    font-size: 20px;
-    color: #fff;
-    text-decoration: none;
-    margin-left: 10px;
-    opacity: 0;
-    animation: slideLeft 1s ease forwards;
-    animation-delay: calc(.2s * var(--i));
-
-}
-
-.social_media a:hover {
-    background: #0ef;
-    color: #1f242d;
-    box-shadow: 0 0 20px #0ef;
-}
-
-.image_above_number_two {
-    max-width: 98vw;
-    max-height: 80%;
-    padding: 0;
-}
-
 /* KEYFRAMES ANIMATION */
 @keyframes slideLeft {
     0% {

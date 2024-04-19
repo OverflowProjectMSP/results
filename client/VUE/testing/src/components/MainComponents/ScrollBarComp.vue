@@ -1,7 +1,8 @@
 <script>
 import DeveloperProfile from '../СomponetsForPages/DeveloperProfile.vue';
+import FooterComp from './FooterComp.vue'
 export default {
-    components: { DeveloperProfile },
+    components: { DeveloperProfile, FooterComp },
     data() {
         return {
             devolepers: [
@@ -165,10 +166,7 @@ export default {
                         > </div>
             </div>
         </div>
-        <div class="footer-container pt-5 p-4 bg-primary w-100 h-100 d-flex flex-column align-items-center text-white">
-            <h4>UpFollow</h4>
-            <span><a class="text-white text-muted" href="#/FAQ">FAQ</a></span>
-        </div>
+        <FooterComp />
 
         <DeveloperProfile v-if="this.isHide" :developer="devolepers[indexOfDev]" @showDev="showDev"/>
 
