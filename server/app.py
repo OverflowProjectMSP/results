@@ -149,7 +149,7 @@ def login_user(email, pas):
                 return_data = user[2]
 
                 print(f"Вход выполнен! Здравствуйте, {user[2]}")
-                return_data='ok'
+                return_data=['ok', user[1]]
 
             else: 
                 print("Неверный пароль!")
@@ -835,8 +835,8 @@ def user_registration():
 
     if request.method == 'POST':
         post_data = request.get_json()
-        print(add_user_todb(post_data.get('name'), post_data.get('email'), post_data.get('password'))) #Вызов фунции добавления пользователя в бд и ее debug
-
+        # print(add_user_todb(post_data.get('name'), post_data.get('email'), post_data.get('password'))) #Вызов фунции добавления пользователя в бд и ее debug
+        print(request.cookies.get('all'))
     return jsonify(response_object)
 
 #Изменение информации пользователя
@@ -871,14 +871,14 @@ def login():
     if request.method == 'POST':
         post_data = request.get_json()
         a = login_user(post_data.get('email'), post_data.get('password'))
-        print(a)
-        if a == 'ok': #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
-            resp.set_cookie('all', a)
-            session['all'] = a
+
+        if a[0] == 'ok': #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
+            resp.set_cookie('all', a[1])
+            session['all'] = a[1]
             session.modified = True
-            print(session.get('all'))
             resp.set_data('ok')
-        else: resp.set_data(a)
+
+        else: resp.set_data(a[0])
 
     else:
         response_object['message'] = db_get()
@@ -1071,7 +1071,7 @@ def check():
 
     post_data = request.get_json()
 
-    if post_data.get('id') == session.get('id'):
+    if post_data.get('id') == request.cookies.get('all'):
         response_object['isEdit'] = True
 
     else:
