@@ -57,8 +57,8 @@ export default {
             <div class="col-12">
                 <h5>Имя</h5>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="" aria-label="form.Name"
-                        aria-describedby="basic-addon1">
+                    <input type="text" class="form-control" aria-label="FirstName"
+                        aria-describedby="basic-addon1" v-model="form.Name">
                 </div>
             </div>
         </div>
@@ -66,8 +66,8 @@ export default {
             <div class="col-12">
                 <h5>Фамилия</h5>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="" aria-label="Secondname"
-                        aria-describedby="basic-addon1" v-model="form.Name">
+                    <input type="text" class="form-control" aria-label="Secondname"
+                        aria-describedby="basic-addon1" v-model="form.SurName">
                 </div>
             </div>
         </div>
@@ -75,8 +75,8 @@ export default {
             <div class="col-12">
                 <h5>Интересы</h5>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="" aria-label="Interests"
-                        aria-describedby="basic-addon1" v-model="form.SurName">
+                    <input type="text" class="form-control" aria-label="Interests"
+                        aria-describedby="basic-addon1" v-model="form.interestings">
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@ export default {
                     <option value="Facebook">Facebook</option>
                     <option value="Telephone">Telephone</option>
                 </select>
-                <input type="text" class="form-control contact-input mb-3" placeholder="" aria-label="About"
+                <input type="text" class="form-control contact-input mb-3" aria-label="About"
                     aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="form.contacts">
             </div>
         </div>

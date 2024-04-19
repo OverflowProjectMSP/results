@@ -7,13 +7,13 @@
 <div class="footer">
     <div class="d-flex flex-column align-items-center"> 
             <div class="d-flex flex-row">
-                <a href="#" style="--i:7"><img class="link" :src="'src/assets/Telegram.png'" alt="telegram"></a>
-                <a href="#" style="--i:8"><img class="link" :src="'src/assets/Vk.png'" alt="vk"></a>
+                <a href="#" style="--i:7"><img class="link user-select-none" :src="'src/assets/Telegram.png'" alt="telegram"></a>
+                <a href="#" style="--i:8"><img class="link user-select-none" :src="'src/assets/Vk.png'" alt="vk"></a>
             </div>
             <p class="text">Upfollow</p>
             <hr class="hr">
             <p class="text_FAQ"><a href="#/FAQ">FAQ</a></p>
-            <a href="#/Main"><img class="arrow" src="@/assets/arrows.png" alt="arrows"></a>
+            <a href="#/Main"><img class="arrow user-select-none" src="@/assets/arrows.png" alt="arrows"></a>
     </div>
 </div>  
 </template>
