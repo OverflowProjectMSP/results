@@ -33,7 +33,7 @@ def push_image(image, user_id):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
 
@@ -65,7 +65,7 @@ def get_image(user_id):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -93,7 +93,7 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -132,7 +132,7 @@ def login_user(email, pas):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -178,7 +178,7 @@ def db_get():
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -211,7 +211,7 @@ def add_user_todb(name, email, pas):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -255,7 +255,7 @@ def add_question(discriptions='', details='', dificulty='', tag='', id=''):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -293,7 +293,7 @@ def render_questions():
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -327,7 +327,7 @@ def change_password(password, old_password, email):
                 dbname=postgres
                 user=postgres
                 password={os.getenv('PASSWORD_PG')}
-                port={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -362,7 +362,7 @@ def check_old_password(email, password):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -465,7 +465,7 @@ def chat(id, time, msg):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -499,7 +499,7 @@ def add_states(discriptions='', details='', id=''):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -540,7 +540,7 @@ def show_all_by_user(id):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -583,7 +583,7 @@ def delete(id, isQ):
                 dbname=postgres
                 user=postgres
                 password={os.getenv('PASSWORD_PG')}
-                port={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -610,7 +610,7 @@ def delete(id, isQ):
                 dbname=postgres
                 user=postgres
                 password={os.getenv('PASSWORD_PG')}
-                port={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -640,7 +640,7 @@ def change(id, info, isQ):
                 dbname=postgres
                 user=postgres
                 password={os.getenv('PASSWORD_PG')}
-                port={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
             """)
         
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -669,7 +669,7 @@ def change(id, info, isQ):
                 dbname=postgres
                 user=postgres
                 password={os.getenv('PASSWORD_PG')}
-                port={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -698,7 +698,7 @@ def show_forum(filtre):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -733,7 +733,7 @@ def render_states():
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -766,7 +766,7 @@ def show_one(id, isQ):
                 dbname=postgres
                 user=postgres
                 password={os.getenv('PASSWORD_PG')}
-                port={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
             """)
 
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -794,7 +794,7 @@ def show_one(id, isQ):
             dbname=postgres
             user=postgres
             password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
