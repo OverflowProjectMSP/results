@@ -57,7 +57,7 @@ export default {
             <div class="col-12">
                 <h5>Имя</h5>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="" aria-label="Name"
+                    <input type="text" class="form-control" placeholder="" aria-label="form.Name"
                         aria-describedby="basic-addon1">
                 </div>
             </div>
@@ -67,7 +67,7 @@ export default {
                 <h5>Фамилия</h5>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="" aria-label="Secondname"
-                        aria-describedby="basic-addon1" v-model="Name">
+                        aria-describedby="basic-addon1" v-model="form.Name">
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@ export default {
                 <h5>Интересы</h5>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="" aria-label="Interests"
-                        aria-describedby="basic-addon1" v-model="SurName">
+                        aria-describedby="basic-addon1" v-model="form.SurName">
                 </div>
             </div>
         </div>
@@ -85,14 +85,14 @@ export default {
                 <h5>О себе</h5>
                 <div class="input-group mb-3">
                     <textarea type="text" class="form-control" placeholder="" aria-label="About"
-                        aria-describedby="basic-addon1" style="height: 150px;" v-model="about"></textarea>
+                        aria-describedby="basic-addon1" style="height: 150px;" v-model="form.about"></textarea>
                 </div>
             </div>
         </div>
         <div class="row contact-container">
             <h5>Контакты</h5>
             <div class="col-12" style="display: flex;">
-                <select role="button" class="contact-select mb-3" v-model="contactsType">
+                <select role="button" class="contact-select mb-3" v-model="form.contactsType">
                     <option value="email">E-mail</option>
                     <option value="Telegram">Telegram</option>
                     <option value="Skype">Skype</option>
@@ -101,7 +101,7 @@ export default {
                     <option value="Telephone">Telephone</option>
                 </select>
                 <input type="text" class="form-control contact-input mb-3" placeholder="" aria-label="About"
-                    aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="contacts">
+                    aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="form.contacts">
             </div>
         </div>
         <div class="row pt-2">
@@ -112,7 +112,7 @@ export default {
         <div class="row pt-4">
             <h5>Местоположение</h5>
             <div class="col-12 place-container gap-3" style="display: flex;">
-                <select style="width: 350px;" role="button" class="country-select col-4" v-model="Country">
+                <select style="width: 350px;" role="button" class="country-select col-4" v-model="form.Country">
                     <option value="Russia" selected>Россия</option>
                     <option value="Belarus">Белоруссия</option>
                     <option value="Germany">Германия</option>
@@ -122,9 +122,9 @@ export default {
                     <option value="UK">Великобритания</option>
                 </select>
                 <input type="text" class="form-control s-place" placeholder="Регион" aria-label="About"
-                    aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="Region">
+                    aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="form.Region">
                 <input type="text" class="form-control s-place" placeholder="Город" aria-label="About"
-                    aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="City">
+                    aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="form.City">
             </div>
         </div>
         <div class="row pt-4">
