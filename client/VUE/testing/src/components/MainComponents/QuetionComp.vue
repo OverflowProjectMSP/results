@@ -5,7 +5,6 @@ export default {
     data() {
         return {
             Vid: false,
-            Input: ``,
             sloz: ``,
             good: `Вопрос готов для предпросмотра.`,
             nogood: `Заполните все поля корректно`,
@@ -75,7 +74,7 @@ export default {
                         <textarea class="text-area text-box multi-line" data-val="true"
                             data-val-length="Maximum = 2045 characters" data-val-length-max="10000" id="texting"
                             name="info" cols="200" rows="3" style="border-color: #D3D3D3; border-radius: 5px;"
-                            v-model="Input" maxlength="35"></textarea>
+                            v-model="this.descriptions" maxlength="35"></textarea>
 
                     </div>
                 </div>
@@ -97,7 +96,7 @@ export default {
                         <textarea class="text-area text-box multi-line yy" data-val="true"
                             data-val-length="Maximum = 2045 characters" data-val-length-max="10000" id="info"
                             name="info" cols="200" rows="3"
-                            style="border-color: #D3D3D3; border-radius: 5px;"></textarea>
+                            style="border-color: #D3D3D3; border-radius: 5px;" v-model="form.details"></textarea>
 
                     </div>
                 </div>
@@ -113,7 +112,7 @@ export default {
 
                 <div class="row pt-1">
                     <div class="col-6">
-                        <select class="form-select" v-model="sloz">
+                        <select class="form-select" v-model="form.dificulty">
                             <option value="Простой">Простой</option>
                             <option value="Средний">Средний</option>
                             <option value="Сложный">Сложный</option>
@@ -121,7 +120,7 @@ export default {
 
                     </div>
                     <div class="col-6">
-                        <select class="form-select" v-model="language">
+                        <select class="form-select" v-model="form.tag">
                             <option value="Python">Python</option>
                             <option value="HTML5">HTML5</option>
                             <option value="Java">Java</option>
