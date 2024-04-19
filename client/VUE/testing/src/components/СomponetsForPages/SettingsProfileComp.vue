@@ -1,6 +1,29 @@
 <script>
+import axios from 'axios';
 export default {
-
+    data() {
+        return {
+            form: {
+                Name: ``,
+                SurName: ``,
+                interestings: ``,
+                about: ``,
+                contactsType: ``,
+                contacts: ``,
+                Country: ``,
+                Region: ``,
+                City: ``,
+            }
+        }
+    },
+    
+    methods: {
+        async putInfo() {
+            await axios.put('/user-info', {
+                form: this.form,
+            });
+        }
+    }
 }
 </script>
 <template>
@@ -44,7 +67,7 @@ export default {
                 <h5>Фамилия</h5>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="" aria-label="Secondname"
-                        aria-describedby="basic-addon1">
+                        aria-describedby="basic-addon1" v-model="Name">
                 </div>
             </div>
         </div>
@@ -53,7 +76,7 @@ export default {
                 <h5>Интересы</h5>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="" aria-label="Interests"
-                        aria-describedby="basic-addon1">
+                        aria-describedby="basic-addon1" v-model="SurName">
                 </div>
             </div>
         </div>
@@ -62,14 +85,14 @@ export default {
                 <h5>О себе</h5>
                 <div class="input-group mb-3">
                     <textarea type="text" class="form-control" placeholder="" aria-label="About"
-                        aria-describedby="basic-addon1" style="height: 150px;"></textarea>
+                        aria-describedby="basic-addon1" style="height: 150px;" v-model="about"></textarea>
                 </div>
             </div>
         </div>
         <div class="row contact-container">
             <h5>Контакты</h5>
             <div class="col-12" style="display: flex;">
-                <select role="button" class="contact-select mb-3">
+                <select role="button" class="contact-select mb-3" v-model="contactsType">
                     <option value="email">E-mail</option>
                     <option value="Telegram">Telegram</option>
                     <option value="Skype">Skype</option>
@@ -78,7 +101,7 @@ export default {
                     <option value="Telephone">Telephone</option>
                 </select>
                 <input type="text" class="form-control contact-input mb-3" placeholder="" aria-label="About"
-                    aria-describedby="basic-addon1" style="margin-left: 30px;">
+                    aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="contacts">
             </div>
         </div>
         <div class="row pt-2">
@@ -89,7 +112,7 @@ export default {
         <div class="row pt-4">
             <h5>Местоположение</h5>
             <div class="col-12 place-container gap-3" style="display: flex;">
-                <select style="width: 350px;" role="button" class="country-select col-4">
+                <select style="width: 350px;" role="button" class="country-select col-4" v-model="Country">
                     <option value="Russia" selected>Россия</option>
                     <option value="Belarus">Белоруссия</option>
                     <option value="Germany">Германия</option>
@@ -99,14 +122,14 @@ export default {
                     <option value="UK">Великобритания</option>
                 </select>
                 <input type="text" class="form-control s-place" placeholder="Регион" aria-label="About"
-                    aria-describedby="basic-addon1" style="margin-left: 30px;">
+                    aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="Region">
                 <input type="text" class="form-control s-place" placeholder="Город" aria-label="About"
-                    aria-describedby="basic-addon1" style="margin-left: 30px;">
+                    aria-describedby="basic-addon1" style="margin-left: 30px;" v-model="City">
             </div>
         </div>
         <div class="row pt-4">
             <div class="col-4 save-btn-block">
-                <button id="save"><b>Сохранить изменения</b></button>
+                <button id="save" @click="putInfo" type="submit"><b>Сохранить изменения</b></button>
             </div>
         </div>
     </div>
