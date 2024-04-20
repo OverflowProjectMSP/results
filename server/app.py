@@ -493,7 +493,7 @@ def chat(id, time, msg):
 
 
 # Добоволение статьи
-def add_states(discriptions='', details='', id=''):
+def add_states(discriptions='', details='', id='', tag=''):
     try: 
         pg = psycopg2.connect(f"""
             host=localhost
@@ -506,16 +506,16 @@ def add_states(discriptions='', details='', id=''):
 
         print(id)
 
-        send_question = []
+        send_state = []
 
         cursor.execute(f"SELECT COUNT(*) FROM states WHERE discriptions=$${discriptions}$$")  
-        send_question.append(cursor.fetchone())
+        send_state.append(cursor.fetchone())
 
         # Существует ли таккая же
-        if send_question[0][0]==0:
+        if send_state[0][0]==0:
             print(details, 1)
-            question_to_write = (uuid.uuid4().hex, discriptions, details, id)
-            cursor.execute(f"INSERT INTO states(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
+            question_to_write = (uuid.uuid4().hex, discriptions, details,tag ,id)
+            cursor.execute(f"INSERT INTO states(id, discriptions, details, tag, user_id) VALUES {question_to_write}")      
             pg.commit()
             
         print('Статья добавлена')
@@ -898,6 +898,17 @@ def new_question():
     
     return jsonify(response_object)
 
+# Новая статья
+@app.route('/new-state', methods=['GET', 'POST'])
+def create_state(): 
+    responce_object = {'status' : 'success'} #БаZа
+
+    post_data = request.get_json().get('form')
+    print(1)
+    print(add_states(post_data.get('discriptions'), post_data.get('details'), session.get('id'), post_data.get('tag'))) #Вызов и debug функции добавления вопроса в бд
+    
+    return jsonify(responce_object)
+
 #Страница со всеми вопросами
 @app.route('/show-questions', methods=['GET'])
 def show_questions():
@@ -953,16 +964,6 @@ def chat_forum():
     
     return jsonify(responce_object)
 
-# Новая статья
-app.route('/new-state', methods=['GET', 'POST'])
-def create_state(): 
-    responce_object = {'status' : 'success'} #БаZа
-
-    post_data = request.get_json().get('form')
-    print(1)
-    print(add_states(post_data.get('discriptions'), post_data.get('details'), session.get('id'))) #Вызов и debug функции добавления вопроса в бд
-    
-    return jsonify(responce_object)
 
 # Фильтр статей
 app.route("/filtre-states", methods=['GET'])

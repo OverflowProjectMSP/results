@@ -9,7 +9,7 @@ export default {
     data() {
         return {
             form: {
-                descriptions: ``,
+                discriptions: ``,
                 details: ``,
                 tag: ``,   
             },
@@ -20,7 +20,7 @@ export default {
 
     methods: {
         async addState() {
-            if (this.form.descriptions.length > 4 && this.form.details.length >= 0 && this.form.tag) {
+            if (true) {
                 await axios.post('/new-state', {
                     form: this.form
                 });
@@ -49,7 +49,7 @@ export default {
             Сформулируйте название так, чтобы сразу было понятно, о чём речь.
         </p>
         <form>
-            <input type="email" class="form-control" id="inputlg" v-model="form.descriptions">
+            <input type="email" class="form-control" id="inputlg" v-model="form.discriptions">
         </form>
     </div>
     <div class="text">
