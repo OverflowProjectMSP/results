@@ -20,7 +20,7 @@ export default {
 
     methods: {
         async addState() {
-            if (true) {
+            if (this.form.details.length >= 40 && this.form.discriptions > 3 && this.form.tag) {
                 await axios.post('/new-state', {
                     form: this.form
                 });

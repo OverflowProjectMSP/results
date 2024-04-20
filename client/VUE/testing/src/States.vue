@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios';
 import VidComp from './components/MainComponents/VidComp.vue'
 import ModelWind from './components/СomponetsForPages/ModelWind.vue';
 export default {
@@ -8,43 +9,49 @@ export default {
     },
     data() {
         return {
-            items: [
-                {
-                    title: `Как создать переменную?`,
-                    subscribers: 50,
-                    hours: 43,
-                    views: 43,
-                    answers: 423,
-                    language: 'Python',
-                    complexity: 'Средне',
-                    id: 0,
-                    question: false,            
-                },
-                {
-                    title: `Как создать переменную?`,
-                    subscribers: 50,
-                    hours: 43,
-                    views: 43,
-                    answers: 423,
-                    language: 'C++',
-                    complexity: 'Средне',
-                    id: 1,
-                    question: false,            
-                },
-                {
-                    title: `Как создать переменную?`,
-                    subscribers: 45,
-                    hours: 0,
-                    views: 43,
-                    answers: 423,
-                    language: 'Асембелер',
-                    complexity: 'Средне',
-                    id: 2,
-                    question: false,                
-                },
+            states: [
+                // {
+                //     title: `Как создать переменную?`,
+                //     subscribers: 50,
+                //     hours: 43,
+                //     views: 43,
+                //     answers: 423,
+                //     language: 'Python',
+                //     complexity: 'Средне',
+                //     id: 0,
+                //     question: false,            
+                // },
+                // {
+                //     title: `Как создать переменную?`,
+                //     subscribers: 50,
+                //     hours: 43,
+                //     views: 43,
+                //     answers: 423,
+                //     language: 'C++',
+                //     complexity: 'Средне',
+                //     id: 1,
+                //     question: false,            
+                // },
+                // {
+                //     title: `Как создать переменную?`,
+                //     subscribers: 45,
+                //     hours: 0,
+                //     views: 43,
+                //     answers: 423,
+                //     language: 'Асембелер',
+                //     complexity: 'Средне',
+                //     id: 2,
+                //     question: false,                
+                // },
             ],
             Show: false,
         }
+    },
+    mounted() {
+        this.loadStates()
+        setInterval(() => {
+            this.loadStates()
+        }, 60000);
     },
     methods: {
         OpenModal() {
@@ -52,6 +59,10 @@ export default {
         },
         CloseModal(Show) {
             this.Show = false
+        },
+        async loadStates() {
+            let res = await axios.get('/show-states');
+            this.states = res.data;
         }
     }
 }
@@ -91,7 +102,7 @@ export default {
 
 
 <!-- Див с виджетами -->
-<div class="con mt-3" v-for="item in items">
+<div class="con mt-3" v-for="item in states">
 <a :href="`#/CommentsPost?id=` + item.id + `&question=` + item.question">
     <vid-comp :item="item" role="button" />
 </a>
