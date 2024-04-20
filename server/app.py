@@ -966,7 +966,7 @@ def chat_forum():
 
 
 # Фильтр статей
-app.route("/filtre-states", methods=['GET'])
+@app.route("/filtre-states", methods=['GET'])
 def filtre_states():
     responce_object = {'status' : 'success'} #БаZа
 
@@ -977,7 +977,7 @@ def filtre_states():
     return jsonify(responce_object)
 
 # Фильтр вопросов
-app.route("/filtre-questions", methods=['GET'])
+@app.route("/filtre-questions", methods=['GET'])
 def filtre_questions():
     responce_object = {'status' : 'success'} #БаZа
 
@@ -988,7 +988,7 @@ def filtre_questions():
     return jsonify(responce_object)
 
 # Вопросы форума
-app.route('/show-forum', methods=['GET'])
+@app.route('/show-forum', methods=['GET'])
 def show_f():
     responce_object = {'status' : 'success'} #БаZа
 
@@ -999,7 +999,7 @@ def show_f():
     return jsonify(responce_object)
 
 # Одино что-то
-app.route('/question', methods=['GET'])
+@app.route('/question', methods=['GET'])
 def one_something():
     responce_object = {'status': 'success'}
 
@@ -1014,7 +1014,7 @@ def one_something():
     return jsonify(responce_object)
 
 # может ли юзер удалять/менять или нет
-app.route('/check-user',methods=['POST'])
+@app.route('/check-user',methods=['POST'])
 def check_user():
     responce_object = {'status' : 'success'} #БаZа
 
@@ -1028,7 +1028,7 @@ def check_user():
     return jsonify(responce_object)
 
 # Удаление чего-то
-app.route('/delete',methods=['DELETE'])
+@app.route('/delete',methods=['DELETE'])
 def delete_():
     responce_object = {'status' : 'success'} #БаZа
 
@@ -1043,7 +1043,7 @@ def delete_():
     return jsonify(responce_object)
 
 # Изменение чего-то
-app.route('/change',methods=['PUT'])
+@app.route('/change',methods=['PUT'])
 def change_():
     responce_object = {'status' : 'success'} #БаZа
 
