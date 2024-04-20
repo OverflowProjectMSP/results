@@ -954,12 +954,12 @@ def chat_forum():
     return jsonify(responce_object)
 
 # Новая статья
-app.route('/new-state', methods = ['POST'])
+app.route('/new-state', methods=['GET', 'POST'])
 def create_state(): 
     responce_object = {'status' : 'success'} #БаZа
 
-    post_data = request.get_json()
-
+    post_data = request.get_json().get('form')
+    print(1)
     print(add_states(post_data.get('discriptions'), post_data.get('details'), session.get('id'))) #Вызов и debug функции добавления вопроса в бд
     
     return jsonify(responce_object)
