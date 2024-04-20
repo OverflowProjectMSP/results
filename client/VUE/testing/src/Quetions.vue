@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios';
 import VidQuetions from './components/MainComponents/VidQuetions.vue';
 
 export default {
@@ -9,49 +10,53 @@ export default {
     data() {
         return {
             quetions: [
-                {
-                    title: `Как создать переменную?`,
-                    subscribers: 50,
-                    hours: 43,
-                    views: 43,
-                    answers: 423,
-                    language: 'Python',
-                    complexity: 'Средне',
-                    id: 0
+                // {
+                //     title: `Как создать переменную?`,
+                //     subscribers: 50,
+                //     hours: 43,
+                //     views: 43,
+                //     answers: 423,
+                //     language: 'Python',
+                //     complexity: 'Средне',
+                //     id: 0
 
-                },
-                {
-                    title: `Как создать переменную?`,
-                    subscribers: 50,
-                    hours: 43,
-                    views: 43,
-                    answers: 423,
-                    language: 'C++',
-                    complexity: 'Средне',
-                    id: 1
-                },
-                {
-                    title: `Как создать переменную?`,
-                    subscribers: 45,
-                    hours: 0,
-                    views: 43,
-                    answers: 423,
-                    language: 'Асембелер',
-                    complexity: 'Средне',
-                    id: 2
-                },
+                // },
+                // {
+                //     title: `Как создать переменную?`,
+                //     subscribers: 50,
+                //     hours: 43,
+                //     views: 43,
+                //     answers: 423,
+                //     language: 'C++',
+                //     complexity: 'Средне',
+                //     id: 1
+                // },
+                // {
+                //     title: `Как создать переменную?`,
+                //     subscribers: 45,
+                //     hours: 0,
+                //     views: 43,
+                //     answers: 423,
+                //     language: 'Асембелер',
+                //     complexity: 'Средне',
+                //     id: 2
+                // },
             ],
-
+        }
+    },
+    mounted() {
+        this.loadQuestions();
+        setInterval(() => {
+            this.loadQuestions();
+        }, 10000);
+    },
+    methods: {
+        async loadQuestions() {
+            let res = await axios.get('/show-questions');
+            this.quetions = res.data;
         }
     }
-
-
-
 }
-
-
-
-
 </script>
 
 <template>
