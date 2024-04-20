@@ -520,7 +520,7 @@ def add_states(discriptions='', details='', id='', tag=''):
             
         print('Статья добавлена')
 
-        return_data = "Вопрос добавлен"
+        return_data = "Статья добавлена"
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
