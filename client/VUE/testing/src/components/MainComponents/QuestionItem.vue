@@ -41,9 +41,9 @@ export default {
             symbCount: false,
             inputAnswer: {
                 textAnswer: ``,
-                comment: 52,
-                likes: 52,
-                dislike: 36,
+                comment: 0,
+                likes: 0,
+                dislike: 0,
             },
             inputUserInfo: {
                 accountIcon: 'ava.png',
