@@ -39,7 +39,7 @@ export default {
                     vkProfile: `ivangorbenko52`,
                 },
                 {
-                    name: `habbock`,
+                    name: `HaBBeR`,
                     role: `Фронтенд разработчик`,
                     imageProfileDS: `hebber.png`,
                     dsProfile: `habbock`,
