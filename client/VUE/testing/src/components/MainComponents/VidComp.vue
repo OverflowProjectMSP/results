@@ -7,21 +7,21 @@ for (let i = 0; i < elList.length; i++) {
 export default {
     data() {
         return {
-            item: {
-                title: `Как создать переменную?`,
-                    subscribers: 50,
-                    hours: 43,
-                    views: 43,
-                    answers: 423,
-                    language: 'Python',
-                    complexity: 'Средне',
-                    id: 0
-            }
+            // item: {
+            //     // title: `Как создать переменную?`,
+            //     //     subscribers: 50,
+            //     //     hours: 43,
+            //     //     views: 43,
+            //     //     answers: 423,
+            //     //     language: 'Python',
+            //     //     complexity: 'Средне',
+            //     //     id: 0
+            // }
         }
 
     },
     props: {
-        itema: Object,
+        item: Object,
         Show: Boolean,
     }
 

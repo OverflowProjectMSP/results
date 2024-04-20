@@ -744,7 +744,23 @@ def render_states():
         all_states = cursor.fetchall()  
         print('все статьи отображены')
 
-        return_data = all_states
+        dict = {
+            'id' : '',
+            'discriptions': '',
+            'details': '',
+            'tag': '',
+            'user_id': ''
+        }
+        
+        a = all_states[0]
+        cnt = -1
+        for key in dict:
+            cnt+=1
+            for i in range (len(a)):
+                if cnt==i:
+                    dict[key] = a[i]   
+
+        return_data = dict
 
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)

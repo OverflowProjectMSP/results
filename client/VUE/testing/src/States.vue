@@ -51,7 +51,7 @@ export default {
         this.loadStates()
         setInterval(() => {
             this.loadStates()
-        }, 60000);
+        }, 300);
     },
     methods: {
         OpenModal() {
@@ -63,6 +63,7 @@ export default {
         async loadStates() {
             let res = await axios.get('/show-states');
             this.states = res.data;
+            console.log(res.data)
         }
     }
 }
