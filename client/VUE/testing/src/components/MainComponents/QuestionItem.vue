@@ -1,8 +1,10 @@
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
-            question: { //структура получения всех данных с сервера
+            question: {        //структура получения всех данных с сервера
                 id: 123,
                 accountInfo: {
                     accountIcon: 'person.svg',
@@ -109,6 +111,14 @@ export default {
                 },
             );
             this.inputAnswer.textAnswer = ``;
+        },
+        async deleteQuestion() {
+            await axios.delete('/delete', {
+                params: {
+                    id: this.question.id,
+                    question: true
+                }
+            });
         }
     }
 }
@@ -117,13 +127,30 @@ export default {
 <template>
     <div class="container mb-4">
         <div class="content-1">
-            <div class="account">
-                <img class="accountIcon" :src="'src/assets/' + question.accountInfo.accountIcon" width="70px" alt="">
-                <div class="name-ring">
-                    <div>
-                        <a href="#!"><span class="name">{{ question.accountInfo.accountName }}</span></a>
+            <div class="account justify-content-between">
+                <div class="creator-info d-flex flex-row align-items-center gap-3">
+                    <img class="accountIcon" :src="'src/assets/' + question.accountInfo.accountIcon" width="70px"
+                        alt="">
+                    <div class="name-ring">
+                        <div>
+                            <a href="#!"><span class="name">{{ question.accountInfo.accountName }}</span></a>
+                        </div>
+                        <p>Уровень: <span class="difficult">{{ question.questionInfo.level }}</span></p>
                     </div>
-                    <p>Уровень: <span class="difficult">{{ question.questionInfo.level }}</span></p>
+                </div>
+                <div class="action-select">
+                    <!-- <select role="button" class="form-select">
+                        <option selected>Дейсвие</option>
+                        <option value="put"><a href="#/Quetion">Редактировать</a></option>
+                        <option value="delete">Удалить</option>
+                    </select> -->
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false">Дейсвие</button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#/Quetion">Редактировать</a></li>
+                            <li><a class="dropdown-item" href="#" @click="deleteQuestion">Удалить</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="title">
@@ -139,8 +166,7 @@ export default {
                 <p>{{ question.questionInfo.views }} просмотра</p>
             </div>
         </div>
-        <a class="answer-a" href="#"><button class="answer-btn user-select-none">Ответов: {{
-            question.questionInfo.answer }}</button></a>
+        <button class="answer-btn answer-a user-select-none">Ответов: {{ question.questionInfo.answer }}</button>
 
         <div class="content-2" v-for="answer in question.answers" v-if="this.question.answers.length != 0">
             <div class="account">
