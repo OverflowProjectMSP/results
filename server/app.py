@@ -588,8 +588,7 @@ def delete(id, isQ):
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            cursor.excute(f'''DELETE FROM questions 
-                          WHEREE id=$${id}$$''')
+            cursor.execute(f'''DELETE FROM question WHERE id=$${id}$$''')
 
             pg.commit()
             return_data = 'ok'
@@ -614,9 +613,9 @@ def delete(id, isQ):
                 port={os.getenv('PORT_PG')}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            print(type(id))
+            cursor.execute(f'''DELETE FROM states WHERE id=$${id}$$;''')
 
-            cursor.excute(f'''DELETE FROM states
-                          WHEREE id=$${id}$$''')
             pg.commit()
             return_data = 'ok'
         except (Exception, Error) as error:
@@ -1048,11 +1047,14 @@ def check_user():
 def delete_():
     responce_object = {'status' : 'success'} #БаZа
 
-    post_data = request.get_json()
-    if post_data.get('question'):
-        responce_object['all'] = delete(post_data.get('id'), True) # а что - решим потом (название поменять надо)
+    post_data = request.args.get('id')
+    print(type(request.args.get('question')))
+    if  request.args.get('question') == 'true':
+        print(post_data, 1)
+        responce_object['all'] = delete(post_data, True) 
     else:
-        responce_object['all'] = delete(post_data.get('id'), False) # а что - решим потом (название поменять надо)
+        print(post_data)
+        responce_object['all'] = delete(post_data, False) 
     
     print(responce_object['all'])
 

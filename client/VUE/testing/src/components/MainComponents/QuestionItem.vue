@@ -66,7 +66,7 @@ export default {
 
     methods: {
         // async loadQuestion() {
-        //     let responce = await axios.get(`/delete`, {
+        //     let responce = await axios.get(`/questions`, {
         //         params: {
         //             id: this.question.id
         //             question: this.question.question
@@ -98,7 +98,7 @@ export default {
                     dislike: this.inputAnswer.dislike,
                 },
             });
-            await axios.post(`/delete`,
+            await axios.post(`/new-comment`,
                 {
                     id: this.question.id,
                     answerUserInfo: this.inputUserInfo,
@@ -114,14 +114,15 @@ export default {
         },
         async deleteQuestion() {
             await axios.delete('/delete', {
-                params: {
-                    id: this.question.id,
+                params:{
+                    id: '3351e483-0160-4faa-835c-b06a51a86b7d',
                     question: true
                 }
-            });
+            })
         }
     }
 }
+
 </script>
 
 <template>
