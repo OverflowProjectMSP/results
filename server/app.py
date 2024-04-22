@@ -1048,12 +1048,10 @@ def delete_():
     responce_object = {'status' : 'success'} #БаZа
 
     post_data = request.args.get('id')
-    print(type(request.args.get('question')))
+
     if  request.args.get('question') == 'true':
-        print(post_data, 1)
         responce_object['all'] = delete(post_data, True) 
     else:
-        print(post_data)
         responce_object['all'] = delete(post_data, False) 
     
     print(responce_object['all'])
