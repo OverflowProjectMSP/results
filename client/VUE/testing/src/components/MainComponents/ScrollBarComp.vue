@@ -8,7 +8,7 @@ export default {
             devolepers: [
                 {
                     name: `kosty_py`,
-                    role: `Тимлид/Старший бекенд разработчик`,
+                    role: `Тимлид/Старший Бекенд разработчик`,
                     imageProfileDS: `kosty-py.png`,
                     dsProfile: `kosty_py`
                 },
@@ -26,7 +26,7 @@ export default {
                 },
                 {
                     name: `febolo`,
-                    role: `Заместитель ведущего Бекенд разработчика`,
+                    role: `Ведущий Бэкенд разработчик`,
                     imageProfileDS: `febolo.png`,
                     dsProfile: `febolo`
                 },
