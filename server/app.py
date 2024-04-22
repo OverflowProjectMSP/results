@@ -262,14 +262,14 @@ def add_question(discriptions='', details='', dificulty='', tag='', id=''):
 
         send_question = []
 
-        cursor.execute(f"SELECT COUNT(*) FROM questions WHERE discriptions=$${discriptions}$$")  
+        cursor.execute(f"SELECT COUNT(*) FROM question WHERE discriptions=$${discriptions}$$")  
         
         send_question.append(cursor.fetchone())
         # Существует ли такой же вопрос
         if send_question[0][0]==0:
             print(details, 1)
             question_to_write = (uuid.uuid4().hex, discriptions, details, dificulty, tag, id)
-            cursor.execute(f"INSERT INTO questions(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
+            cursor.execute(f"INSERT INTO question(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
             pg.commit()
             
             
@@ -299,7 +299,7 @@ def render_questions():
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        cursor.execute(f"SELECT * from questions")
+        cursor.execute(f"SELECT * from question")
 
         all_questions = cursor.fetchall()  
 
@@ -546,7 +546,7 @@ def show_all_by_user(id):
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        questions = cursor.execute(f'''SELECT * FROM questions
+        questions = cursor.execute(f'''SELECT * FROM question
                                 WHERE id=$${id}$$''')
         
         states = cursor.execute(f'''SELEСT * FROM states
@@ -645,7 +645,7 @@ def change(id, info, isQ):
         
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            cursor.excute(f'''UPDATE questions
+            cursor.excute(f'''UPDATE question
                         SET (information)
                           WHEREE id=$${id}$$''')
 
@@ -704,7 +704,7 @@ def show_forum(filtre):
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         states = cursor.excute(f'''SELECT * FROM states WHERE tag=$${filtre}$$''')
-        questions = cursor.excute(f'''SELECT * FROM questions WHERE tag=$${filtre}$$''')
+        questions = cursor.excute(f'''SELECT * FROM question WHERE tag=$${filtre}$$''')
         
         return_data = {
             "states": states,
