@@ -41,7 +41,7 @@ def push_image(image, user_id):
         cursor.execute(f"""
             UPDATE users
             SET avatar = decode('{image}', 'base64')
-            WHERE id = $$user_id$$
+            WHERE id = $${user_id}$$
                 """)
         pg.commit()
         print('Изобрадение было добавлено')
