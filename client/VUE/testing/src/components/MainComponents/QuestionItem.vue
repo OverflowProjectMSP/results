@@ -4,40 +4,43 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            question: {        //структура получения всех данных с сервера
-                id: 123,
-                accountInfo: {
-                    accountIcon: 'person.svg',
-                    accountName: 'Nick Endgy',
-                },
-                questionInfo: {
-                    title: 'Как сделать регистрацию с использованием только JavaScript?',
-                    description: `Подскажите, пожалуйста, как сделать регистрацию пользователя на сайте? Сайт у меня на node.js. Я первый раз такую форму делаю и не знаю какой путь выбрать. Какой вариант лучше? Просто к кнопке "зарегистрироваться" подвязать эвент и в нем делать функцию? Или как-то использовать method="post" у формы? 
-                                <br>UPD:А как fetch() использовать? Я написал такой код, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
-                    level: `Лёгкий`,
-                    imageInQuetion: 'test',
-                    answer: 28,
-                    views: 473,
-                    data: `05.01.2024 12:31`,
-                    Decided: true,
-                },
-                answers: [
-                    {
-                        answerUserInfo: {
-                            accountIcon: 'ava.png',
-                            accountName: 'JavaScriptPRO',
-                            rang: `Решала`,
-                        },
-                        answerInfo: {
-                            text: `123123123, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
-                            comment: 52,
-                            likes: 52,
-                            dislike: 36,
-                        },
-                    },
-                ],
+            // question: { //структура получения всех данных с сервера
+            //     id: 123,
+            //     accountInfo: {
+            //         accountIcon: 'person.svg',
+            //         accountName: 'Nick Endgy',
+            //     },
+            //     questionInfo: {
+            //         title: 'Как сделать регистрацию с использованием только JavaScript?',
+            //         description: `Подскажите, пожалуйста, как сделать регистрацию пользователя на сайте? Сайт у меня на node.js. Я первый раз такую форму делаю и не знаю какой путь выбрать. Какой вариант лучше? Просто к кнопке "зарегистрироваться" подвязать эвент и в нем делать функцию? Или как-то использовать method="post" у формы? 
+            //                     <br>UPD:А как fetch() использовать? Я написал такой код, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
+            //         level: `Лёгкий`,
+            //         imageInQuetion: 'test',
+            //         answer: 28,
+            //         views: 473,
+            //         data: `05.01.2024 12:31`,
+            //         Decided: true,
+            //     },
+            //     answers: [
+            //         {
+            //             answerUserInfo: {
+            //                 accountIcon: 'ava.png',
+            //                 accountName: 'JavaScriptPRO',
+            //                 rang: `Решала`,
+            //             },
+            //             answerInfo: {
+            //                 text: `123123123, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
+            //                 comment: 52,
+            //                 likes: 52,
+            //                 dislike: 36,
+            //             },
+            //         },
+            //     ],
+            // },
 
-            },
+            questionInfo: {}, //главная хуйня
+            answers: [],
+
             text: '',
             symbols: 0,
             symbCount: false,
@@ -68,17 +71,17 @@ export default {
     // },
 
     methods: {
-        // async loadQuestion() {
-        //     let responce = await axios.get(`/questions`, {
-        //         params: {
-        //             id: this.question.id
-        //             question: this.question.question
-        //         }
-        //     });
-        //     this.question = responce.data;
-        // },
+        async loadQuestion() {
+            let responce = await axios.get(`/questions`, {
+                params: {
+                    id: this.$route.query.id,
+                    question: true
+                }
+            });
+            this.questionInfo = responce.data.questionInfo;
+            this.answers = responce.data.answers;
+        },
         counterPlus(index) {
-
             if (this.count == 0 && this.countmin == 0) {
                 this.question.answers[index].answerInfo.likes++;
                 this.count++;
@@ -100,7 +103,6 @@ export default {
                 this.question.answers[index].answerInfo.dislike--;
                 this.countmin--;
             }
-               
         },
 
         breakLines(text) {
@@ -128,7 +130,7 @@ export default {
             });
             await axios.post(`/new-comment`,
                 {
-                    id: this.question.id,
+                    id: this.$route.query.id,
                     answerUserInfo: this.inputUserInfo,
                     answerInfo: {
                         text: this.inputAnswer.textAnswer,
@@ -143,7 +145,7 @@ export default {
         async deleteQuestion() {
             await axios.delete('/delete', {
                 params:{
-                    id: this.question.id,
+                    id: this.$route.query.id,
                     question: true,
                 }
             })
