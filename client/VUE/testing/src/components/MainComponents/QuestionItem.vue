@@ -115,8 +115,8 @@ export default {
         async deleteQuestion() {
             await axios.delete('/delete', {
                 params:{
-                    id: '3351e483-0160-4faa-835c-b06a51a86b7d',
-                    question: true
+                    id: this.question.id,
+                    question: true,
                 }
             })
         }
