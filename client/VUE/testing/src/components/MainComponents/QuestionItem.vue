@@ -79,9 +79,11 @@ export default {
         // },
         counterPlus(index) {
 
-            if (this.count == 0 && this.countmin == 1) {
+            if (this.count == 0 && this.countmin == 0) {
                 this.question.answers[index].answerInfo.likes++;
                 this.count++;
+            } else if (this.count == 0 && this.countmin == 1) {
+                return;
             } else if (this.count == 1) {
                 this.question.answers[index].answerInfo.likes--;
                 this.count--;
@@ -89,9 +91,11 @@ export default {
         },
 
         counterMinus(index) {
-            if (this.countmin == 0) {
+            if (this.countmin == 0 && this.countmin == 0) {
                 this.question.answers[index].answerInfo.dislike++;
                 this.countmin++;
+            } else if (this.count == 1 && this.countmin == 0) {
+                return;
             } else if (this.countmin == 1) {
                 this.question.answers[index].answerInfo.dislike--;
                 this.countmin--;
