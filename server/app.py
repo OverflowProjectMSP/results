@@ -16,7 +16,7 @@ load_dotenv()
 # instantiate the app
 app = Flask(__name__)
 
-app.secret_key = b'eewj'
+app.secret_key = os.getenv('PG_KEY')
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] =  'None'
@@ -41,7 +41,7 @@ def push_image(image, user_id):
         cursor.execute(f"""
             UPDATE users
             SET avatar = decode('{image}', 'base64')
-            WHERE id = $$user_id$$
+            WHERE id = $${user_id}$$
                 """)
         pg.commit()
         print('Изобрадение было добавлено')
@@ -262,14 +262,14 @@ def add_question(discriptions='', details='', dificulty='', tag='', id=''):
 
         send_question = []
 
-        cursor.execute(f"SELECT COUNT(*) FROM questions WHERE discriptions=$${discriptions}$$")  
+        cursor.execute(f"SELECT COUNT(*) FROM question WHERE discriptions=$${discriptions}$$")  
         
         send_question.append(cursor.fetchone())
         # Существует ли такой же вопрос
         if send_question[0][0]==0:
             print(details, 1)
             question_to_write = (uuid.uuid4().hex, discriptions, details, dificulty, tag, id)
-            cursor.execute(f"INSERT INTO questions(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
+            cursor.execute(f"INSERT INTO question(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
             pg.commit()
             
             
@@ -299,7 +299,7 @@ def render_questions():
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        cursor.execute(f"SELECT * from questions")
+        cursor.execute(f"SELECT * from question")
 
         all_questions = cursor.fetchall()  
 
@@ -423,7 +423,7 @@ def send_code(email):
 
 # ------------------------Улучшить бы----------------------------------------------------
     for i in range(4):
-        a = random.randint(0, 9)
+        a = random.randint(0, 9) # А че тут улучшать? (Без негатива, от febolo)
         code_pas += str(a)
 #-----------------------------------------------------------------------------------------
     
@@ -456,7 +456,6 @@ def check_password(password, true_password):
         return_data = False
     session.pop('sent-password', None)
     return return_data
-
 
 # Добавление сообщения в бд (чат форума)
 def chat(id, time, msg):
@@ -546,7 +545,7 @@ def show_all_by_user(id):
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        questions = cursor.execute(f'''SELECT * FROM questions
+        questions = cursor.execute(f'''SELECT * FROM question
                                 WHERE id=$${id}$$''')
         
         states = cursor.execute(f'''SELEСT * FROM states
@@ -588,8 +587,7 @@ def delete(id, isQ):
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            cursor.excute(f'''DELETE FROM questions 
-                          WHEREE id=$${id}$$''')
+            cursor.execute(f'''DELETE FROM question WHERE id=$${id}$$''')
 
             pg.commit()
             return_data = 'ok'
@@ -614,9 +612,9 @@ def delete(id, isQ):
                 port={os.getenv('PORT_PG')}
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            print(type(id))
+            cursor.execute(f'''DELETE FROM states WHERE id=$${id}$$;''')
 
-            cursor.excute(f'''DELETE FROM states
-                          WHEREE id=$${id}$$''')
             pg.commit()
             return_data = 'ok'
         except (Exception, Error) as error:
@@ -646,7 +644,7 @@ def change(id, info, isQ):
         
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            cursor.excute(f'''UPDATE questions
+            cursor.excute(f'''UPDATE question
                         SET (information)
                           WHEREE id=$${id}$$''')
 
@@ -705,7 +703,7 @@ def show_forum(filtre):
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         states = cursor.excute(f'''SELECT * FROM states WHERE tag=$${filtre}$$''')
-        questions = cursor.excute(f'''SELECT * FROM questions WHERE tag=$${filtre}$$''')
+        questions = cursor.excute(f'''SELECT * FROM question WHERE tag=$${filtre}$$''')
         
         return_data = {
             "states": states,
@@ -832,6 +830,53 @@ def show_one(id, isQ):
             pg.close
             print("Соединение с PostgreSQL закрыто")
             return return_data
+        
+
+# ФИЛЬТРЫ
+def filtration(filters):
+
+    if not filters['filtr']:
+        filtr = ''
+    elif filters["filtr"]:
+        filtr = ' WHERE'
+        for i in filters:
+            print(i)
+            if filters[i] != 'false':
+                if i == 'filtr':
+                    continue
+                if filtr == ' WHERE':
+                    filtr += f' {i}=$${filters[i]}$$'
+                else:
+                    filtr += f' AND {i}=$${filters[i]}$$'
+
+    try:
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor) 
+        cursor.execute(f"SELECT * FROM states{filtr}")
+        result = cursor.fetchall()
+
+        return_data = []
+        for row in result:
+            return_data.append(dict(row))
+
+    except (Exception, Error) as error:
+        print(f"Ошибка получения данных: {error}")
+        return_data = 'Error'
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
+        
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -1048,11 +1093,12 @@ def check_user():
 def delete_():
     responce_object = {'status' : 'success'} #БаZа
 
-    post_data = request.get_json()
-    if post_data.get('question'):
-        responce_object['all'] = delete(post_data.get('id'), True) # а что - решим потом (название поменять надо)
+    post_data = request.args.get('id')
+
+    if  request.args.get('question') == 'true':
+        responce_object['all'] = delete(post_data, True) 
     else:
-        responce_object['all'] = delete(post_data.get('id'), False) # а что - решим потом (название поменять надо)
+        responce_object['all'] = delete(post_data, False) 
     
     print(responce_object['all'])
 

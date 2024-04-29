@@ -51,7 +51,7 @@ export default {
         this.loadStates()
         setInterval(() => {
             this.loadStates()
-        }, 300);
+        }, 30000);
     },
     methods: {
         OpenModal() {
