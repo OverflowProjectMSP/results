@@ -55,6 +55,9 @@ export default {
             isBold: false,
             isItalic: false,
 
+            count: 0,
+            countmin: 0,
+
         }
     },
     // mounted() {
@@ -74,6 +77,27 @@ export default {
         //     });
         //     this.question = responce.data;
         // },
+        counterPlus(index) {
+
+            if (this.count == 0 && this.countmin == 1) {
+                this.question.answers[index].answerInfo.likes++;
+                this.count++;
+            } else if (this.count == 1) {
+                this.question.answers[index].answerInfo.likes--;
+                this.count--;
+            }  
+        },
+
+        counterMinus(index) {
+            if (this.countmin == 0) {
+                this.question.answers[index].answerInfo.dislike++;
+                this.countmin++;
+            } else if (this.countmin == 1) {
+                this.question.answers[index].answerInfo.dislike--;
+                this.countmin--;
+            }
+               
+        },
 
         breakLines(text) {
             return text.replace(/\n/g, "<br>");
@@ -169,7 +193,7 @@ export default {
         </div>
         <button class="answer-btn answer-a user-select-none">Ответов: {{ question.questionInfo.answer }}</button>
 
-        <div class="content-2" v-for="answer in question.answers" v-if="this.question.answers.length != 0">
+        <div class="content-2" v-for="(answer, index) in question.answers" v-if="this.question.answers.length != 0">
             <div class="account">
                 <img class="accountIcon" :src="'src/assets/' + answer.answerUserInfo.accountIcon" width="70px" alt="">
                 <div class="name-ring">
@@ -187,11 +211,11 @@ export default {
                 <div class="left">
                     <button class="comm-add btgr">Добавить комментарий</button>
                     <div class="like-bc bc">
-                        <button class="like btgr"><img :src="'src/assets/Like.svg'" alt=""></button>
+                        <button @click="counterPlus(index)" class="like btgr"><img :src="'src/assets/Like.svg'" alt=""></button>
                         <p class="like-count user-select-none">{{ answer.answerInfo.likes }}</p>
                     </div>
                     <div class="dislike-bc bc">
-                        <button class="dislike btgr"><img :src="'src/assets/Dislike.svg'" alt=""></button>
+                        <button @click="counterMinus(index)" class="dislike btgr"><img :src="'src/assets/Dislike.svg'" alt=""></button>
                         <p class="dislike-count user-select-none">{{ answer.answerInfo.dislike }}</p>
                     </div>
                 </div>
