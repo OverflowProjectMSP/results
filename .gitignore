@@ -1,3 +1,4 @@
 /client/vue/testing/node_modules
 /server/.env
 /server/media
+/server/avatar

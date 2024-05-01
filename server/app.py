@@ -26,7 +26,7 @@ CORS(app, resources={r"*": {"origins": "http://localhost:5173", 'supports_creden
 
 
 # Обновление доп данных о 
-def refresh_data(name = '', surname='', interestings='', about='', contacts='', country='', region='', city='', id=''):
+def refresh_data(name = '', surname='', interestings='', about='', contacts='', country='', region='', city='', avatar='',filename='', id=''):
     try:
         pg = psycopg2.connect(f"""
             host=localhost
@@ -38,6 +38,7 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         print(id)
+        src = add_img(avatar, filename, True, False, session.get('id') )
         # UPDATE user-info
         cursor.execute(f"""UPDATE users 
                     SET name = $${name}$$,
@@ -47,7 +48,8 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
                         contacts = $${contacts}$$,
                         country = $${country}$$,
                         region=$${region}$$,
-                        city=$${city}$$
+                        city=$${city}$$,
+                        avatar=$${src}$$
                     WHERE id=$${id}$$;""")
         pg.commit()
 
@@ -806,6 +808,28 @@ def filtre(filters, isQ):
                 pg.close
                 print("Соединение с PostgreSQL закрыто")
                 return return_data
+            
+def add_img( base, name, isAvatar, isQ,id):
+    base=base[base.find(',')+1:]
+    decoded_bytes = base64.b64decode(base)
+    dote = name[name.find('.'):]
+    if isAvatar:
+        name = 'a_'+id+dote
+        with open(os.path.join('/avatat/', name), "wb") as file:
+            file.write(decoded_bytes)
+        return 'http://127.0.0.1:5000/avatar/'+name
+    
+    if isQ:
+        name = 'q_'+id+dote
+        with open(os.path.join('/media/', name), "wb") as file:
+                file.write(decoded_bytes)
+        return 'http://127.0.0.1:5000/media/'+name
+    
+    name = 's_'+id+dote
+    with open(os.path.join('/media/', name), "wb") as file:
+            file.write(decoded_bytes)
+    return 'http://127.0.0.1:5000/media/'+name
+
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -847,6 +871,8 @@ def user_info():
                      post_data.get('Country'), 
                      post_data.get('Region'), 
                      post_data.get('City'),
+                     post_data.get('Avatar'),
+                     post_data.get('Filename'),
                      session.get('id'))
 
     return jsonify(response_object)
@@ -855,18 +881,14 @@ def user_info():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     response_object = {'status': 'success'} #БаZа
-    # resp = make_response(jsonify(response_object)) #куки-заготовка
-    # resp.headers['Content-Type'] = 'text/plain'
 
     post_data = request.get_json()
     a = login_user(post_data.get('email'), post_data.get('password'))
 
     if a[0] == 'ok': #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
-        # resp.set_cookie('all', a[1])
         session['id'] = a[1]
         session.permanent = True
         session.modified = True
-        # resp.set_data('ok')
         response_object['message'] = 'ok'
 
     else: response_object['message'] = 'wrong!'
