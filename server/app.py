@@ -13,11 +13,11 @@ import base64
 
 
 load_dotenv()
-# instantiate the app
+
 app = Flask(__name__)
 
-app.secret_key = b'eewj'
-app.config['PERMANENT_SESSION_LIFETIME'] = 3600
+app.secret_key = os.getenv('SECRET_KEY')
+app.permanent_session_lifetime = 60 * 60 * 24 * 28
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] =  'None'
 
@@ -36,15 +36,16 @@ def push_image(image, user_id):
             port={os.getenv('PORT_PG')}
         """)
 
-
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cursor.execute(f"""
             UPDATE users
             SET avatar = decode('{image}', 'base64')
             WHERE id = $$user_id$$
                 """)
+        
         pg.commit()
-        print('Изобрадение было добавлено')
+
+        print('Изображение было добавлено')
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
@@ -838,9 +839,9 @@ def show_one(id, isQ):
 def home():
 
     response_object = {'status': 'success'} #БаZа
-    response_object['message'] = session.get('username')
+    response_object['message'] = session.get('id')
 
-    print(session.get('username')) #debug
+    print(session.get('id')) #debug
 
     return jsonify(response_object)
 
@@ -851,8 +852,8 @@ def user_registration():
 
     if request.method == 'POST':
         post_data = request.get_json()
-        # print(add_user_todb(post_data.get('name'), post_data.get('email'), post_data.get('password'))) #Вызов фунции добавления пользователя в бд и ее debug
-        print(request.cookies.get('all'))
+        print(add_user_todb(post_data.get('name'), post_data.get('email'), post_data.get('password'))) #Вызов фунции добавления пользователя в бд и ее debug
+        print(session.get('all'))
     return jsonify(response_object)
 
 #Изменение информации пользователя
@@ -883,24 +884,23 @@ def user_info():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     response_object = {'status': 'success'} #БаZа
-    resp = make_response(jsonify(response_object)) #куки-заготовка
-    resp.headers['Content-Type'] = 'text/plain'
-    if request.method == 'POST':
-        post_data = request.get_json()
-        a = login_user(post_data.get('email'), post_data.get('password'))
+    # resp = make_response(jsonify(response_object)) #куки-заготовка
+    # resp.headers['Content-Type'] = 'text/plain'
 
-        if a[0] == 'ok': #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
-            resp.set_cookie('all', a[1])
-            session['id'] = a[1]
-            session.modified = True
-            resp.set_data('ok')
+    post_data = request.get_json()
+    a = login_user(post_data.get('email'), post_data.get('password'))
 
-        else: resp.set_data(a[0])
+    if a[0] == 'ok': #Вызов и debug функции проверки пароля пользователя (вход в аккаунт)
+        # resp.set_cookie('all', a[1])
+        session['id'] = a[1]
+        session.permanent = True
+        session.modified = True
+        # resp.set_data('ok')
+        response_object['message'] = 'ok'
 
-    else:
-        response_object['message'] = db_get()
-        
-    return resp
+    else: response_object['message'] = 'wrong!'
+
+    return response_object
 
 #Новый вопрос
 @app.route('/new-question', methods=['POST'])
