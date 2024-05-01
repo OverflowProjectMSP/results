@@ -1159,13 +1159,3 @@ def check_():
 if __name__ == '__main__':
     app.run()
 
-'''
-from flask import jsonify, make_response
-
-@app.route('/your-endpoint')
-def your_function():
-    response = make_response(jsonify(my_dictionary))
-    # Добавляем заголовок Content-Type
-    response.headers['Content-Type'] = 'application/json'
-    return response
-'''
