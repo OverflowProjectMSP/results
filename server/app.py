@@ -934,7 +934,7 @@ def new_password_with_old():
 
     #Вызов, debug и возврат ответа на клиент функции обновления пароля
     if request.method=='PUT':
-        response_object['changeable'] = change_password(post_data.get('new-password'),post_data.get('old_passord') ,post_data.get('email'))
+        response_object['changeable'] = change_password(post_data.get('new_password'),post_data.get('old_passord') ,post_data.get('email'))
         print(response_object['changeable'])
     
     return jsonify(response_object)
