@@ -25,67 +25,6 @@ app.config["SESSION_COOKIE_SECURE"] =  'None'
 CORS(app, resources={r"*": {"origins": "http://localhost:5173", 'supports_credentials': True}})
 
 
-# Добавление в картинки в БД
-def push_image(image, user_id):
-    try: 
-        pg = psycopg2.connect(f"""
-            host=localhost
-            dbname=postgres
-            user=postgres
-            password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PORT_PG')}
-        """)
-
-        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cursor.execute(f"""
-            UPDATE users
-            SET avatar = decode('{image}', 'base64')
-            WHERE id = $${user_id}$$
-                """)
-        
-        pg.commit()
-
-        print('Изображение было добавлено')
-    except (Exception, Error) as error:
-        print(f'DB ERROR: ', error)
-        return_data = f"Ошибка обращения к базе данных: {error}" 
-
-    finally:
-        if pg:
-            cursor.close
-            pg.close
-            print("Соединение с PostgreSQL закрыто")
-            return return_data
-
-
-# Получение картинки из БД
-def get_image(user_id):
-    try: 
-        pg = psycopg2.connect(f"""
-            host=localhost
-            dbname=postgres
-            user=postgres
-            password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PORT_PG')}
-        """)
-
-        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cursor.execute(f"SELECT avatar from users WHERE id=$${user_id}$$")
-        to_encode = bytes(cursor.fetchone()[0])
-        print('base64 успешно отправлен')
-        return base64.b64encode(to_encode)
-    except (Exception, Error) as error:
-        print(f'DB ERROR: ', error)
-        return_data = f"Ошибка обращения к базе данных: {error}" 
-
-    finally:
-        if pg:
-            cursor.close
-            pg.close
-            print("Соединение с PostgreSQL закрыто")
-            return return_data
-
-
 # Обновление доп данных о 
 def refresh_data(name = '', surname='', interestings='', about='', contacts='', country='', region='', city='', id=''):
     try:
@@ -163,39 +102,6 @@ def login_user(email, pas):
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
-
-    finally:
-        if pg:
-            cursor.close
-            pg.close
-            print("Соединение с PostgreSQL закрыто")
-            return return_data
-
-
-# Get шифы с бд
-def db_get():
-    try:
-        pg = psycopg2.connect(f"""
-            host=localhost
-            dbname=postgres
-            user=postgres
-            password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PORT_PG')}
-        """)
-
-        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        
-        pg.commit()
-
-        cursor.execute("SELECT * FROM users")
-        result = cursor.fetchall()
-
-        return_data = []
-        for row in result:
-            return_data.append(dict(row))
-
-    except (Exception, Error) as error:
-        return_data = f"Ошибка получения данных: {error}" 
 
     finally:
         if pg:
@@ -458,6 +364,7 @@ def check_password(password, true_password):
     session.pop('sent-password', None)
     return return_data
 
+
 # Добавление сообщения в бд (чат форума)
 def chat(id, time, msg):
     try: 
@@ -568,11 +475,6 @@ def show_all_by_user(id):
             pg.close
             print("Соединение с PostgreSQL закрыто")
             return return_data
-
-
-# Фильтр 
-def filtre(filtres, category):
-    pass
 
 
 # удалить что-то
@@ -834,8 +736,7 @@ def show_one(id, isQ):
         
 
 # ФИЛЬТРЫ
-def filtration(filters):
-
+def filtre(filters, isQ):
     if not filters['filtr']:
         filtr = ''
     elif filters["filtr"]:
@@ -849,35 +750,62 @@ def filtration(filters):
                     filtr += f' {i}=$${filters[i]}$$'
                 else:
                     filtr += f' AND {i}=$${filters[i]}$$'
+    if isQ:
+        try:
+            pg = psycopg2.connect(f"""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
+            """)
 
-    try:
-        pg = psycopg2.connect(f"""
-            host=localhost
-            dbname=postgres
-            user=postgres
-            password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PORT_PG')}
-        """)
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor) 
+            cursor.execute(f"SELECT * FROM questions{filtr}")
+            result = cursor.fetchall()
 
-        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor) 
-        cursor.execute(f"SELECT * FROM states{filtr}")
-        result = cursor.fetchall()
+            return_data = []
+            for row in result:
+                return_data.append(dict(row))
 
-        return_data = []
-        for row in result:
-            return_data.append(dict(row))
+        except (Exception, Error) as error:
+            print(f"Ошибка получения данных: {error}")
+            return_data = 'Error'
 
-    except (Exception, Error) as error:
-        print(f"Ошибка получения данных: {error}")
-        return_data = 'Error'
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                print("Соединение с PostgreSQL закрыто")
+                return return_data
+    else: 
+        try:
+            pg = psycopg2.connect(f"""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
+            """)
 
-    finally:
-        if pg:
-            cursor.close
-            pg.close
-            print("Соединение с PostgreSQL закрыто")
-            return return_data
-        
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor) 
+            cursor.execute(f"SELECT * FROM questions{filtr}")
+            result = cursor.fetchall()
+
+            return_data = []
+            for row in result:
+                return_data.append(dict(row))
+
+        except (Exception, Error) as error:
+            print(f"Ошибка получения данных: {error}")
+            return_data = 'Error'
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                print("Соединение с PostgreSQL закрыто")
+                return return_data
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -899,7 +827,7 @@ def user_registration():
     if request.method == 'POST':
         post_data = request.get_json()
         print(add_user_todb(post_data.get('name'), post_data.get('email'), post_data.get('password'))) #Вызов фунции добавления пользователя в бд и ее debug
-        print(session.get('all'))
+
     return jsonify(response_object)
 
 #Изменение информации пользователя
@@ -920,9 +848,6 @@ def user_info():
                      post_data.get('Region'), 
                      post_data.get('City'),
                      session.get('id'))
-        
-    else:
-        response_object['message'] = db_get()
 
     return jsonify(response_object)
 
@@ -1033,7 +958,7 @@ def filtre_states():
 
     post_data = request.get_json()
 
-    responce_object['all'] = filtre(post_data.get('filters'), 'Стать')
+    responce_object['all'] = filtre(post_data.get('filters'), False)
 
     return jsonify(responce_object)
 
@@ -1044,7 +969,7 @@ def filtre_questions():
 
     post_data = request.get_json()
 
-    responce_object['all'] = filtre(post_data.get('filters'), 'Вопрос')
+    responce_object['all'] = filtre(post_data.get('filters'), True)
 
     return jsonify(responce_object)
 
