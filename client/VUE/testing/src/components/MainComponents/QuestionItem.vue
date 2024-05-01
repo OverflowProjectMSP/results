@@ -4,40 +4,43 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            question: {        //структура получения всех данных с сервера
-                id: 123,
-                accountInfo: {
-                    accountIcon: 'person.svg',
-                    accountName: 'Nick Endgy',
-                },
-                questionInfo: {
-                    title: 'Как сделать регистрацию с использованием только JavaScript?',
-                    description: `Подскажите, пожалуйста, как сделать регистрацию пользователя на сайте? Сайт у меня на node.js. Я первый раз такую форму делаю и не знаю какой путь выбрать. Какой вариант лучше? Просто к кнопке "зарегистрироваться" подвязать эвент и в нем делать функцию? Или как-то использовать method="post" у формы? 
-                                <br>UPD:А как fetch() использовать? Я написал такой код, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
-                    level: `Лёгкий`,
-                    imageInQuetion: 'test',
-                    answer: 28,
-                    views: 473,
-                    data: `05.01.2024 12:31`,
-                    Decided: true,
-                },
-                answers: [
-                    {
-                        answerUserInfo: {
-                            accountIcon: 'ava.png',
-                            accountName: 'JavaScriptPRO',
-                            rang: `Решала`,
-                        },
-                        answerInfo: {
-                            text: `123123123, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
-                            comment: 52,
-                            likes: 52,
-                            dislike: 36,
-                        },
-                    },
-                ],
+            // question: { //структура получения всех данных с сервера
+            //     id: 123,
+            //     accountInfo: {
+            //         accountIcon: 'person.svg',
+            //         accountName: 'Nick Endgy',
+            //     },
+            //     questionInfo: {
+            //         title: 'Как сделать регистрацию с использованием только JavaScript?',
+            //         description: `Подскажите, пожалуйста, как сделать регистрацию пользователя на сайте? Сайт у меня на node.js. Я первый раз такую форму делаю и не знаю какой путь выбрать. Какой вариант лучше? Просто к кнопке "зарегистрироваться" подвязать эвент и в нем делать функцию? Или как-то использовать method="post" у формы? 
+            //                     <br>UPD:А как fetch() использовать? Я написал такой код, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
+            //         level: `Лёгкий`,
+            //         imageInQuetion: 'test',
+            //         answer: 28,
+            //         views: 473,
+            //         data: `05.01.2024 12:31`,
+            //         Decided: true,
+            //     },
+            //     answers: [
+            //         {
+            //             answerUserInfo: {
+            //                 accountIcon: 'ava.png',
+            //                 accountName: 'JavaScriptPRO',
+            //                 rang: `Решала`,
+            //             },
+            //             answerInfo: {
+            //                 text: `123123123, а что дальше с ним сделать - не знаю. Как я понял, на сервер запрос отправлен, а именно на сервер были отправлены данные формы. А что дальше с ними сделать? Обрабатывать форму в этом же коде? Моя цель - отправить запрос в базу данных sql, в которую внесется новый пользователь`,
+            //                 comment: 52,
+            //                 likes: 52,
+            //                 dislike: 36,
+            //             },
+            //         },
+            //     ],
+            // },
 
-            },
+            questionInfo: {}, //главная хуйня
+            answers: [],
+
             text: '',
             symbols: 0,
             symbCount: false,
@@ -55,6 +58,9 @@ export default {
             isBold: false,
             isItalic: false,
 
+            count: 0,
+            countmin: 0,
+
         }
     },
     // mounted() {
@@ -65,15 +71,39 @@ export default {
     // },
 
     methods: {
-        // async loadQuestion() {
-        //     let responce = await axios.get(`/questions`, {
-        //         params: {
-        //             id: this.question.id
-        //             question: this.question.question
-        //         }
-        //     });
-        //     this.question = responce.data;
-        // },
+        async loadQuestion() {
+            let responce = await axios.get(`/questions`, {
+                params: {
+                    id: this.$route.query.id,
+                    question: true
+                }
+            });
+            this.questionInfo = responce.data.questionInfo;
+            this.answers = responce.data.answers;
+        },
+        counterPlus(index) {
+            if (this.count == 0 && this.countmin == 0) {
+                this.question.answers[index].answerInfo.likes++;
+                this.count++;
+            } else if (this.count == 0 && this.countmin == 1) {
+                return;
+            } else if (this.count == 1) {
+                this.question.answers[index].answerInfo.likes--;
+                this.count--;
+            }  
+        },
+
+        counterMinus(index) {
+            if (this.countmin == 0 && this.countmin == 0) {
+                this.question.answers[index].answerInfo.dislike++;
+                this.countmin++;
+            } else if (this.count == 1 && this.countmin == 0) {
+                return;
+            } else if (this.countmin == 1) {
+                this.question.answers[index].answerInfo.dislike--;
+                this.countmin--;
+            }
+        },
 
         breakLines(text) {
             return text.replace(/\n/g, "<br>");
@@ -100,7 +130,7 @@ export default {
             });
             await axios.post(`/new-comment`,
                 {
-                    id: this.question.id,
+                    id: this.$route.query.id,
                     answerUserInfo: this.inputUserInfo,
                     answerInfo: {
                         text: this.inputAnswer.textAnswer,
@@ -115,8 +145,8 @@ export default {
         async deleteQuestion() {
             await axios.delete('/delete', {
                 params:{
-                    id: '3351e483-0160-4faa-835c-b06a51a86b7d',
-                    question: true
+                    id: this.$route.query.id,
+                    question: true,
                 }
             })
         }
@@ -169,7 +199,7 @@ export default {
         </div>
         <button class="answer-btn answer-a user-select-none">Ответов: {{ question.questionInfo.answer }}</button>
 
-        <div class="content-2" v-for="answer in question.answers" v-if="this.question.answers.length != 0">
+        <div class="content-2" v-for="(answer, index) in question.answers" v-if="this.question.answers.length != 0">
             <div class="account">
                 <img class="accountIcon" :src="'src/assets/' + answer.answerUserInfo.accountIcon" width="70px" alt="">
                 <div class="name-ring">
@@ -187,11 +217,11 @@ export default {
                 <div class="left">
                     <button class="comm-add btgr">Добавить комментарий</button>
                     <div class="like-bc bc">
-                        <button class="like btgr"><img :src="'src/assets/Like.svg'" alt=""></button>
+                        <button @click="counterPlus(index)" class="like btgr"><img :src="'src/assets/Like.svg'" alt=""></button>
                         <p class="like-count user-select-none">{{ answer.answerInfo.likes }}</p>
                     </div>
                     <div class="dislike-bc bc">
-                        <button class="dislike btgr"><img :src="'src/assets/Dislike.svg'" alt=""></button>
+                        <button @click="counterMinus(index)" class="dislike btgr"><img :src="'src/assets/Dislike.svg'" alt=""></button>
                         <p class="dislike-count user-select-none">{{ answer.answerInfo.dislike }}</p>
                     </div>
                 </div>

@@ -40,7 +40,7 @@ def push_image(image, user_id):
         cursor.execute(f"""
             UPDATE users
             SET avatar = decode('{image}', 'base64')
-            WHERE id = $$user_id$$
+            WHERE id = $${user_id}$$
                 """)
         
         pg.commit()
@@ -424,7 +424,7 @@ def send_code(email):
 
 # ------------------------Улучшить бы----------------------------------------------------
     for i in range(4):
-        a = random.randint(0, 9)
+        a = random.randint(0, 9) # А че тут улучшать? (Без негатива, от febolo)
         code_pas += str(a)
 #-----------------------------------------------------------------------------------------
     
@@ -457,7 +457,6 @@ def check_password(password, true_password):
         return_data = False
     session.pop('sent-password', None)
     return return_data
-
 
 # Добавление сообщения в бд (чат форума)
 def chat(id, time, msg):
@@ -832,6 +831,53 @@ def show_one(id, isQ):
             pg.close
             print("Соединение с PostgreSQL закрыто")
             return return_data
+        
+
+# ФИЛЬТРЫ
+def filtration(filters):
+
+    if not filters['filtr']:
+        filtr = ''
+    elif filters["filtr"]:
+        filtr = ' WHERE'
+        for i in filters:
+            print(i)
+            if filters[i] != 'false':
+                if i == 'filtr':
+                    continue
+                if filtr == ' WHERE':
+                    filtr += f' {i}=$${filters[i]}$$'
+                else:
+                    filtr += f' AND {i}=$${filters[i]}$$'
+
+    try:
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor) 
+        cursor.execute(f"SELECT * FROM states{filtr}")
+        result = cursor.fetchall()
+
+        return_data = []
+        for row in result:
+            return_data.append(dict(row))
+
+    except (Exception, Error) as error:
+        print(f"Ошибка получения данных: {error}")
+        return_data = 'Error'
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            print("Соединение с PostgreSQL закрыто")
+            return return_data
+        
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
