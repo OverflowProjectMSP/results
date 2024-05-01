@@ -947,7 +947,7 @@ def new_password_with_email():
 
     if request.method=='PUT':
         #Восстановление пароля если мы в аккаунте
-        change_password_send(post_data('new-password'), session.get('email'))
+        change_password_send(post_data('new_password'), session.get('email'))
     
     elif request.method == 'POST' and post_data.get('email'):
         #Восстановление пароля если мы НЕ в аккаунте
