@@ -955,7 +955,7 @@ def new_password_with_email():
     
     else:
         # ХЗ, вроде проверка кода подтверждения
-        response_object['status'] = check_password(post_data.get('password'), session.get('code'))
+        response_object['stat'] = check_password(post_data.get('password'), session.get('code'))
     
     return jsonify(response_object)
 
