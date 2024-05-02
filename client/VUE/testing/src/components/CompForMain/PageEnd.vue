@@ -102,14 +102,20 @@ a {
 }
 
 @media (max-width: 529px) {
-    .pageend {
+    /* .pageend {
         margin-top: 430px;
+    } */
+}
+
+@media (max-width: 519px) {
+    .pageend {
+        margin-top: 400px;
     }
 }
 
 @media (max-width: 388px) {
-    .pageend {
+    /* .pageend {
         margin-top: 600px;
-    }
+    } */
 }
 </style>

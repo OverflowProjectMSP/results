@@ -421,15 +421,15 @@ hr {
 }
 
 @media (max-width: 590px) {
-    .languages {
+    /* .languages {
         margin-bottom: 110px;
-    }
+    } */
 }
 
 @media (max-width: 388px) {
-    .languages {
-        margin-bottom: 300px;
-    }
+    /* .languages {
+        margin-bottom: 100px;
+    } */
 
     .lang-item-col-2,
     .lang-item-col-3,

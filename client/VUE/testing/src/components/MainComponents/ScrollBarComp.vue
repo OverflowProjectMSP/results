@@ -234,4 +234,10 @@ export default {
         margin-top: 150px;
     }
 }
+
+@media (max-width: 453px) {
+    hr {
+        margin-top: 200px;
+    }
+}
 </style>
