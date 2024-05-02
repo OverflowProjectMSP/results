@@ -210,9 +210,9 @@ export default {
         display: none !important;
     }
 
-    hr {
-        margin-top: 200px !important;
-    }
+    /* hr {
+        margin-top: 50px !important;
+    } */
 
     .develop {
         margin: 30px 10px !important;
@@ -220,6 +220,18 @@ export default {
 
     .arrow {
         margin: 0 20px !important;
+    }
+}
+
+@media (max-width: 829px) {
+    hr {
+        margin-top: 100px;
+    }
+}
+
+@media (max-width: 539px) {
+    hr {
+        margin-top: 150px;
     }
 }
 </style>

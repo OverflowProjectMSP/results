@@ -89,9 +89,9 @@ a {
     background-color: #aac3e1
 }
 
-@media (max-width: 799px) {
+@media (max-width: 790px) {
     .pageend {
-        margin-top: 160px;
+        margin-top: 150px;
     }
 }
 
