@@ -35,7 +35,7 @@ export default {
                     role: `Лучший фронтенд разработчик`,
                     imageProfileDS: `garleen.png`,
                     dsProfile: `garleenn`,
-                    tgProfile: `@Grandb1s`,
+                    tgProfile: `Garleen`,
                     vkProfile: `ivangorbenko52`,
                 },
                 {

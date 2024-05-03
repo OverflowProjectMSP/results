@@ -30,7 +30,8 @@ a {
 }
 .footer{    
     background: url('@/assets/back.png'); 
-    background-repeat: no-repeat;   
+    background-repeat: no-repeat;
+    background-size: cover;
     height: 370px;
     width: 100%;
     display: flex;
