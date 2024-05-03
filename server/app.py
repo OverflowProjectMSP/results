@@ -693,10 +693,15 @@ def show_one(id, isQ):
 
             cursor.execute(f"SELECT * from states WHERE id = $${id}$$")
             
-            all_states = cursor.fetchall()  
+            all_states = cursor.fetchall()[0]
+            cursor.execute(f"SELECT * from answers WHERE o_id = $${id}$$")
+            all_asw = cursor.fetchall()
 
 
-            return_data = all_states
+            return_data = {
+                'question:': all_states,
+                'answers': all_asw     
+                           }
 
         except (Exception, Error) as error:
             print(f'DB ERROR: ', error)
@@ -721,9 +726,14 @@ def show_one(id, isQ):
 
         cursor.execute(f"SELECT * from states WHERE id = $${id}$$")
         
-        all_states = cursor.fetchall()  
+        all_states = cursor.fetchall()[0]
+        cursor.execute(f"SELECT * from answers WHERE o_id = $${id}$$")
+        all_asw = cursor.fetchall()
 
-        return_data = all_states
+        return_data = {
+                'states': all_states,
+                'answers': all_asw     
+                           }
 
     except (Exception, Error) as error:
         print(f'DB ERROR: ', error)
