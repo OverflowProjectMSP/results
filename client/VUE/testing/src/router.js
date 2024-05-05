@@ -13,7 +13,7 @@ export default createRouter({
         import("../src/components/MainComponents/QuetionComp.vue"),
     },
     {
-      path: "/main",
+      path: "/",
       component: () => import("./components/MainComponents/MainComp.vue"),
     },
     {

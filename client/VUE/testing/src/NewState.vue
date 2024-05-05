@@ -36,29 +36,19 @@ export default {
 <template>
     <head-comp />
     <div class="title">
-        <h2>
-            Новая статья
-        </h2>
+        <h2>Новая статья</h2>
     </div>
     <hr>
     <div class="name">
-        <h4>
-            Название статьи
-        </h4>
-        <p class="transparent mb-0">
-            Сформулируйте название так, чтобы сразу было понятно, о чём речь.
-        </p>
+        <h4>Название статьи</h4>
+        <p class="transparent mb-0">Сформулируйте название так, чтобы сразу было понятно, о чём речь.</p>
         <form>
             <input type="email" class="form-control" id="inputlg" v-model="form.discriptions">
         </form>
     </div>
     <div class="text">
-        <h4>
-            Текст статьи
-        </h4>
-        <p class="transparent">
-            Делайте что хотите, в ваших руках все инструменты!
-        </p>
+        <h4>Текст статьи</h4>
+        <p class="transparent">Делайте что хотите, в ваших руках все инструменты!</p>
         <div class="string">
             <div class="btn-group" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-secondary"><b>B</b></button>
@@ -86,8 +76,6 @@ export default {
         </div>
 
     </div>
-
-
 
     <div class="row pt-5 block">
         <div class="col-6">

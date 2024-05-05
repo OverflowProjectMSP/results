@@ -45,7 +45,7 @@ export default {
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="container-contant"></div>
           <h4 class="nav-item mr-0 ml-0">
-            <a class="nav-link mt-2" aria-current="page" href="#/Main">StackOverflow</a>
+            <a class="nav-link mt-2" aria-current="page" href="#/">StackOverflow</a>
           </h4>
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 mb-2">
             <li class="nav-item mt-1" style="cursor: pointer;">
