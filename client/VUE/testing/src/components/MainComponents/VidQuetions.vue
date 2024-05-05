@@ -20,10 +20,10 @@ export default {
             <div class="left">
                 <div class="top-1">
                     <div class="name">
-                        <p><img src="" alt="" class="t">{{ quetion.language }}</p>
+                        <p><img src="" alt="" class="t">{{ quetion.tag }}</p>
                     </div>
                     <div class="id middle">
-                        <p><img src="" alt="" class="t">{{ quetion.complexity }}</p>
+                        <p><img src="" alt="" class="t">{{ quetion.dificulty}}</p>
                     </div>
                 </div>
                 <div class="mid-1">

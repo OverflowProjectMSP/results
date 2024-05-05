@@ -3,6 +3,7 @@ import axios from 'axios';
 import VidQuetions from './components/MainComponents/VidQuetions.vue';
 import ModelWind from './components/СomponetsForPages/ModelWind.vue';
 
+
 export default {
     components: {
         VidQuetions,
@@ -53,12 +54,6 @@ export default {
             Show: false,
         }
     },
-    mounted() {
-        this.loadQuestions();
-        setInterval(() => {
-            this.loadQuestions();
-        }, 10000);
-    },
     methods: {
         async loadQuestions() {
             let res = await axios.get('/show-questions');
@@ -73,11 +68,11 @@ export default {
             } else {
                 this.filtrs = {
                     filtr: true,
-                    type: this.filtres.type,
-                    dificulty: this.filtres.dificulty,
+                    tag: this.filters.type,
+                    dificulty: this.filters.dificulty,
                 };
             }
-            let res = await axios.post('/filtre-question', {
+            let res = await axios.post('/filtre-questions', {
                 body: {
                     filters: this.filtrs
                 }
@@ -89,7 +84,13 @@ export default {
         OpenModal() {
             this.Show = !this.Show
         },
-    }
+    },
+    mounted() {
+        this.loadQuestions();
+        setInterval(() => {
+            this.loadQuestions();
+        }, 10000);
+    },
 }
 </script>
 
@@ -102,9 +103,9 @@ export default {
                 <div class="select-block d-flex border rounded-3 gap-1 py-0  me-2">
                     <img class="border-end pe-2 ps-2" src="./assets/image.png" alt="level">
                     <select class="form-select border-0" v-model="filters.dificulty">
-                        <option value="easy" selected>Лёгкие</option>
-                        <option value="middle">Средние</option>
-                        <option value="hard">Сложные</option>
+                        <option value="Легкие" selected>Лёгкие</option>
+                        <option value="Средние">Средние</option>
+                        <option value="Сложные">Сложные</option>
                         <option value="false">Без фильтров</option>
                     </select>
                 </div>
@@ -124,7 +125,7 @@ export default {
                         <div class="contain" @click="OpenModal">
                             <img src="./assets/add.png" class="add">
                         </div>
-                        <button class="btn find-btn btn-outline-primary text-dark ms-4">Найти</button>
+                        <button class="btn find-btn btn-outline-primary text-dark ms-4" @click="filtre">Найти</button>
                     </div>
                 </div>
             </div>

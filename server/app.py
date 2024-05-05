@@ -773,9 +773,9 @@ def filtre(filters, isQ):
             """)
 
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor) 
-            cursor.execute(f"SELECT * FROM questions{filtr}")
+            cursor.execute(f"SELECT * FROM question{filtr}")
             result = cursor.fetchall()
-
+            print(f"SELECT * FROM question{filtr}")
             return_data = []
             for row in result:
                 return_data.append(dict(row))
@@ -995,12 +995,12 @@ def filtre_states():
     return jsonify(responce_object)
 
 # Фильтр вопросов
-@app.route("/filtre-questions", methods=['GET'])
+@app.route("/filtre-questions", methods=['POST'])
 def filtre_questions():
     responce_object = {'status' : 'success'} #БаZа
 
-    post_data = request.get_json()
-
+    post_data = request.get_json().get('body')
+    print(post_data)
     responce_object['all'] = filtre(post_data.get('filters'), True)
 
     return jsonify(responce_object)
