@@ -34,7 +34,7 @@ export default {
   <header>
     <nav class="navbar navbar-expand-xl  d-flex align-items-center rounded-0">
       <div class="container-fluid ">
-        <a class="navbar-brand" href="#/Main">
+        <a class="navbar-brand" href="#/">
           <div class="logo-container mt-1"><img src="../../assets/apple-touch-icon@2.png" alt="" class="logo"></div>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"

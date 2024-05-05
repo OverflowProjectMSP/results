@@ -83,6 +83,7 @@ export default {
                 }
             });
             this.quetions = res.data;
+            console.log(this.quetions)
         },
 
         OpenModal() {
