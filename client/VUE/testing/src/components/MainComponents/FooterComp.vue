@@ -70,10 +70,6 @@ a {
     color: white;
     text-align: center;
 }
-.arrow{
-/* padding: 15px 20px 0 20px; */
-}
-
 
 @media (max-width: 400px) {
     .footer{

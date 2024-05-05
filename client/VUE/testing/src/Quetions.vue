@@ -13,37 +13,37 @@ export default {
     data() {
         return {
             quetions: [
-                // {
-                //     title: `Как создать переменную?`,
-                //     subscribers: 50,
-                //     hours: 43,
-                //     views: 43,
-                //     answers: 423,
-                //     language: 'Python',
-                //     complexity: 'Средне',
-                //     id: 0
+                {
+                    title: `Как создать переменную?`,
+                    subscribers: 50,
+                    hours: 43,
+                    views: 43,
+                    answers: 423,
+                    language: 'Python',
+                    complexity: 'Средне',
+                    id: 0
 
-                // },
-                // {
-                //     title: `Как создать переменную?`,
-                //     subscribers: 50,
-                //     hours: 43,
-                //     views: 43,
-                //     answers: 423,
-                //     language: 'C++',
-                //     complexity: 'Средне',
-                //     id: 1
-                // },
-                // {
-                //     title: `Как создать переменную?`,
-                //     subscribers: 45,
-                //     hours: 0,
-                //     views: 43,
-                //     answers: 423,
-                //     language: 'Асембелер',
-                //     complexity: 'Средне',
-                //     id: 2
-                // },
+                },
+                {
+                    title: `Как создать переменную?`,
+                    subscribers: 50,
+                    hours: 43,
+                    views: 43,
+                    answers: 423,
+                    language: 'C++',
+                    complexity: 'Средне',
+                    id: 1
+                },
+                {
+                    title: `Как создать переменную?`,
+                    subscribers: 45,
+                    hours: 0,
+                    views: 43,
+                    answers: 423,
+                    language: 'Асембелер',
+                    complexity: 'Средне',
+                    id: 2
+                },
             ],
 
             filters: {
@@ -55,31 +55,31 @@ export default {
         }
     },
     methods: {
-        async loadQuestions() {
-            let res = await axios.get('/show-questions');
-            this.quetions = res.data;
-        },
+        // async loadQuestions() {
+        //     let res = await axios.get('/show-questions');
+        //     this.quetions = res.data;
+        // },
 
-        async filtre() {
-            if (this.filters.type == 'false' && this.filters.dificulty == 'false') {
-                this.filtrs = {
-                    filtr: false
-                }
-            } else {
-                this.filtrs = {
-                    filtr: true,
-                    tag: this.filters.type,
-                    dificulty: this.filters.dificulty,
-                };
-            }
-            let res = await axios.post('/filtre-questions', {
-                body: {
-                    filters: this.filtrs
-                }
-            });
-            this.quetions = res.data;
-            console.log(this.quetions)
-        },
+        // async filtre() {
+        //     if (this.filters.type == 'false' && this.filters.dificulty == 'false') {
+        //         this.filtrs = {
+        //             filtr: false
+        //         }
+        //     } else {
+        //         this.filtrs = {
+        //             filtr: true,
+        //             tag: this.filters.type,
+        //             dificulty: this.filters.dificulty,
+        //         };
+        //     }
+        //     let res = await axios.post('/filtre-questions', {
+        //         body: {
+        //             filters: this.filtrs
+        //         }
+        //     });
+        //     this.quetions = res.data;
+        //     console.log(this.quetions)
+        // },
 
         OpenModal() {
             this.Show = !this.Show

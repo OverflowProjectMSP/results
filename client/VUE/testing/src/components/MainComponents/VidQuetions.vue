@@ -27,11 +27,13 @@ export default {
                     </div>
                 </div>
                 <div class="mid-1">
-                    <p class="name-limit">{{ quetion.title }}</p>
+                    <p class="name-limit w-fit d-flex align-items-center">{{ quetion.title }} 
+                        <span v-if="quetion.solve" class="badge text-bg-success w-fit fs-6 h-fit ms-2 rounded-4">Решён</span>
+                    </p>
+                    
                 </div>
                 <div class="bottom-1">
-                    <div class="el">{{ quetion.subscribers }} подписчика(ов)</div>
-                    <div class="el">{{ quetion.hours }} час(ов) назад</div>
+                    <div class="el">{{ quetion.data }}</div>
                     <div class="el -d">{{ quetion.views }} просмотр(ов)</div>
                 </div>
             </div>
