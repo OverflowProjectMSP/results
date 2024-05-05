@@ -124,6 +124,7 @@ export default {
                         <div class="contain" @click="OpenModal">
                             <img src="./assets/add.png" class="add">
                         </div>
+                        <button class="btn find-btn btn-outline-primary text-dark ms-4">Найти</button>
                     </div>
                 </div>
             </div>
@@ -137,6 +138,9 @@ export default {
 </template>
 
 <style scoped>
+.find-btn:hover {
+    color: #fff !important;
+}
 a {
     text-decoration: none;
     color: #000;
