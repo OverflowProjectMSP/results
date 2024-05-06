@@ -17,6 +17,7 @@ export default {
                 discord: ``,
                 facebook: ``,
                 phonenumber: ``,
+                github: ``,
             },
         }
     },
@@ -106,6 +107,11 @@ export default {
                                 <div class="border px-3 py-1 rounded-3 h-fit">Email</div>
                                 <input type="text" class="form-control contact-input" style="margin-left: 30px;"
                                     v-model="form.email">
+                            </div>
+                            <div class="contact-plus d-flex align-items-center gap-0 mb-3">
+                                <div class="border px-3 py-1 rounded-3 h-fit">GitHub</div>
+                                <input type="text" class="form-control contact-input" style="margin-left: 30px;"
+                                    v-model="form.github">
                             </div>
                             <div class="contact-plus d-flex align-items-center gap-0 mb-3">
                                 <div class="border px-3 py-1 rounded-3 h-fit">Telegram</div>
