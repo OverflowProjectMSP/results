@@ -77,5 +77,9 @@ export default createRouter({
       path: "/QuestionItem",
       component: () => import("./components/MainComponents/QuestionItem.vue"),
     },
+    {
+      path: "/AccauntSettings",
+      component: () => import("./components/СomponetsForPages/AccauntSettings.vue"),
+    },
   ],
 });
