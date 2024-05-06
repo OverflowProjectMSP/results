@@ -457,15 +457,14 @@ def show_all_by_user(id):
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-        questions = cursor.execute(f'''SELECT * FROM question
-                                WHERE id=$${id}$$''')
-        
-        states = cursor.execute(f'''SELEСT * FROM states
-                                WHERE id=$${id}$$''')
-        
+        print(id)
+        questions = cursor.execute(f'SELECT * FROM question WHERE user_=$${id}$$')
+        print(f'SELECT * FROM question WHERE user_=$${id}$$')
+        # states = cursor.execute(f'''SELEСT * FROM states
+        #                         WHERE user_=$${id}$$''')
+        states = 0
         print('Информация отпраленна')
-
+        print(questions)
         return_data = {
             'questions': questions,
             'states': states
@@ -1094,14 +1093,15 @@ def check():
 
     return  jsonify(response_object)
 
-# проверка может ли юзер исправлять что-то
+# все от одного юзера
 @app.route('/show-all-by-user', methods=['GET'])
 def check_():
     response_object = {'status': 'success'} #БаZа
 
-    post_data = request.get_json()
+    post_data = request.args.get('id')
 
-    response_object['all'] = show_all_by_user(post_data.get('id'))
+
+    response_object['all'] = show_all_by_user(post_data)
 
     print('Отправлено')
     return  jsonify(response_object)
