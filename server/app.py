@@ -26,7 +26,18 @@ CORS(app, resources={r"*": {"origins": "http://localhost:5173", 'supports_creden
 
 
 # Обновление доп данных о 
-def refresh_data(name = '', surname='', interestings='', about='', contacts='', country='', region='', city='', avatar='',filename='', id=''):
+def refresh_data(info, id):
+    data = ''
+    for i in info:
+        print(i)
+        if info[i] != 'false':
+            if i == 'avatar' or i == 'filename':
+                continue
+            if data == '':
+                data += f' {i}=$${info[i]}$$'
+            else:
+                data += f', {i}=$${info[i]}$$'
+
     try:
         pg = psycopg2.connect(f"""
             host=localhost
@@ -37,20 +48,12 @@ def refresh_data(name = '', surname='', interestings='', about='', contacts='', 
         """)
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        print(id)
-        src = add_img(avatar, filename, True, False, session.get('id') )
+        
+        # src = add_img(info['avatar'], info['filename'], True, False, session.get('id') )
         # UPDATE user-info
         cursor.execute(f"""UPDATE users 
-                    SET name = $${name}$$,
-                        surname = $${surname}$$,
-                        interestings = $${interestings}$$,
-                        about = $${about}$$,
-                        contacts = $${contacts}$$,
-                        country = $${country}$$,
-                        region=$${region}$$,
-                        city=$${city}$$,
-                        avatar=$${src}$$
-                    WHERE id=$${id}$$;""")
+                    SET {data}
+                    WHERE id='f527d19af56b4614bab663800ed79825';""")
         pg.commit()
 
         return_data = "Данные изменены"
@@ -873,17 +876,7 @@ def user_info():
         #Вызов функции обновления бд
         post_data = request.get_json()
         post_data = post_data.get('form')
-        refresh_data(post_data.get('Name'), 
-                     post_data.get('Surname'), 
-                     post_data.get('interestings'), 
-                     post_data.get('about'), 
-                     post_data.get('contacts'), # contactsType 
-                     post_data.get('Country'), 
-                     post_data.get('Region'), 
-                     post_data.get('City'),
-                     post_data.get('Avatar'),
-                     post_data.get('Filename'),
-                     session.get('id'))
+        refresh_data(post_data, session.get('id'))
 
     return jsonify(response_object)
 
