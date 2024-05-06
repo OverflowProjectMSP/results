@@ -6,17 +6,18 @@ export default {
         return {
             email: '',
             password: '',
-            isShowPassword: false,
-            showPassword: 'password',
             exPassword: '',
-            isShowExPassword: false,
-            showExPassword: 'password',
+            nickname: ``,
+            
             error: '',
             eyeOpen1: true,
             eyeOpen2: true,
             eyeImg1: '/src/assets/eye.svg',
             eyeImg2: '/src/assets/eye.svg',
-            nickname: ``,
+            isShowPassword: false,
+            showPassword: 'password',
+            isShowExPassword: false,
+            showExPassword: 'password',
         }
     },
     methods: {
@@ -78,7 +79,7 @@ export default {
                 email: this.email,
                 password: this.password
             });
-        }
+        },
     }
 }
 
