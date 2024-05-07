@@ -468,11 +468,11 @@ def show_all_by_user(id):
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         logging.info(id)
-        questions = cursor.execute(f'SELECT * FROM question WHERE user_=$${id}$$')
-        logging.info(f'SELECT * FROM question WHERE user_=$${id}$$')
-        # states = cursor.execute(f'''SELEСT * FROM states
-        #                         WHERE user_=$${id}$$''')
-        states = 0
+        cursor.execute(f'SELECT * FROM question WHERE user_=$${id}$$')
+        questions = cursor.fetchall()
+        cursor.execute(f'''SELEСT * FROM states
+                                WHERE user_=$${id}$$''')
+        states = cursor.fetchall()
         logging.info('Информация отпраленна')
         logging.info(questions)
         return_data = {
@@ -619,8 +619,10 @@ def show_forum(filtre):
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        states = cursor.excute(f'''SELECT * FROM states WHERE tag=$${filtre}$$''')
-        questions = cursor.excute(f'''SELECT * FROM question WHERE tag=$${filtre}$$''')
+        cursor.execute(f'''SELECT * FROM states WHERE tag=$${filtre}$$''')
+        states = cursor.fetchall()
+        cursor.execute(f'''SELECT * FROM question WHERE tag=$${filtre}$$''')
+        questions = cursor.fetchall()
         
         return_data = {
             "states": states,
@@ -1013,9 +1015,10 @@ def filtre_questions():
 def show_f():
     responce_object = {'status' : 'success'} #БаZа
 
-    post_data = request.get_json()
+    post_data = request.args.get('language')
 
-    responce_object['all'] = show_forum(post_data.get('filters'))
+
+    responce_object['all'] = show_forum(post_data)
 
     return jsonify(responce_object)
 
@@ -1110,7 +1113,6 @@ def check_():
     response_object = {'status': 'success'} #БаZа
 
     post_data = request.args.get('id')
-
 
     response_object['all'] = show_all_by_user(post_data)
 
