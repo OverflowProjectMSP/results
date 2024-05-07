@@ -28,9 +28,11 @@ export default {
                     id: 124,
                     question: true
                 },
-
             ],
             plusImg: 'src/assets/plus.svg',
+
+            question: [],
+            states: [],
         }
     },
     mounted() {
@@ -40,10 +42,11 @@ export default {
         async loadForum() {
             let res = await axios.get('/show-forum', {
                 params: {
-                    language: this.language
+                    lang: this.$route.query.lang
                 }
             });
-            this.posts = res.data;
+            this.question = res.data.question;
+            this.states = res.data.states;
         }
     }
 }

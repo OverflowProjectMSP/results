@@ -81,5 +81,9 @@ export default createRouter({
       path: "/AccauntSettings",
       component: () => import("./components/СomponetsForPages/AccauntSettings.vue"),
     },
+    {
+      path: "/ForumPage",
+      component: () => import("./components/СomponetsForPages/ForumPage.vue"),
+    },
   ],
 });
