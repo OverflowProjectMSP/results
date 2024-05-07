@@ -33,8 +33,18 @@ export default {
             plusImg: 'src/assets/plus.svg',
         }
     },
+    mounted() {
+        this.loadForum();
+    },
     methods: {
-
+        async loadForum() {
+            let res = await axios.get('/show-forum', {
+                params: {
+                    language: this.language
+                }
+            });
+            this.posts = res.data;
+        }
     }
 }
 </script>
