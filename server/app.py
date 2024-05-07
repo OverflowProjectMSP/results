@@ -3,7 +3,7 @@ import uuid
 import psycopg2
 from psycopg2 import extras, Error
 from flask import Flask, jsonify, request, session, make_response
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 import smtplib
 from email.mime.text import MIMEText
 import random
