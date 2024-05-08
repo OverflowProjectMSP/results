@@ -125,7 +125,7 @@ export default {
 
     .regist form {
         display: flex;
-        flex-direction: column;
+        
     }
 
     .inp {
