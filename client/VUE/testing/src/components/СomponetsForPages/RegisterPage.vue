@@ -86,144 +86,117 @@ export default {
 </script>
 
 <template>
-    <div class="container">
-        <h1>Регистрация</h1>
-        <form action="#!" @submit.prevent="register">
-            <input class="form-item form-item-1" v-model="nickname" placeholder="Введите никнейм" type="email" name=""
-                id="">
-            <input class="form-item form-item-1" v-model="email" placeholder="Email" type="email" name="" id="">
-            <div class="password">
-                <input class="form-item form-item-2" :type="showPassword" v-model="password" placeholder="Пароль"
-                    type="password" name="password" id="password-input">
-                <img @click="toggleVisibility1" class="password-show" :src="eyeImg1" alt="">
+    <div class="tototocontainer">
+        <div class="background"></div>
+        <div class="content">
+            <p>Регистрация</p>
+            <div class="regist">
+                <form>
+                    <input v-model="nickname" class="inp inp-username" type="text" name="" id="" placeholder="Никнейм">
+                    <input v-model="email" class="inp inp-email" type="email" placeholder="Почта">
+                    <input v-model="password" class="inp inp-password" type="password" placeholder="Пароль">
+                    <input v-model="exPassword" class="inp inp-rep-password" type="password" placeholder="Повторите пароль">
+                </form>
+
+                <a href="#!"><button>Продолжить</button></a>
+                <div class="haveacc">
+                    <p>У вас уже есть аккаунт?</p><a href="#!">Войти -></a>
+                </div>
             </div>
-            <div class="exPassword">
-                <input class="form-item form-item-3" :type="showExPassword" v-model="exPassword"
-                    placeholder="Повторите пароль" type="password" name="exPassword" id="exPassword-input">
-                <img @click="toggleVisibility2" class="exPassword-show" :src="eyeImg2" alt="">
-            </div>
-        </form>
-        <div class="error-end-btn">
-            <p class="have_account">Уже есть аккаунт? <a href="#/Login">Войти</a></p>
-            <p class="error">{{ error }}</p>
-            <button type="submit" class="btn-reg" @click="register">Зарегистрироваться</button>
         </div>
     </div>
 </template>
+    
+<style>
+    .tototocontainer {
+        width: 100%;
+        display: flex;
+    }
 
-<style scoped>
-.container {
-    background: #ffffff;
-    width: 400px;
-    height: 580px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 100px;
-    border-radius: 30px;
-    border: solid 3px #2a2a2a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
+    .background {
+        width: 40%;
+        height: 92vh;
+        background: url(../../assets/backgroundUp.png) center;
+        background-repeat: no-repeat; 
+    }
 
-h1 {
-    font-size: 45px;
-    margin-bottom: 50px;
-    user-select: none;
-}
+    .content p {
+        font-size: 56px;
+        margin-bottom: 12px;
+    }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
+    .content {
+        margin-top: 219px;
+        margin-left: 128px;
+    }
 
-.form-item {
-    border: 2px solid #2a2a2a;
-    border-radius: 10px;
-    width: 300px;
-    height: 40px;
-
-    margin-bottom: 25px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.form-item:focus {
-    outline: 2px solid #4200FF;
-    border: none;
-}
-
-.btn-reg {
-    margin-top: 10px;
-
-    width: 280px;
-    height: 60px;
-    border-radius: 12px;
-    border: none;
-    background-color: #4200FF;
-    color: #fff;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 16px;
-
-    transition: all 100ms;
-}
-
-.btn-reg:hover {
-    background-color: #2d00aa;
-    border-radius: 25px 5px;
-}
-
-.btn-reg:active {
-    background-color: #240088;
-}
-
-.error {
-    color: #ff2600;
-    height: 20px;
-    user-select: none;
-}
-
-.have_account {
-    font-size: 20px;
-    user-select: none;
-}
-
-div a {
-    text-decoration: none;
-    color: #4200FF;
-}
+    .regist form {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
 
 
-.password {
-    position: relative;
-}
+    .inp {
+        font-size: 18px;
+        width: 750px;
+        height: 35px;
+        padding-left: 10px;
+        border-radius: 12px !important;
 
-.password-show {
-    position: absolute;
-    cursor: pointer;
-    top: 5px;
-    right: 12px;
-    width: 30px;
+        border: 1px solid #121212 !important;
+    }
 
-}
+    .regist button {
+        margin-top: 50px;
+        margin-bottom: 15px;
 
-.exPassword {
-    position: relative;
-}
+        width: 320px;
+        height: 50px;
+        font-size: 24px;
+        background: none;
 
-.exPassword-show {
-    position: absolute;
-    cursor: pointer;
-    top: 5px;
-    right: 12px;
-    width: 30px;
+        border: 1px solid #2D72D9;
+        border-radius: 8px;
+        color: #2D72D9;
 
-}
+        transition: all 100ms;
+    }
+
+    .regist button:hover {
+        background-color: #2D72D9;
+        color: #fff;
+    }
+
+    .regist button:active {
+        background-color: #1b54a9;
+    }
+
+    .regist p {
+        font-size: 26px;
+        margin: 0;
+    }
+
+    .regist a {
+        font-size: 26px;
+        color: #2D72D9;
+        font-weight: 500;
+    }
+
+    .regist a:hover {
+        color: #1b54a9;
+    }
+
+    .regist a:active {
+        color: #114189;
+    }
+
+    .haveacc {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
 
-/* .password-control.view {
-	background: url(../assets/eyeclose.svg) 0 0 no-repeat;
-} */
+    
 </style>
