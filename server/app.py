@@ -856,6 +856,8 @@ def add_img( base, name, isAvatar, isQ,id):
             file.write(decoded_bytes)
     return 'http://127.0.0.1:5000/media/'+name
 
+def add_answer(text, isQ, idO, id_u):
+    pass
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -1098,11 +1100,10 @@ def show_sates():
 @app.route('/check', methods=['GET'])
 def check():
     response_object = {'status': 'success'} #БаZа
-    session['id'] = 'b4d02f3f43bd4bc880f59df248fb30f6'
-    session.modified = True
     id = request.args.get('id')
+
     logging.info(id)
-    logging.info(session.get('id'))
+
     if id == session.get('id'):
         response_object['isEdit'] = 'True'
 
@@ -1121,7 +1122,20 @@ def check_():
     response_object['all'] = show_all_by_user(post_data)
 
     logging.info('Отправлено')
-    return  jsonify(response_object)
+    return jsonify(response_object)
+
+@app.route('/answers', methods=['POST'])
+def add_a():
+    response_object = {'status': 'success'} #БаZа
+
+    post_data = request.get_json()
+    text = post_data.get('text')
+
+    if post_data.get('q'):
+        response_object['res'] =  add_answer(text, True, post_data.get('id'), session.get('id'))
+        return jsonify(response_object)
+    response_object['res'] =  add_answer(text, False, post_data.get('id'), session.get('id'))
+    return jsonify(response_object)
 
 
 if __name__ == '__main__':
