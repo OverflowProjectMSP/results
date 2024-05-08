@@ -65,12 +65,13 @@ export default {
 
         }
     },
-    // mounted() {
-    //     this.loadQuestion();
-    //     setInterval(() => {
-    //         this.loadQuestion();
-    //     }, 20000);
-    // },
+    mounted() {
+        this.loadQuestion();
+        this.checkUser();
+        setInterval(() => {
+            this.loadQuestion();
+        }, 20000);
+    },
 
     methods: {
         async loadQuestion() {
