@@ -92,11 +92,16 @@ export default {
             <p>Регистрация</p>
             <div class="regist">
                 <form>
-                    <input class="inp inp-username" type="text" name="" id="" placeholder="Никнейм">
-                    <input class="inp inp-email" type="email" placeholder="Почта">
-                    <input class="inp inp-password" type="password" placeholder="Пароль">
-                    <input class="inp inp-rep-password" type="password" placeholder="Повторите пароль">
+                    <input v-model="nickname" class="inp inp-username" type="text" name="" id="" placeholder="Никнейм">
+                    <input v-model="email" class="inp inp-email" type="email" placeholder="Почта">
+                    <input v-model="password" class="inp inp-password" type="password" placeholder="Пароль">
+                    <input v-model="exPassword" class="inp inp-rep-password" type="password" placeholder="Повторите пароль">
                 </form>
+
+                <a href="#!"><button>Продолжить</button></a>
+                <div class="haveacc">
+                    <p>У вас уже есть аккаунт?</p><a href="#!">Войти -></a>
+                </div>
             </div>
         </div>
     </div>
@@ -116,7 +121,7 @@ export default {
     }
 
     .content p {
-        font-size: 38px;
+        font-size: 56px;
         margin-bottom: 12px;
     }
 
@@ -129,15 +134,67 @@ export default {
         display: flex;
         flex-direction: column;
         gap: 30px;
-        border: none;
     }
 
+
     .inp {
+        font-size: 18px;
         width: 750px;
-        height: 30px;
+        height: 35px;
         padding-left: 10px;
-        border-radius: 15px;
-        border: none;
+        border-radius: 12px !important;
+
+        border: 1px solid #121212 !important;
+    }
+
+    .regist button {
+        margin-top: 50px;
+        margin-bottom: 15px;
+
+        width: 320px;
+        height: 50px;
+        font-size: 24px;
+        background: none;
+
+        border: 1px solid #2D72D9;
+        border-radius: 8px;
+        color: #2D72D9;
+
+        transition: all 100ms;
+    }
+
+    .regist button:hover {
+        background-color: #2D72D9;
+        color: #fff;
+    }
+
+    .regist button:active {
+        background-color: #1b54a9;
+    }
+
+    .regist p {
+        font-size: 26px;
+        margin: 0;
+    }
+
+    .regist a {
+        font-size: 26px;
+        color: #2D72D9;
+        font-weight: 500;
+    }
+
+    .regist a:hover {
+        color: #1b54a9;
+    }
+
+    .regist a:active {
+        color: #114189;
+    }
+
+    .haveacc {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
 
