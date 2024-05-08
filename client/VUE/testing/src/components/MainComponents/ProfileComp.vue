@@ -1,6 +1,8 @@
 <script>
 import HeadComp from '../MinorComponents/HeadComp.vue';
 import VidUserComp from '../MainComponents/VidUserComp.vue';
+import axios from 'axios';
+
 
 export default {
     components: { HeadComp, VidUserComp },
@@ -40,8 +42,27 @@ export default {
                 },
             ],
         }
-    }
+    }, 
+    methods: {
+        async all_by_he(){
+            let id = 'b4d02f3f43bd4bc880f59df248fb30f6'
+            res = await axios.get('/show-all-by-user', {
+                params: {
+                    id: id
+                }
+            });
+            
+            this.quetionsUsers = res.data
+        }
+    },
+    mounted() {
+        this.all_by_he();
+        setInterval(() => {
+            this.all_by_he();
+        }, 100900);
+    },
 }
+
 </script>
 
 <template>
@@ -70,7 +91,7 @@ export default {
                 <p><img src="../../assets/User.svg" alt="">Привет, я {Имя Фамилия}</p>
                 <p><img src="../../assets/SVGRepo_iconCarrier.svg" alt="">Я интересуюсь {интересы}</p>
                 <p><img src="../../assets/Frame.svg" alt="" class="u">Как со мной связаться? {соц. сети}</p>
-                <p><img src="../../assets/-.svg" alt="">{Описание пользователя}</p>
+                <!-- <p><img src="../../assets/-.svg" alt="">{Описание пользователя}</p> -->
             </div>
         </div>
 

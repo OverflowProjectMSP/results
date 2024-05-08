@@ -40,7 +40,7 @@ export default {
 
             questionInfo: {}, //главная хуйня
             answers: [],
-
+            id_: 'b4d02f3f43bd4bc880f59df248fb30f6',
             text: '',
             symbols: 0,
             symbCount: false,
@@ -51,6 +51,7 @@ export default {
                 dislike: 0,
             },
             inputUserInfo: {
+                
                 accountIcon: 'ava.png',
                 accountName: 'Your',
                 rang: `ИИ`,
@@ -61,15 +62,11 @@ export default {
             count: 0,
             countmin: 0,
 
+            isCheck: null,
+
         }
     },
-    // mounted() {
-    //     this.loadQuestion();
-    //     setInterval(() => {
-    //         this.loadQuestion();
-    //     }, 20000);
-    // },
-
+    
     methods: {
         async loadQuestion() {
             let responce = await axios.get(`/questions`, {
@@ -148,14 +145,30 @@ export default {
                     id: this.$route.query.id,
                     question: true,
                 }
-            })
+            });
+        },
+
+        async checkUser() {
+            let res = await axios.get('/check', {
+                params: {
+                    id: this.id_,
+                }
+            });
+            this.isCheck = res.data.isEdit;
         }
-    }
+    },
+    mounted() {
+        this.loadQuestion();
+        this.checkUser();
+        setInterval(() => {
+            this.loadQuestion();
+        }, 20000);
+    },
 }
 
 </script>
 
-<template>
+<!-- <template>
     <div class="container mb-4">
         <div class="content-1">
             <div class="account justify-content-between">
@@ -169,15 +182,10 @@ export default {
                         <p>Уровень: <span class="difficult">{{ question.questionInfo.level }}</span></p>
                     </div>
                 </div>
-                <div class="action-select">
-                    <!-- <select role="button" class="form-select">
-                        <option selected>Дейсвие</option>
-                        <option value="put"><a href="#/Quetion">Редактировать</a></option>
-                        <option value="delete">Удалить</option>
-                    </select> -->
+                <div class="action-select" v-if="isCheck == 'true'">
                     <div class="dropdown">
-                        <button class="btn dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false">Дейсвие</button>
-                        <ul class="dropdown-menu">
+                        <button class="btn dropdown-toggle border">Дейсвие</button>
+                        <ul class="dropdown-menu 52-da-sdravstvuet-sankt-piterburg-i-etot-gorod-nash-ya-kazhdiy">
                             <li><a class="dropdown-item" href="#/Quetion">Редактировать</a></li>
                             <li><a class="dropdown-item" href="#" @click="deleteQuestion">Удалить</a></li>
                         </ul>
@@ -207,9 +215,9 @@ export default {
                     <p>Звание: <span class="difficult-ans">{{ answer.answerUserInfo.rang }}</span></p>
                 </div>
             </div>
-            <!-- <div class="title">
+            <div class="title">
                 <h3>{{ question.questionInfo.title }}</h3>
-            </div> -->
+            </div>
             <div class="description mt-3">
                 <p v-html="breakLines(answer.answerInfo.text)"></p>
             </div>
@@ -257,7 +265,7 @@ export default {
         </div>
 
     </div>
-</template>
+</template> -->
 
 <style scoped>
 img {

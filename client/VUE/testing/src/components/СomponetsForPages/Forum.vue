@@ -28,13 +28,28 @@ export default {
                     id: 124,
                     question: true
                 },
-
             ],
             plusImg: 'src/assets/plus.svg',
+            
+            isQuestion: true,
+
+            question: [],
+            states: [],
         }
     },
+    mounted() {
+        this.loadForum();
+    },
     methods: {
-
+        async loadForum() {
+            let res = await axios.get('/show-forum', {
+                params: {
+                    lang: this.$route.query.lang
+                }
+            });
+            this.question = res.data.question;
+            this.states = res.data.states;
+        }
     }
 }
 </script>
@@ -44,9 +59,9 @@ export default {
         <div class="container-one">
             <div class="name-and-image">
                 <img class="forum-image" :src="'src/assets/js.jpg'" alt="">
-                <p>JavaScript</p>
+                <p>{{ this.$route.query.lang }}</p>
             </div>
-            <button class="create-post"><img class="plus-icon" :src="plusImg" alt=""><a href="#/Quetion">Создать вопрос</a></button>
+            <button class="create-post"><img class="plus-icon" :src="plusImg"><a href="#/Quetion">Создать вопрос</a></button>
         </div>
     </div>
     <div class="contant-post">
@@ -61,11 +76,16 @@ export default {
             </select>
         </div>
         <!-- <div class="hr"></div> -->
+        <div class="ancet d-flex mb-3" style="display: flex; gap: 40px;">
+            <h5 role="button" class="mb-0" :class="{'border-bottom border-2 border-dark fw-semibold': isQuestion}" 
+            @click="this.states = []; this.isQuestion = !this.isQuestion">Вопросы</h5>
+            <h5 role="button" class="mb-0" :class="{'border-bottom border-2 border-dark fw-semibold': !isQuestion}" 
+            @click="this.question = []; this.isQuestion = !this.isQuestion">Статьи</h5>
+        </div>
 
         <div class="post" v-for="(post, index) in posts">
             <div class="account">
-                <a href="#!"><img class="account-img" :src="'src/assets/' + post.accountIcon" alt="">{{ post.accountName
-                    }}</a>
+                <a href="#!"><img class="account-img" :src="'src/assets/' + post.accountIcon" alt="">{{ post.accountName }}</a>
             </div>
             <div class="main-post-and-check">
                 <div class="main-post">
@@ -74,12 +94,12 @@ export default {
                 </div>
                 <div class="decided" v-if="post.Decided">
                     <div class="decid"><img width="60" class="decided-img" :src="'src/assets/decided.svg'" alt=""><span
-                            class="hover-hidden">Вопрос решён</span></div>
+                        class="hover-hidden">Вопрос решён</span></div>
                 </div>
             </div>
             <div class="answer">
-                <a :href="`#/QuestionItem?id=` + post.id + `&question=${post.question}`"><button><img :src="'src/assets/comments.svg'" alt=""><span>{{ post.answers }}</span>
-                        Ответов</button></a>
+                <a :href="`#/QuestionItem?id=` + post.id + `&question=${post.question}`"><button><img
+                :src="'src/assets/comments.svg'" alt=""><span>{{ post.answers }}</span>Ответов</button></a>
             </div>
         </div>
 
@@ -426,4 +446,3 @@ a {
     }
 }
 </style>
-
