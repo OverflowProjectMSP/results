@@ -1095,17 +1095,19 @@ def show_sates():
     return jsonify(response_object)
 
 # проверка может ли юзер исправлять что-то
-@app.route('/check-user', methods=['GET'])
+@app.route('/check', methods=['GET'])
 def check():
     response_object = {'status': 'success'} #БаZа
-
-    post_data = request.get_json()
-
-    if post_data.get('id') == request.cookies.get('all'):
-        response_object['isEdit'] = True
+    session['id'] = 'b4d02f3f43bd4bc880f59df248fb30f6'
+    session.modified = True
+    id = request.args.get('id')
+    logging.info(id)
+    logging.info(session.get('id'))
+    if id == session.get('id'):
+        response_object['isEdit'] = 'True'
 
     else:
-        response_object['isEdit'] = False
+        response_object['isEdit'] = 'False'
 
     return  jsonify(response_object)
 
@@ -1120,6 +1122,7 @@ def check_():
 
     logging.info('Отправлено')
     return  jsonify(response_object)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
