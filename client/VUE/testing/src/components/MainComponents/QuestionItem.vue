@@ -61,6 +61,8 @@ export default {
             count: 0,
             countmin: 0,
 
+            isCheck: null,
+
         }
     },
     // mounted() {
@@ -148,7 +150,16 @@ export default {
                     id: this.$route.query.id,
                     question: true,
                 }
-            })
+            });
+        },
+
+        async checkUser() {
+            let res = await axios.get('/check', {
+                params: {
+                    id: this.$route.query.id,
+                }
+            });
+            this.isCheck = res.data;
         }
     }
 }
@@ -169,15 +180,10 @@ export default {
                         <p>Уровень: <span class="difficult">{{ question.questionInfo.level }}</span></p>
                     </div>
                 </div>
-                <div class="action-select">
-                    <!-- <select role="button" class="form-select">
-                        <option selected>Дейсвие</option>
-                        <option value="put"><a href="#/Quetion">Редактировать</a></option>
-                        <option value="delete">Удалить</option>
-                    </select> -->
+                <div class="action-select" v-if="isCheck == 'true'">
                     <div class="dropdown">
-                        <button class="btn dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false">Дейсвие</button>
-                        <ul class="dropdown-menu">
+                        <button class="btn dropdown-toggle border">Дейсвие</button>
+                        <ul class="dropdown-menu 52-da-sdravstvuet-sankt-piterburg-i-etot-gorod-nash-ya-kazhdiy">
                             <li><a class="dropdown-item" href="#/Quetion">Редактировать</a></li>
                             <li><a class="dropdown-item" href="#" @click="deleteQuestion">Удалить</a></li>
                         </ul>
