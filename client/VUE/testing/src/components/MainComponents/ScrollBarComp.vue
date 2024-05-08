@@ -27,8 +27,10 @@ export default {
                 {
                     name: `febolo`,
                     role: `Ведущий Бэкенд разработчик`,
-                    imageProfileDS: `febolo.png`,
-                    dsProfile: `febolo`
+                    imageProfileDS: `febolo.gif`,
+                    dsProfile: `febolo`,
+                    tgProfile: `febolo`,
+                    vkProfile: `febolo`,
                 },
                 {
                     name: `garleenn`,
