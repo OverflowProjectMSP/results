@@ -76,7 +76,7 @@ export default {
             } else {
                 this.filtrs = {
                     filtr: true,
-                    tag: '1',
+                    tag: this.filtr.tag,
                 };
             }
             let res = await axios.post('/filtre-states', {
