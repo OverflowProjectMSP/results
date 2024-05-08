@@ -94,6 +94,8 @@ export default {
                 <form>
                     <input class="inp inp-username" type="text" name="" id="" placeholder="Никнейм">
                     <input class="inp inp-email" type="email" placeholder="Почта">
+                    <input class="inp inp-password" type="password" placeholder="Пароль">
+                    <input class="inp inp-rep-password" type="password" placeholder="Повторите пароль">
                 </form>
             </div>
         </div>
@@ -125,11 +127,17 @@ export default {
 
     .regist form {
         display: flex;
-        
+        flex-direction: column;
+        gap: 30px;
+        border: none;
     }
 
     .inp {
-        width: 700px;
+        width: 750px;
+        height: 30px;
+        padding-left: 10px;
+        border-radius: 15px;
+        border: none;
     }
 
 
