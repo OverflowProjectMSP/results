@@ -45,6 +45,9 @@ export default {
                 // },
             ],
             Show: false,
+            filters: {
+                type: "false",
+            },
         }
     },
     mounted() {
@@ -64,6 +67,25 @@ export default {
             let res = await axios.get('/show-states');
             this.states = res.data;
             console.log(res.data)
+        },
+        async filtre() {
+            if (this.filters.type == 'false') {
+                this.filtrs = {
+                    filtr: false
+                }
+            } else {
+                this.filtrs = {
+                    filtr: true,
+                    tag: this.filtr.tag,
+                };
+            }
+            let res = await axios.post('/filtre-states', {
+                body: {
+                    filters: this.filtrs
+                }
+            });
+            this.quetions = res.data;
+            console.log(this.quetions)
         }
     }
 }
@@ -79,23 +101,23 @@ export default {
    <!-- селект -->
   <div class="down-menu d-flex align-items-center">
       <div class="dropdown-center">
-      <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <img src="./assets/js.jpg" alt="" class="image"><span>JavaScript</span>
-      </button>
-      <ul class="dropdown-menu">
-          <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>JavaScript</span></a></li>
-          <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>TS</span></a></li>
-        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>Python</span></a></li>
-        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>PHP</span></a></li>
-        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>C++</span></a></li>
-        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>Java</span></a></li>
-        <li><a class="dropdown-item d-flex align-items-center" href="#/States"><img src="./assets/js.jpg" alt="" class="image"><span>C#</span></a></li>
-      </ul>
+      <select class="form-select me-2" v-model="filters.type">
+        <option value="JavaScript"><img src="./assets/js.jpg" class="image">JavaScript</option>
+        <option value="TS"><img :src="'src/assets/js.jpg'" class="image">TS</option>
+        <option value="Python"><img src="./assets/js.jpg" class="image">Python</option>
+        <option value="PHP"><img src="./assets/js.jpg" class="image">PHP</option>
+        <option value="C++"><img src="./assets/js.jpg" class="image">C++</option>
+        <option value="Java"><img src="./assets/js.jpg" class="image">Java</option>
+        <option value="C#"><img src="./assets/js.jpg" class="image">C#</option>
+        <option value="false"><img src="./assets/js.jpg" class="image">Без фильтров</option>
+      </select>
       </div>
       <!-- плюсик -->
       <div class="contain" @click="OpenModal" >
         <img src="./assets/add.png" class="add" alt="">
       </div>
+      <button class="btn find-btn btn-outline-primary text-dark ms-4" @click="filtre">Отфильровать</button>
+
       </div>
   </div>
 

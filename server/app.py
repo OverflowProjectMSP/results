@@ -475,10 +475,12 @@ def show_all_by_user(id):
         states = cursor.fetchall()
         logging.info('Информация отпраленна')
         logging.info(questions)
+
         return_data = {
             'questions': questions,
             'states': states
         }
+
     except (Exception, Error) as error:
         logging.error(f'DB: ', error)
         return_data = f"Ошибка обращения к базе данных: {error}" 
@@ -815,7 +817,7 @@ def filtre(filters, isQ):
             """)
 
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor) 
-            cursor.execute(f"SELECT * FROM questions{filtr}")
+            cursor.execute(f"SELECT * FROM states{filtr}")
             result = cursor.fetchall()
 
             return_data = []
@@ -989,12 +991,12 @@ def chat_forum():
 
 
 # Фильтр статей
-@app.route("/filtre-states", methods=['GET'])
+@app.route("/filtre-states", methods=['POST'])
 def filtre_states():
     responce_object = {'status' : 'success'} #БаZа
 
-    post_data = request.get_json()
-
+    post_data = request.get_json().get('body')
+    logging.info(post_data)
     responce_object['all'] = filtre(post_data.get('filters'), False)
 
     return jsonify(responce_object)
@@ -1120,5 +1122,5 @@ def check_():
     return  jsonify(response_object)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
 
