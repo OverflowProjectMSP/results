@@ -710,8 +710,8 @@ def show_one(id, isQ):
             cursor.execute(f"SELECT * from states WHERE id = $${id}$$")
             
             all_states = cursor.fetchall()[0]
-            cursor.execute(f"SELECT * from answers WHERE o_id = $${id}$$")
-            all_asw = cursor.fetchall()
+            
+            all_asw = show_answers(True, id)
 
 
             return_data = {
@@ -743,8 +743,9 @@ def show_one(id, isQ):
         cursor.execute(f"SELECT * from states WHERE id = $${id}$$")
         
         all_states = cursor.fetchall()[0]
-        cursor.execute(f"SELECT * from answers WHERE o_id = $${id}$$")
-        all_asw = cursor.fetchall()
+
+        all_asw = all_asw = show_answers(True, id)
+
 
         return_data = {
                 'states': all_states,
@@ -856,8 +857,70 @@ def add_img( base, name, isAvatar, isQ,id):
             file.write(decoded_bytes)
     return 'http://127.0.0.1:5000/media/'+name
 
-def add_answer(text, isQ, idO, id_u):
+# Добовление ответа
+def add_ans(text, isQ, idO, id_u):
     pass
+
+def show_answers(isQ, idO):
+    if isQ:
+        try:
+            pg = psycopg2.connect(f"""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
+            """)
+
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            
+            cursor.execute(f'''SELECT * FROM answers 
+                       WHERE id_q = $${idO}$$
+                       ORDER BY date''')
+            
+            return_data = cursor.fetchall()
+
+            logging.info('Все ответы добавлены')
+
+        except (Exception, Error) as error:
+            logging.info(f"Ошибка получения данных: {error}")
+            return_data = 'Error'
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                logging.info("Соединение с PostgreSQL закрыто")
+                return return_data
+    try:
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cursor.execute(f'''SELECT * FROM comments 
+                       WHERE id_s = $${idO}$$
+                       ORDER BY date''')
+        
+        return_data = cursor.fetchall()
+
+        logging.info('Все комментарии добавлены')
+
+    except (Exception, Error) as error:
+        logging.info(f"Ошибка получения данных: {error}")
+        return_data = 'Error'
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            logging.info("Соединение с PostgreSQL закрыто")
+            return return_data
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -1132,9 +1195,9 @@ def add_a():
     text = post_data.get('text')
 
     if post_data.get('q'):
-        response_object['res'] =  add_answer(text, True, post_data.get('id'), session.get('id'))
+        response_object['res'] =  add_ans(text, True, post_data.get('id'), session.get('id'))
         return jsonify(response_object)
-    response_object['res'] =  add_answer(text, False, post_data.get('id'), session.get('id'))
+    response_object['res'] =  add_ans(text, False, post_data.get('id'), session.get('id'))
     return jsonify(response_object)
 
 
