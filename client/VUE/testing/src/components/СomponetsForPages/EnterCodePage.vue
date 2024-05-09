@@ -4,7 +4,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            email: '',
+            email: 'example@gmail.com',
             password: '',
             exPassword: '',
             nickname: ``,
@@ -18,16 +18,13 @@ export default {
             showPassword: 'password',
             isShowExPassword: false,
             showExPassword: 'password',
+
+            inputNumber: '',
         }
     },
     methods: {
         check() {
-            if (this.email === '') {
-                this.error = '*Вы не ввели Email*'
-            } 
-            else {
-                this.error = ''
-            }
+        
         },
         toggleVisibility1() {
             this.isShowPassword = !this.isShowPassword;
@@ -71,13 +68,17 @@ export default {
     <div class="tototocontainer">
         <div class="background"></div>
         <div class="content">
-            <p>Востановить пароль</p>
+            <p>Введите код доступа</p>
+            <p class="toemail">На почту <br> {{ email }} вам был <br> отправлен ключ доступа </p>
             <div class="regist">
                 <form>
-                    <input v-model="email" class="inp inp-email" type="email" placeholder="Почта">
+                    <input class="numinp" type="number">
+                    <input class="numinp" type="number">
+                    <input class="numinp" type="number">
+                    <input class="numinp" type="number">
                 </form>
                 <p class="error">{{ error }}</p>
-                <button @click="check">Сбросить</button>
+                <button @click="check">Подтвердить через ...</button>
             </div>
         </div>
     </div>
@@ -108,19 +109,30 @@ export default {
 
     .regist form {
         display: flex;
-        flex-direction: column;
-        gap: 30px;
+        flex-direction: row;
+        gap: 20px;
         margin-bottom: 40px;
     }
 
+    .toemail {
+        font-size: 30px !important;
+        color: #A4A4A4;
+    }
 
-    .inp {
-        font-size: 18px;
-        width: 750px;
-        height: 35px;
-        padding-left: 10px;
-        border-radius: 12px !important;
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0; /* Удалить отступы */
+    }
 
+    .numinp {
+        padding-left: 25px;
+
+        width: 100px;
+        height: 100px;
+        font-size: 80px;
+
+        border-radius: 15px !important;
         border: 1px solid #121212 !important;
     }
 
