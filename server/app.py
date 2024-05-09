@@ -2,7 +2,7 @@ import os
 import uuid
 import psycopg2
 from psycopg2 import extras, Error
-from flask import Flask, jsonify, request, session, make_response
+from flask import Flask, jsonify, request, session, make_response, send_from_directory
 from flask_cors import CORS
 import smtplib
 from email.mime.text import MIMEText
@@ -188,7 +188,7 @@ def add_question(discriptions='', details='', dificulty='', tag='', id=''):
         if send_question[0][0]==0:
             logging.info(details, 1)
             question_to_write = (uuid.uuid4().hex, discriptions, details, dificulty, tag, id)
-            cursor.execute(f"INSERT INTO question(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
+            cursor.execute(f"INSERT INTO questions(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
             pg.commit()
             
             
@@ -219,13 +219,16 @@ def render_questions():
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        cursor.execute(f"SELECT * from question")
+        cursor.execute(f"SELECT * from questions")
 
         all_questions = cursor.fetchall()  
 
         logging.info('Вопросы отображены')
 
-        return_data = all_questions
+        return_data = []
+
+        for row in all_questions:
+            return_data.append(dict(row))
 
     except (Exception, Error) as error:
         logging.error(f'DB: ', error)
@@ -436,8 +439,8 @@ def add_states(discriptions='', details='', id='', tag=''):
         # Существует ли таккая же
         if send_state[0][0]==0:
             logging.info(details, 1)
-            question_to_write = (uuid.uuid4().hex, discriptions, details,tag ,id)
-            cursor.execute(f"INSERT INTO states(id, discriptions, details, tag, user_id) VALUES {question_to_write}")      
+            state_to_write = (uuid.uuid4().hex, discriptions, details,tag ,id)
+            cursor.execute(f"INSERT INTO states(id, discriptions, details, tag, user_id) VALUES {state_to_write}")      
             pg.commit()
             
         logging.info('Статья добавлена')
@@ -468,13 +471,14 @@ def show_all_by_user(id):
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         logging.info(id)
-        cursor.execute(f'SELECT * FROM question WHERE user_=$${id}$$')
+        cursor.execute(f'SELECT * FROM questions WHERE user_=$${id}$$')
         questions = cursor.fetchall()
         cursor.execute(f'''SELEСT * FROM states
                                 WHERE user_=$${id}$$''')
+        
         states = cursor.fetchall()
         logging.info('Информация отпраленна')
-        logging.info(questions)
+
 
         return_data = {
             'questions': questions,
@@ -506,7 +510,7 @@ def delete(id, isQ):
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            cursor.execute(f'''DELETE FROM question WHERE id=$${id}$$''')
+            cursor.execute(f'''DELETE FROM questions WHERE id=$${id}$$''')
 
             pg.commit()
             return_data = 'ok'
@@ -563,7 +567,7 @@ def change(id, info, isQ):
         
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            cursor.excute(f'''UPDATE question
+            cursor.excute(f'''UPDATE questions
                         SET (information)
                           WHEREE id=$${id}$$''')
 
@@ -623,7 +627,7 @@ def show_forum(filtre):
 
         cursor.execute(f'''SELECT * FROM states WHERE tag=$${filtre}$$''')
         states = cursor.fetchall()
-        cursor.execute(f'''SELECT * FROM question WHERE tag=$${filtre}$$''')
+        cursor.execute(f'''SELECT * FROM questions WHERE tag=$${filtre}$$''')
         questions = cursor.fetchall()
         
         return_data = {
@@ -662,24 +666,10 @@ def render_states():
         
         all_states = cursor.fetchall()  
         logging.info('все статьи отображены')
+        return_data = []
 
-        dict = {
-            'id' : '',
-            'discriptions': '',
-            'details': '',
-            'tag': '',
-            'user_id': ''
-        }
-        
-        a = all_states[0]
-        cnt = -1
-        for key in dict:
-            cnt+=1
-            for i in range (len(a)):
-                if cnt==i:
-                    dict[key] = a[i]   
-
-        return_data = dict
+        for row in all_states:
+            return_data.append(dict(row))
 
     except (Exception, Error) as error:
         logging.error(f'DB: ', error)
@@ -710,8 +700,8 @@ def show_one(id, isQ):
             cursor.execute(f"SELECT * from states WHERE id = $${id}$$")
             
             all_states = cursor.fetchall()[0]
-            cursor.execute(f"SELECT * from answers WHERE o_id = $${id}$$")
-            all_asw = cursor.fetchall()
+            
+            all_asw = show_answers(True, id)
 
 
             return_data = {
@@ -743,8 +733,9 @@ def show_one(id, isQ):
         cursor.execute(f"SELECT * from states WHERE id = $${id}$$")
         
         all_states = cursor.fetchall()[0]
-        cursor.execute(f"SELECT * from answers WHERE o_id = $${id}$$")
-        all_asw = cursor.fetchall()
+
+        all_asw = all_asw = show_answers(True, id)
+
 
         return_data = {
                 'states': all_states,
@@ -789,9 +780,9 @@ def filtre(filters, isQ):
             """)
 
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor) 
-            cursor.execute(f"SELECT * FROM question{filtr}")
+            cursor.execute(f"SELECT * FROM questions{filtr}")
             result = cursor.fetchall()
-            logging.info(f"SELECT * FROM question{filtr}")
+            logging.info(f"SELECT * FROM questions{filtr}")
             return_data = []
             for row in result:
                 return_data.append(dict(row))
@@ -856,6 +847,139 @@ def add_img( base, name, isAvatar, isQ,id):
             file.write(decoded_bytes)
     return 'http://127.0.0.1:5000/media/'+name
 
+# Добовление ответа
+def add_ans(text, isQ, idO, id_u):
+    date = datetime.now().isoformat()
+    to_write = (uuid.uuid4().hex, id_u, idO, text, date)   
+    if isQ:
+        obj = "answers(id, id_user, id_q, text, data)"
+    else:
+        obj = "comments(id, id_user, id_s, text, data)"
+
+    try:
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cursor.execute(f"INSERT INTO {obj} VALUES{to_write}")      
+        pg.commit()  
+
+        logging.info("200\n", to_write)
+
+        return_data = "Комментарий добавлен!"
+
+    except (Exception, Error) as error:
+        logging.error(error)
+        return_data = f"Ошибка добавления в базу данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            logging.info("Соединение с PostgreSQL закрыто")
+            return return_data
+
+def show_answers(isQ, idO):
+    if isQ:
+        try:
+            pg = psycopg2.connect(f"""
+                host=localhost
+                dbname=postgres
+                user=postgres
+                password={os.getenv('PASSWORD_PG')}
+                port={os.getenv('PORT_PG')}
+            """)
+
+            cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            
+            cursor.execute(f'''SELECT * FROM answers 
+                       WHERE id_q = $${idO}$$
+                       ORDER BY date''')
+            
+            return_data = cursor.fetchall()
+
+            logging.info('Все ответы добавлены')
+
+        except (Exception, Error) as error:
+            logging.info(f"Ошибка получения данных: {error}")
+            return_data = 'Error'
+
+        finally:
+            if pg:
+                cursor.close
+                pg.close
+                logging.info("Соединение с PostgreSQL закрыто")
+                return return_data
+    try:
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cursor.execute(f'''SELECT * FROM comments 
+                       WHERE id_s = $${idO}$$
+                       ORDER BY date''')
+        
+        return_data = cursor.fetchall()
+
+        logging.info('Все комментарии добавлены')
+
+    except (Exception, Error) as error:
+        logging.info(f"Ошибка получения данных: {error}")
+        return_data = 'Error'
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            logging.info("Соединение с PostgreSQL закрыто")
+            return return_data
+        
+def show_avatar(id):
+    try:
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cursor.execute(f'''SELECT avatar FROM users
+                      WHERE id = $${id}$$''')
+        
+        link = cursor.fetchall()[0]
+
+        if link == None:
+            return_data = 'No'
+        else: return_data = link
+    except (Exception, Error) as error:
+        logging.info(f"Ошибка получения данных: {error}")
+        return_data = 'No'
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            logging.info("Соединение с PostgreSQL закрыто")
+            return return_data
+        
+# def to_dict(d):
+#     res = {
+#         'id': d['id']
+#     }
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Главная страница
@@ -938,7 +1062,7 @@ def create_state():
 @app.route('/show-questions', methods=['GET'])
 def show_questions():
     response_object = {'status': 'success'} #БаZа
-    response_object['message'] = render_questions() #Вызов и возврат ответа на клиент функции для получения всех вопросов
+    response_object['all'] = render_questions() #Вызов и возврат ответа на клиент функции для получения всех вопросов
     
     return jsonify(response_object)
 
@@ -1090,22 +1214,23 @@ def change_():
 def show_sates():
     response_object = {'status': 'success'} #БаZа
 
-    response_object['message'] = render_states() #Вызов и возврат ответа на клиент функции для получения всех вопросов
+    response_object['all'] = render_states() #Вызов и возврат ответа на клиент функции для получения всех вопросов
     
     return jsonify(response_object)
 
 # проверка может ли юзер исправлять что-то
-@app.route('/check-user', methods=['GET'])
+@app.route('/check', methods=['GET'])
 def check():
     response_object = {'status': 'success'} #БаZа
+    id = request.args.get('id')
 
-    post_data = request.get_json()
+    logging.info(id)
 
-    if post_data.get('id') == request.cookies.get('all'):
-        response_object['isEdit'] = True
+    if id == session.get('id'):
+        response_object['isEdit'] = 'True'
 
     else:
-        response_object['isEdit'] = False
+        response_object['isEdit'] = 'False'
 
     return  jsonify(response_object)
 
@@ -1119,8 +1244,39 @@ def check_():
     response_object['all'] = show_all_by_user(post_data)
 
     logging.info('Отправлено')
-    return  jsonify(response_object)
+    return jsonify(response_object)
+
+@app.route('/answers', methods=['POST'])
+def add_a():
+    response_object = {'status': 'success'} #БаZа
+
+    post_data = request.get_json()
+    text = post_data.get('text')
+
+    if post_data.get('q'):
+        response_object['res'] =  add_ans(text, True, post_data.get('id'), session.get('id'))
+        return jsonify(response_object)
+    response_object['res'] =  add_ans(text, False, post_data.get('id'), session.get('id'))
+    return jsonify(response_object)
+
+@app.route('/avatar', methods=['GET'])
+def ava():
+    response_object = {'status': 'success'} #БаZа
+
+    response_object['link'] = show_avatar(session.get('id'))
+
+    return jsonify(response_object)
+
+@app.route('/avatr/<path:filename>')
+def serve_file(filename):
+    path = filename
+    print('/avatar/'+path)
+    if not os.path.exists('{}/{}'.format('/avatar/', '/'+filename)):
+        return jsonify({'error': 'File not found'}), 404
+
+    return send_from_directory(directory='/avatar/', path=path)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 

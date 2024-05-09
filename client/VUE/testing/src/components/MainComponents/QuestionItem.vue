@@ -55,14 +55,7 @@ export default {
 
         }
     },
-    mounted() {
-        this.loadQuestion();
-        this.checkUser();
-        setInterval(() => {
-            this.loadQuestion();
-        }, 20000);
-    },
-
+    
     methods: {
         async loadQuestion() {
             let responce = await axios.get(`/questions`, {
@@ -142,17 +135,24 @@ export default {
         async checkUser() {
             let res = await axios.get('/check', {
                 params: {
-                    id: this.$route.query.id,
+                    id: this.id_,
                 }
             });
             this.isCheck = res.data.all;
         }
-    }
+    },
+    mounted() {
+        this.loadQuestion();
+        this.checkUser();
+        setInterval(() => {
+            this.loadQuestion();
+        }, 20000);
+    },
 }
 
 </script>
 
-<template>
+<!-- <template>
     <div class="container mb-4">
         <div class="content-1">
             <div class="account justify-content-between">
@@ -199,9 +199,9 @@ export default {
                     <p>Звание: <span class="difficult-ans">{{ answer.answerUserInfo.rang }}</span></p>
                 </div>
             </div>
-            <!-- <div class="title">
+            <div class="title">
                 <h3>{{ question.questionInfo.title }}</h3>
-            </div> -->
+            </div>
             <div class="description mt-3">
                 <p v-html="breakLines(answer.answerInfo.text)"></p>
             </div>
@@ -249,7 +249,7 @@ export default {
         </div>
 
     </div>
-</template>
+</template> -->
 
 <style scoped>
 img {

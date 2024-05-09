@@ -1,6 +1,5 @@
 <script>
 import axios from 'axios';
-import HeaderComp from './components/MainComponents/HeaderComp.vue';
 export default {
     componets: {
         HeaderComp
@@ -34,7 +33,6 @@ export default {
 </script>
 
 <template>
-    <head-comp />
     <div class="title">
         <h2>Новая статья</h2>
     </div>

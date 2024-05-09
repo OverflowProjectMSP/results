@@ -16,7 +16,7 @@ export default {
                 // {
                 //     title: `Как создать переменную?`,
                 //     subscribers: 50,
-                //     hours: 43,
+                //     data: 43,
                 //     views: 43,
                 //     answers: 423,
                 //     language: 'Python',
@@ -57,7 +57,8 @@ export default {
     methods: {
         async loadQuestions() {
             let res = await axios.get('/show-questions');
-            this.quetions = res.data;
+            this.quetions = res.data.all;
+            console.log(this.quetions)
         },
 
         async filtre() {
