@@ -85,5 +85,13 @@ export default createRouter({
       path: "/ForumPage",
       component: () => import("./components/СomponetsForPages/ForumPage.vue"),
     },
+    {
+      path: "/RecoveryPassPage",
+      component: () => import("./components/СomponetsForPages/RecoveryPassPage.vue")
+    },
+    {
+      path: "/EnterCodePage",
+      component: () => import("./components/СomponetsForPages/EnterCodePage.vue")
+    }
   ],
 });
