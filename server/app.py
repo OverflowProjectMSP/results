@@ -188,7 +188,7 @@ def add_question(discriptions='', details='', dificulty='', tag='', id=''):
         if send_question[0][0]==0:
             logging.info(details, 1)
             question_to_write = (uuid.uuid4().hex, discriptions, details, dificulty, tag, id)
-            cursor.execute(f"INSERT INTO question(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
+            cursor.execute(f"INSERT INTO questions(id, discriptions, details, dificulty, tag, user_id) VALUES {question_to_write}")      
             pg.commit()
             
             
@@ -219,7 +219,7 @@ def render_questions():
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        cursor.execute(f"SELECT * from question")
+        cursor.execute(f"SELECT * from questions")
 
         all_questions = cursor.fetchall()  
 
@@ -436,8 +436,8 @@ def add_states(discriptions='', details='', id='', tag=''):
         # Существует ли таккая же
         if send_state[0][0]==0:
             logging.info(details, 1)
-            question_to_write = (uuid.uuid4().hex, discriptions, details,tag ,id)
-            cursor.execute(f"INSERT INTO states(id, discriptions, details, tag, user_id) VALUES {question_to_write}")      
+            state_to_write = (uuid.uuid4().hex, discriptions, details,tag ,id)
+            cursor.execute(f"INSERT INTO states(id, discriptions, details, tag, user_id) VALUES {state_to_write}")      
             pg.commit()
             
         logging.info('Статья добавлена')
@@ -468,13 +468,14 @@ def show_all_by_user(id):
 
         cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
         logging.info(id)
-        cursor.execute(f'SELECT * FROM question WHERE user_=$${id}$$')
+        cursor.execute(f'SELECT * FROM questions WHERE user_=$${id}$$')
         questions = cursor.fetchall()
         cursor.execute(f'''SELEСT * FROM states
                                 WHERE user_=$${id}$$''')
+        
         states = cursor.fetchall()
         logging.info('Информация отпраленна')
-        logging.info(questions)
+
 
         return_data = {
             'questions': questions,
@@ -506,7 +507,7 @@ def delete(id, isQ):
             """)
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            cursor.execute(f'''DELETE FROM question WHERE id=$${id}$$''')
+            cursor.execute(f'''DELETE FROM questions WHERE id=$${id}$$''')
 
             pg.commit()
             return_data = 'ok'
@@ -563,7 +564,7 @@ def change(id, info, isQ):
         
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            cursor.excute(f'''UPDATE question
+            cursor.excute(f'''UPDATE questions
                         SET (information)
                           WHEREE id=$${id}$$''')
 
@@ -623,7 +624,7 @@ def show_forum(filtre):
 
         cursor.execute(f'''SELECT * FROM states WHERE tag=$${filtre}$$''')
         states = cursor.fetchall()
-        cursor.execute(f'''SELECT * FROM question WHERE tag=$${filtre}$$''')
+        cursor.execute(f'''SELECT * FROM questions WHERE tag=$${filtre}$$''')
         questions = cursor.fetchall()
         
         return_data = {
@@ -790,9 +791,9 @@ def filtre(filters, isQ):
             """)
 
             cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor) 
-            cursor.execute(f"SELECT * FROM question{filtr}")
+            cursor.execute(f"SELECT * FROM questions{filtr}")
             result = cursor.fetchall()
-            logging.info(f"SELECT * FROM question{filtr}")
+            logging.info(f"SELECT * FROM questions{filtr}")
             return_data = []
             for row in result:
                 return_data.append(dict(row))
@@ -947,6 +948,37 @@ def show_answers(isQ, idO):
     except (Exception, Error) as error:
         logging.info(f"Ошибка получения данных: {error}")
         return_data = 'Error'
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            logging.info("Соединение с PostgreSQL закрыто")
+            return return_data
+        
+def show_avatar(id):
+    try:
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cursor.execute(f'''SELECT avatar FROM users
+                      WHERE id = $${id}$$''')
+        
+        link = cursor.fetchall()[0]
+
+        if link == None:
+            return_data = 'No'
+        else: return_data = link
+    except (Exception, Error) as error:
+        logging.info(f"Ошибка получения данных: {error}")
+        return_data = 'No'
 
     finally:
         if pg:
@@ -1233,6 +1265,13 @@ def add_a():
     response_object['res'] =  add_ans(text, False, post_data.get('id'), session.get('id'))
     return jsonify(response_object)
 
+@app.route('/avatar', methods=['GET'])
+def ava():
+    response_object = {'status': 'success'} #БаZа
+
+    response_object['link'] = show_avatar(session.get('id'))
+
+    return jsonify(response_object)
 
 if __name__ == '__main__':
     app.run(debug=True)
