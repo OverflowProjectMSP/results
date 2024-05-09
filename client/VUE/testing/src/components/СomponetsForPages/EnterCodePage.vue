@@ -22,29 +22,11 @@ export default {
     },
     methods: {
         check() {
-            if (this.nickname === ``) {
-                this.error = '*Вы не ввели никнейм*'
-            }
-            else if (this.email === '') {
+            if (this.email === '') {
                 this.error = '*Вы не ввели Email*'
-            } else if (this.password === '') {
-                this.error = '*Вы не ввели пароль*'
-            } else if (this.exPassword === '') {
-                this.error = '*Вы не повторили пароль*'
-            } else if (this.password.length < 8) {
-                this.error = '*Пароль должен включать 8 символов*'
-            } else if (!this.password.includes('~')) {
-                this.error = '*Пароль должен включать спец символ*'
-            } else if (this.password !== this.exPassword) {
-                this.error = '*Пароли не совпадают'
-            }
+            } 
             else {
                 this.error = ''
-            }
-
-
-            if (this.password !== this.exPassword) {
-                this.error = '*Пароли не совпадают'
             }
         },
         toggleVisibility1() {
@@ -89,19 +71,13 @@ export default {
     <div class="tototocontainer">
         <div class="background"></div>
         <div class="content">
-            <p>Регистрация</p>
+            <p>Востановить пароль</p>
             <div class="regist">
                 <form>
-                    <input v-model="nickname" class="inp inp-username" type="text" name="" id="" placeholder="Никнейм">
                     <input v-model="email" class="inp inp-email" type="email" placeholder="Почта">
-                    <input v-model="password" class="inp inp-password" type="password" placeholder="Пароль">
-                    <input v-model="exPassword" class="inp inp-rep-password" type="password" placeholder="Повторите пароль">
                 </form>
                 <p class="error">{{ error }}</p>
-                <button @click="check">Продолжить</button>
-                <div class="haveacc">
-                    <p>У вас уже есть аккаунт?</p><a href="#/Login">Войти -></a>
-                </div>
+                <button @click="check">Сбросить</button>
             </div>
         </div>
     </div>
@@ -121,7 +97,7 @@ export default {
     }
 
     .content p {
-        font-size: 56px;
+        font-size: 42px;
         margin-bottom: 12px;
     }
 
@@ -192,13 +168,8 @@ export default {
         color: #114189;
     }
 
-    .haveacc {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
     .error {
+        font-size: 18px !important;
         color: #ff1f1f;
         margin-bottom: -30px !important;
         margin-top: -30px !important;
