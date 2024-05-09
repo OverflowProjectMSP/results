@@ -16,7 +16,7 @@ export default {
                 // {
                 //     title: `Как создать переменную?`,
                 //     subscribers: 50,
-                //     hours: 43,
+                //     data: 43,
                 //     views: 43,
                 //     answers: 423,
                 //     language: 'Python',
