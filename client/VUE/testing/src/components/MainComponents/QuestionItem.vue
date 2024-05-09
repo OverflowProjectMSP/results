@@ -40,21 +40,11 @@ export default {
 
             questionInfo: {}, //главная хуйня
             answers: [],
+            text: ``,
 
             text: '',
             symbols: 0,
             symbCount: false,
-            inputAnswer: {
-                textAnswer: ``,
-                comment: 0,
-                likes: 0,
-                dislike: 0,
-            },
-            inputUserInfo: {
-                accountIcon: 'ava.png',
-                accountName: 'Your',
-                rang: `ИИ`,
-            },
             isBold: false,
             isItalic: false,
 
@@ -131,19 +121,14 @@ export default {
                     dislike: this.inputAnswer.dislike,
                 },
             });
-            await axios.post(`/new-comment`,
+            await axios.post(`/answers`,
                 {
                     id: this.$route.query.id,
-                    answerUserInfo: this.inputUserInfo,
-                    answerInfo: {
-                        text: this.inputAnswer.textAnswer,
-                        comment: this.inputAnswer.comment,
-                        likes: this.inputAnswer.likes,
-                        dislike: this.inputAnswer.dislike,
-                    },
+                    q: true,
+                    text: this.text,
                 },
             );
-            this.inputAnswer.textAnswer = ``;
+            this.text = ``;
         },
         async deleteQuestion() {
             await axios.delete('/delete', {
@@ -160,7 +145,7 @@ export default {
                     id: this.$route.query.id,
                 }
             });
-            this.isCheck = res.data;
+            this.isCheck = res.data.all;
         }
     }
 }
@@ -254,7 +239,7 @@ export default {
                 </div>
             </div>
             <div class="content-3-without mb-3">
-                <textarea v-model="inputAnswer.textAnswer" @input="symbolsCount" maxlength="2000" class="comm-input"
+                <textarea v-model="text" @input="symbolsCount" maxlength="2000" class="comm-input"
                     placeholder="Оставь свой ответ:" :class="{ 'fw-bold': isBold, 'fst-italic': isItalic }"></textarea>
                 <p :class="{ 'red-text': this.question.symbCount }">{{ question.symbols }} / 2000</p>
             </div>

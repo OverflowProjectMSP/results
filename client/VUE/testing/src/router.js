@@ -85,5 +85,25 @@ export default createRouter({
       path: "/ForumPage",
       component: () => import("./components/СomponetsForPages/ForumPage.vue"),
     },
+    {
+      path: "/EnterPage_1",
+      component: () => import("./components/login/EnterPage_1.vue"),
+    },
+    {
+      path: "/RecoveryPassPage",
+      component: () => import("./components/login/RecoveryPassPage.vue"),
+    },
+    {
+      path: "/RegisterPage_1",
+      component: () => import("./components/login/RegisterPage_1.vue"),
+    },
+    {
+      path: "/EnterCodePage",
+      component: () => import("./components/login/EnterCodePage.vue"),
+    },
+    {
+      path: "/EnterNewPassword",
+      component: () => import("./components/login/EnterNewPassword.vue"),
+    },
   ],
 });

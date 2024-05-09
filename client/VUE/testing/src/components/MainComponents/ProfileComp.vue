@@ -3,7 +3,6 @@ import HeadComp from '../MinorComponents/HeadComp.vue';
 import VidUserComp from '../MainComponents/VidUserComp.vue';
 import axios from 'axios';
 
-
 export default {
     components: { HeadComp, VidUserComp },
     data() {
@@ -41,24 +40,31 @@ export default {
                     id: 54
                 },
             ],
+            user: {},
         }
     }, 
     methods: {
-        async all_by_he(){
-            let id = 'b4d02f3f43bd4bc880f59df248fb30f6'
+        async allByHe(){
+            const id = this.$router.query.id;
             res = await axios.get('/show-all-by-user', {
                 params: {
                     id: id
                 }
             });
             
-            this.quetionsUsers = res.data
+            this.quetionsUsers = res.data.all;
+        },
+        async loadUser() {
+            let res = await axios.get(`/user-info?id=${this.$router.query.id}`);
+            this.user = res.data.all;
         }
     },
     mounted() {
-        this.all_by_he();
+        this.allByHe();
+        this.loadUser();
         setInterval(() => {
-            this.all_by_he();
+            this.allByHe();
+            this.loadUser();
         }, 100900);
     },
 }
@@ -66,13 +72,13 @@ export default {
 </script>
 
 <template>
-    <div class="profile">
+    <div class="profile" v-if="user">
         <a href="#/ProfileSettings"><img src="../../assets/sh.svg" alt="" class="il"></a>
         <div class="head">
 
             <div class="circle t-alig-c"></div>
 
-            <p class="nikname t-alig-c">@Ник пользователя</p>
+            <p class="nikname t-alig-c">@{{ user.name }}</p>
             <div class="table t-alig-c">
                 <div class="cell">
                     <p class="num">5</p>
@@ -88,7 +94,7 @@ export default {
                 </div>
             </div>
             <div class="about">
-                <p><img src="../../assets/User.svg" alt="">Привет, я {Имя Фамилия}</p>
+                <p><img src="../../assets/User.svg" alt="">Привет, я {{ user.name }}</p>
                 <p><img src="../../assets/SVGRepo_iconCarrier.svg" alt="">Я интересуюсь {интересы}</p>
                 <p><img src="../../assets/Frame.svg" alt="" class="u">Как со мной связаться? {соц. сети}</p>
                 <!-- <p><img src="../../assets/-.svg" alt="">{Описание пользователя}</p> -->

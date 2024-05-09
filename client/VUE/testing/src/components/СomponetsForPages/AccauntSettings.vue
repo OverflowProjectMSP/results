@@ -3,23 +3,35 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            form: {
-                Name: ``,
-            }
+            oldPassword: ``,
+            newPassword: ``,
+            exPassword: ``,
         }
     },
 
     methods: {
         async putInfo() {
-            await axios.put('/account-info', {
-                form: this.form,
-            });
-        }
+            if (this.newPassword == this.exPassword) {
+                let res = await axios.put('/new-password-old', {
+                    old_password: this.oldPassword,
+                    new_password: this.newPassword,
+                });
+                if (res.data.res == 'Error') {
+                    this.error = '*Ошибка отправки*';
+                } else if (res.data.res == 'True') {
+                    this.$router.push('/Profile');
+                } else {
+                    this.error = 'Хуйню делаешь брат';
+                }
+            } else {
+                this.error = 'Пароли не совпадают';
+            }
+        },
     }
 }
 </script>
 <template>
-    <div class="container mb-3">
+    <form class="container mb-3" @submit.prevent="putInfo">
         <div class="row pt-5">
             <div class="col-3">
                 <h3>Настройки профиля</h3>
@@ -27,23 +39,25 @@ export default {
         </div>
         <hr>
         <div class="ancet d-flex" style="display: flex; gap: 40px;">
-            <h5 role="button" class="mb-0" style="color: gray; font-weight: 400;"><a href="#/ProfileSettings">Анкета</a></h5>
-            <h5 role="button" class="mb-0 border-bottom border-2 border-dark"><a href="#/AccauntSettings">Аккаунт</a></h5>
+            <h5 role="button" class="mb-0" style="color: gray; font-weight: 400;"><a href="#/ProfileSettings">Анкета</a>
+            </h5>
+            <h5 role="button" class="mb-0 border-bottom border-2 border-dark"><a href="#/AccauntSettings">Аккаунт</a>
+            </h5>
         </div>
         <hr>
         <h2 class="text-center mt-4 mb-3">Смена пароля</h2>
         <div class="password-container">
             <h5>Старый пароль</h5>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" v-model="n">
+                <input type="text" class="form-control" v-model="oldPassword">
             </div>
             <h5 class="mt-4">Новый пароль</h5>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" v-model="n">
+                <input type="text" class="form-control" v-model="newPassword">
             </div>
             <h5 class="mt-4">Повторите новый пароль</h5>
             <div class="input-group mb-5">
-                <input type="text" class="form-control" v-model="n">
+                <input type="text" class="form-control" v-model="exPassword">
             </div>
         </div>
         <hr>
@@ -55,9 +69,10 @@ export default {
             </div>
         </div>
         <div class="d-flex justify-content-start mt-5 ms-0">
-            <button class="btn btn-outline-success w-fit ms-0" @click="putInfo" type="submit"><b>Сохранить изменения</b></button>
+            <button class="btn btn-outline-success w-fit ms-0" type="submit"><b>Сохранить
+                    изменения</b></button>
         </div>
-    </div>
+    </form>
 </template>
 <style scoped>
 select {
