@@ -31,9 +31,9 @@ export default {
                 this.error = '*Вы не ввели пароль*'
             } else if (this.exPassword === '') {
                 this.error = '*Вы не повторили пароль*'
-            } else if (this.password.length <= 9) {
+            } else if (this.password.length < 8) {
                 this.error = '*Пароль должен включать 8 символов*'
-            } else if (!this.password.includes('*')) {
+            } else if (!this.password.includes('~')) {
                 this.error = '*Пароль должен включать спец символ*'
             } else if (this.password !== this.exPassword) {
                 this.error = '*Пароли не совпадают'
@@ -97,10 +97,10 @@ export default {
                     <input v-model="password" class="inp inp-password" type="password" placeholder="Пароль">
                     <input v-model="exPassword" class="inp inp-rep-password" type="password" placeholder="Повторите пароль">
                 </form>
-
-                <a href="#!"><button>Продолжить</button></a>
+                <p class="error">{{ error }}</p>
+                <button @click="check">Продолжить</button>
                 <div class="haveacc">
-                    <p>У вас уже есть аккаунт?</p><a href="#!">Войти -></a>
+                    <p>У вас уже есть аккаунт?</p><a href="#/Login">Войти -></a>
                 </div>
             </div>
         </div>
@@ -115,7 +115,7 @@ export default {
 
     .background {
         width: 40%;
-        height: 92vh;
+        height: 91vh;
         background: url(../../assets/backgroundUp.png) center;
         background-repeat: no-repeat; 
     }
@@ -134,6 +134,7 @@ export default {
         display: flex;
         flex-direction: column;
         gap: 30px;
+        margin-bottom: 40px;
     }
 
 
@@ -148,7 +149,7 @@ export default {
     }
 
     .regist button {
-        margin-top: 50px;
+        margin-top: 40px;
         margin-bottom: 15px;
 
         width: 320px;
@@ -197,6 +198,10 @@ export default {
         gap: 10px;
     }
 
-
+    .error {
+        color: #ff1f1f;
+        margin-bottom: -30px !important;
+        margin-top: -30px !important;
+    }
     
 </style>

@@ -1,57 +1,77 @@
 <script>
 import axios from 'axios';
-axios.defaults.baseURL = 'http://127.0.0.1:5000';
-axios.defaults.withCredentials = true;
 
 export default {
     data() {
         return {
             email: '',
             password: '',
+            exPassword: '',
+            nickname: ``,
+            
+            error: '',
+            eyeOpen1: true,
+            eyeOpen2: true,
+            eyeImg1: '/src/assets/eye.svg',
+            eyeImg2: '/src/assets/eye.svg',
             isShowPassword: false,
             showPassword: 'password',
-            eyeOpen: true,
-            error: '',
-            eyeImg: '/src/assets/eye.svg',
+            isShowExPassword: false,
+            showExPassword: 'password',
         }
     },
     methods: {
         check() {
-            if (this.email === '' && this.password === '') {
-                this.error = '*Заполните поля*'
-            } else if (this.email === '') {
+            if (this.email === '') {
                 this.error = '*Вы не ввели Email*'
             } else if (this.password === '') {
                 this.error = '*Вы не ввели пароль*'
-            } else {
+            } else if (this.exPassword === '') {
+                this.error = '*Вы не повторили пароль*'
+            } else if (this.password !== this.exPassword) {
+                this.error = '*Пароли не совпадают'
+            }
+            else {
                 this.error = ''
             }
+
+
+            if (this.password !== this.exPassword) {
+                this.error = '*Пароли не совпадают'
+            }
         },
-        toggleVisibility() {
-            this.isShowPassword = !this.isShowPassword
-            this.eyeOpen = !this.eyeOpen
+        toggleVisibility1() {
+            this.isShowPassword = !this.isShowPassword;
+            this.eyeOpen1 = !this.eyeOpen1
 
             if (this.isShowPassword) {
                 this.showPassword = 'text'
-                this.eyeImg = '/src/assets/svg-editor-image2.svg'
+                this.eyeImg1 = '/src/assets/svg-editor-image2.svg'
             } else {
                 this.showPassword = 'password'
-                this.eyeImg = '/src/assets/eye.svg'
+                this.eyeImg1 = '/src/assets/eye.svg'
             }
         },
-        async login() {
-            this.check();
+        toggleVisibility2() {
+            this.isShowExPassword = !this.isShowExPassword;
+            this.eyeOpen2 = !this.eyeOpen2
 
-            let res = await axios.post('/login', {    
-                withCredentials : true,
+            if (this.isShowExPassword) {
+                this.showExPassword = 'text'
+                this.eyeImg2 = '/src/assets/svg-editor-image2.svg'
+            } else {
+                this.showExPassword = 'password'
+                this.eyeImg2 = '/src/assets/eye.svg'
+            }
+        },
+        
+        async register() {
+            this.check();
+            await axios.post('/registration', {
+                name: this.nickname,
                 email: this.email,
                 password: this.password
             });
-            if(res.data != 'ok') {
-                this.error = res.data;
-            } else {
-                // нудно добавить переход на след. страницу
-            }
         },
     }
 }
@@ -59,127 +79,125 @@ export default {
 </script>
 
 <template>
-    <div class="container">
-        <h1>Вход</h1>
-        <form @submit.prevent="login">
-            <input class="form-item" v-model="email" placeholder="Email" type="email" name="" id="">
-            <div class="password">
-                <input class="form-item" v-model="password" :type="showPassword" placeholder="Пароль" type="password"
-                    name="" id="">
-                <img @click="toggleVisibility" class="password-show" :src="eyeImg" alt="">
+    <div class="tototocontainer">
+        <div class="background"></div>
+        <div class="content">
+            <p>Войти</p>
+            <div class="regist">
+                <form>
+                    <input v-model="email" class="inp inp-email" type="email" placeholder="Почта">
+                    <input v-model="password" class="inp inp-password" type="password" placeholder="Пароль">
+                    <input v-model="exPassword" class="inp inp-rep-password" type="password" placeholder="Повторите пароль">
+                </form>
+                <p class="error">{{ error }}</p>
+                <button @click="check">Войти</button>
+                <div class="haveacc">
+                    <p>Забыли</p><a href="#/Login">пароль</a><p>?</p>
+                </div>
             </div>
-        </form>
-        <div class="error-end-btn">
-            <div class="nha_div">
-                <p class="no_have_accaunt">Нет аккаунта? </p>
-                <a href="#/Registration">Зарегистрироваться</a>
-            </div>
-            <p class="error">{{ error }}</p>
-            <button type="submit" class="btn-reg" @click="login">Войти</button>
         </div>
     </div>
 </template>
+    
+<style>
+    .tototocontainer {
+        width: 100%;
+        display: flex;
+    }
 
-<style scoped>
-.container {
-    background: #ffffff;
-    width: 400px;
-    height: 500px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 100px;
-    border-radius: 30px;
-    border: solid 3px #2a2a2a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
+    .background {
+        width: 40%;
+        height: 91vh;
+        background: url(../../assets/backgroundUp.png) center;
+        background-repeat: no-repeat; 
+    }
 
-h1 {
-    font-size: 45px;
-    margin-bottom: 50px;
-    user-select: none;
-}
+    .content p {
+        font-size: 56px;
+        margin-bottom: 12px;
+    }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
+    .content {
+        margin-top: 219px;
+        margin-left: 128px;
+    }
 
-.form-item {
-    border: 2px solid #2a2a2a;
-    border-radius: 10px;
-    width: 300px;
-    height: 40px;
+    .regist form {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
 
-    margin-bottom: 25px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
 
-.form-item:focus {
-    outline: 2px solid #4200FF;
-    border: none;
-}
+    .inp {
+        font-size: 18px;
+        width: 750px;
+        height: 35px;
+        padding-left: 10px;
+        border-radius: 12px !important;
 
-.btn-reg {
-    margin-top: 10px;
+        border: 1px solid #121212 !important;
+    }
 
-    width: 250px;
-    height: 50px;
-    border-radius: 12px;
-    border: none;
-    background-color: #4200FF;
-    color: #fff;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 20px;
+    .regist button {
+        margin-top: 40px;
+        margin-bottom: 15px;
 
-    transition: all 100ms;
-}
+        width: 320px;
+        height: 50px;
+        font-size: 24px;
+        background: none;
 
-.btn-reg:hover {
-    background-color: #2d00aa;
-    border-radius: 25px 5px;
-}
+        border: 1px solid #2D72D9;
+        border-radius: 8px;
+        color: #2D72D9;
 
-.btn-reg:active {
-    background-color: #240088;
-}
+        transition: all 100ms;
+    }
 
-.error {
-    color: #ff2600;
-    height: 20px;
-    user-select: none;
-}
+    .regist button:hover {
+        background-color: #2D72D9;
+        color: #fff;
+    }
 
-.no_have_accaunt {
-    margin: 0;
-    font-size: 20px;
-    user-select: none;
-}
+    .regist button:active {
+        background-color: #1b54a9;
+    }
 
-div a {
-    font-size: 20px;
-    text-decoration: none;
-    color: #4200FF;
-}
+    .regist p {
+        font-size: 26px;
+        margin: 0;
+    }
 
-.nha_div {
-    margin-bottom: 16px;
-}
+    .regist a {
+        font-size: 26px;
+        color: #2D72D9;
+        font-weight: 500;
+    }
 
-.password {
-    position: relative;
-}
+    .regist a:hover {
+        color: #1b54a9;
+    }
 
-.password-show {
-    position: absolute;
-    cursor: pointer;
-    top: 5px;
-    right: 12px;
-    width: 30px;
+    .regist a:active {
+        color: #114189;
+    }
 
-}
+    .haveacc {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .error {
+        color: #ff1f1f;
+        margin-bottom: -30px !important;
+        margin-top: -30px !important;
+    }
+
+    .haveacc p:last-child {
+        margin-left: -7px;
+    }
+    
 </style>
