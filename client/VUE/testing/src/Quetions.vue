@@ -57,7 +57,8 @@ export default {
     methods: {
         async loadQuestions() {
             let res = await axios.get('/show-questions');
-            this.quetions = res.data;
+            this.quetions = res.data.all;
+            console.log(this.quetions)
         },
 
         async filtre() {
