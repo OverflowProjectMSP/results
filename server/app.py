@@ -2,7 +2,7 @@ import os
 import uuid
 import psycopg2
 from psycopg2 import extras, Error
-from flask import Flask, jsonify, request, session, make_response
+from flask import Flask, jsonify, request, session, make_response, send_from_directory
 from flask_cors import CORS
 import smtplib
 from email.mime.text import MIMEText
@@ -663,24 +663,24 @@ def render_states():
         
         all_states = cursor.fetchall()  
         logging.info('все статьи отображены')
-
-        dict = {
-            'id' : '',
-            'discriptions': '',
-            'details': '',
-            'tag': '',
-            'user_id': ''
-        }
+        return_data = all_states
+        # dict = {
+        #     'id' : '',
+        #     'discriptions': '',
+        #     'details': '',
+        #     'tag': '',
+        #     'user_id': ''
+        # }
         
-        a = all_states[0]
-        cnt = -1
-        for key in dict:
-            cnt+=1
-            for i in range (len(a)):
-                if cnt==i:
-                    dict[key] = a[i]   
+        # a = all_states[0]
+        # cnt = -1
+        # for key in dict:
+        #     cnt+=1
+        #     for i in range (len(a)):
+        #         if cnt==i:
+        #             dict[key] = a[i]   
 
-        return_data = dict
+        # return_data = dict
 
     except (Exception, Error) as error:
         logging.error(f'DB: ', error)
@@ -860,40 +860,7 @@ def add_img( base, name, isAvatar, isQ,id):
 
 # Добовление ответа
 def add_ans(text, isQ, idO, id_u):
-    date = datetime.now().isoformat()
-    to_write = (uuid.uuid4().hex, id_u, idO, text, date)   
-    if isQ:
-        obj = "answers(id, id_user, id_q, text, data)"
-    else:
-        obj = "comments(id, id_user, id_s, text, data)"
-
-    try:
-        pg = psycopg2.connect(f"""
-            host=localhost
-            dbname=postgres
-            user=postgres
-            password={os.getenv('PASSWORD_PG')}
-            port={os.getenv('PORT_PG')}
-        """)
-
-        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cursor.execute(f"INSERT INTO {obj} VALUES{to_write}")      
-        pg.commit()  
-
-        logging.info("200\n", to_write)
-
-        return_data = "Комментарий добавлен!"
-
-    except (Exception, Error) as error:
-        logging.error(error)
-        return_data = f"Ошибка добавления в базу данных: {error}" 
-
-    finally:
-        if pg:
-            cursor.close
-            pg.close
-            logging.info("Соединение с PostgreSQL закрыто")
-            return return_data
+    pass
 
 def show_answers(isQ, idO):
     if isQ:
@@ -1273,6 +1240,16 @@ def ava():
 
     return jsonify(response_object)
 
+@app.route('/avatr/<path:filename>')
+def serve_file(filename):
+    path = filename
+    print('/avatar/'+path)
+    if not os.path.exists('{}/{}'.format('/avatar/', '/'+filename)):
+        return jsonify({'error': 'File not found'}), 404
+
+    return send_from_directory(directory='/avatar/', path=path)
+
 if __name__ == '__main__':
     app.run(debug=True)
+
 
