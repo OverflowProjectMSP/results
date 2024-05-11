@@ -976,6 +976,43 @@ def show_avatar(id):
             logging.info("Соединение с PostgreSQL закрыто")
             return return_data
         
+
+def show_user_info(id):
+    try: 
+        pg = psycopg2.connect(f"""
+            host=localhost
+            dbname=postgres
+            user=postgres
+            password={os.getenv('PASSWORD_PG')}
+            port={os.getenv('PORT_PG')}
+        """)
+
+        cursor = pg.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cursor.execute(f"SELECT * from users WHERE id=$${id}$$")
+        
+        all_states = dict(cursor.fetchall()[0])
+        logging.info('Инфа есть')
+        return_data={}
+
+        for key in all_states:
+            if key != "password":
+                return_data[key] = all_states[key]
+
+    except (Exception, Error) as error:
+        logging.error(f'DB: ', error)
+        return_data = f"Ошибка обращения к базе данных: {error}" 
+
+    finally:
+        if pg:
+            cursor.close
+            pg.close
+            logging.info("Соединение с PostgreSQL закрыто")
+            return return_data
+
+
+
+
 # def to_dict(d):
 #     res = {
 #         'id': d['id']
@@ -1011,10 +1048,15 @@ def user_info():
     response_object = {'status': 'success'} #БаZа
 
     if request.method == 'PUT':
-        #Вызов функции обновления бд
         post_data = request.get_json()
+        #Вызов функции обновления бд
         post_data = post_data.get('form')
         refresh_data(post_data, session.get('id'))
+
+        return jsonify(response_object)
+    
+    print(request.args.get('id'))
+    response_object['all'] = show_user_info(request.args.get('id'))
 
     return jsonify(response_object)
 
