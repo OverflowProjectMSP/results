@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios';
 import BlindWindow from '../СomponetsForPages/BlindWindow.vue'
 
 export default {
@@ -13,7 +14,8 @@ export default {
       Errors: [{
         title: `Функция в разработке.`,
 
-      }]
+      }],
+      userId: ``,
     }
   },
   methods: {
@@ -23,6 +25,10 @@ export default {
     },
     Open() {
       this.Show = !this.Show;
+    },
+    async loadUser() {
+      let res = await axios.get('/session');
+      this.userId = res.data.id;
     }
   }
 }
@@ -33,7 +39,7 @@ export default {
 
   <header>
     <nav class="navbar navbar-expand-xl  d-flex align-items-center rounded-0">
-      <div class="container-fluid ">
+      <div class="container-fluid">
         <a class="navbar-brand" href="#/">
           <div class="logo-container mt-1"><img src="../../assets/apple-touch-icon@2.png" alt="" class="logo"></div>
         </a>
@@ -72,7 +78,7 @@ export default {
             <img src="../../assets/sun_112421.png" alt="" class="them">
           </div>
           <div class="ava-container">
-            <a href="#/Profile"> <img
+            <a :href="`#/Profile?id=${userId}`"> <img
                 src="https://avatars.dzeninfra.ru/get-zen_doc/1578906/pub_5cdbdfbd635d0800b447ae37_5cdbdfc2e1368c00b3e27ce3/scale_1200"
                 alt="" class="ava"></a>
           </div>
