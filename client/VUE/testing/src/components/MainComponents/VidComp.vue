@@ -157,7 +157,7 @@ export default {
 
 .mid-1 p {
     margin: 0;
-    text-wrap: wrap;
+    
 }
 
 .name-limit {
