@@ -58,14 +58,14 @@ export default {
     
     methods: {
         async loadQuestion() {
-            let responce = await axios.get(`/questions`, {
+            let responce = await axios.get(`/show-one`, {
                 params: {
                     id: this.$route.query.id,
-                    question: true
+                    q: true,
                 }
             });
-            this.questionInfo = responce.data.questionInfo;
-            this.answers = responce.data.answers;
+            this.questionInfo = responce.data.all.question;
+            this.answers = responce.data.all.answers;
         },
         counterPlus(index) {
             if (this.count == 0 && this.countmin == 0) {

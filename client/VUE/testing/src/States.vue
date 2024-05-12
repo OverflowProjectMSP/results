@@ -63,10 +63,10 @@ export default {
         CloseModal(Show) {
             this.Show = false
         },
+
         async loadStates() {
             let res = await axios.get('/show-states');
-            this.states = res.data;
-            console.log(res.data)
+            this.states = res.data.all;
         },
         async filtre() {
             if (this.filters.type == 'false') {
@@ -80,12 +80,9 @@ export default {
                 };
             }
             let res = await axios.post('/filtre-states', {
-                body: {
-                    filters: this.filtrs
-                }
+                filters: this.filtrs
             });
-            this.quetions = res.data;
-            console.log(this.quetions)
+            this.quetions = res.data.all;
         }
     }
 }

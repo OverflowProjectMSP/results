@@ -2,9 +2,7 @@
 import axios from 'axios'
 axios.defaults.baseURL = 'http://127.0.0.1:5000';
 
-import SideChatMenu from '../MainComponents/SideChatMenu.vue';
 export default {
-    components: { SideChatMenu },
     data() {
         return {
             posts: [
@@ -44,7 +42,7 @@ export default {
         async loadForum() {
             let res = await axios.get('/show-forum', {
                 params: {
-                    lang: this.$route.query.lang
+                    lang: this.$route.query.lang,
                 }
             });
             this.question = res.data.question;
@@ -98,15 +96,12 @@ export default {
                 </div>
             </div>
             <div class="answer">
-                <a :href="`#/QuestionItem?id=` + post.id + `&question=${post.question}`"><button><img
+                <a :href="`#/QuestionItem?id=` + post.id + `&question=${ post.question }`"><button><img
                 :src="'src/assets/comments.svg'" alt=""><span>{{ post.answers }}</span>Ответов</button></a>
             </div>
         </div>
 
     </div>
-
-    <SideChatMenu />
-
 </template>
 
 <style scoped>
