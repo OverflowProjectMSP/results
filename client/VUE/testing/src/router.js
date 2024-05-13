@@ -105,5 +105,9 @@ export default createRouter({
       path: "/EnterNewPassword",
       component: () => import("./components/login/EnterNewPassword.vue"),
     },
+    {
+      path: "/StatesItem",
+      component: () => import("./components/MainComponents/StatesItem.vue"),
+    },
   ],
 });

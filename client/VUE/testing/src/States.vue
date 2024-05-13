@@ -123,7 +123,7 @@ export default {
 
 <!-- Див с виджетами -->
 <div class="con mt-3" v-for="item in states">
-<a :href="`#/CommentsPost?id=` + item.id + `&question=` + item.question">
+<a :href="`#/StatesItem?id=${item.id}&question=${false}`">
     <vid-comp :item="item" role="button" />
 </a>
 </div>
