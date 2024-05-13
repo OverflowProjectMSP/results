@@ -28,6 +28,9 @@ export default {
                 },
             ],
             plusImg: 'src/assets/plus.svg',
+
+            titleLang: ``,
+            imageLang: ``,
             
             isQuestion: true,
 
@@ -40,6 +43,7 @@ export default {
     },
     methods: {
         async loadForum() {
+            this.lang();
             let res = await axios.get('/show-forum', {
                 params: {
                     lang: this.$route.query.lang,
@@ -47,6 +51,54 @@ export default {
             });
             this.question = res.data.question;
             this.states = res.data.states;
+        },
+
+        lang() {
+            switch(this.$route.query.lang) {
+                case 'go':
+                    this.titleLang = 'Golang';
+                    this.imageLang = 'golang';
+                break;
+                case 'javascript':
+                    this.titleLang = 'JavaScript';
+                    this.imageLang = 'js';
+                break;
+                case 'java':
+                    this.titleLang = 'Java';
+                    this.imageLang = 'java';
+                break;
+                case 'cs':
+                    this.titleLang = 'C#';
+                    this.imageLang = 'cs';
+                break;
+                case 'python':
+                    this.titleLang = 'Python';
+                    this.imageLang = 'python';
+                break;
+                case 'php':
+                    this.titleLang = 'PHP';
+                    this.imageLang = 'php';
+                break;
+                case 'cpp':
+                    this.titleLang = 'C++';
+                    this.imageLang = 'cpp';
+                break;
+                case 'ruby':
+                    this.titleLang = 'Ruby';
+                    this.imageLang = 'ruby';
+                break;
+                case 'kotlin':
+                    this.titleLang = 'Kotlin';
+                    this.imageLang = 'kotlin';
+                break;
+                case 'typescript':
+                    this.titleLang = 'TypeScript';
+                    this.imageLang = 'ts';
+                break;
+                default: 
+                    this.titleLang = this.$route.query.lang;
+                break;
+            }
         }
     }
 }
@@ -56,10 +108,13 @@ export default {
     <div class="contant-head mt-3">
         <div class="container-one">
             <div class="name-and-image">
-                <img class="forum-image" :src="'src/assets/js.jpg'" alt="">
-                <p>{{ this.$route.query.lang }}</p>
+                <img class="forum-image" :src="`src/assets/${this.imageLang}.jpg`" alt="">
+                <p>{{ titleLang }}</p>
             </div>
-            <button class="create-post"><img class="plus-icon" :src="plusImg"><a href="#/Quetion">Создать вопрос</a></button>
+            <button class="create-post" v-if="this.isQuestion"><img class="plus-icon" :src="plusImg"><a href="#/Quetion">
+                Создать вопрос</a></button>
+            <button class="create-post" v-else><img class="plus-icon" :src="plusImg"><a href="#/NewState">
+                Создать статью</a></button>
         </div>
     </div>
     <div class="contant-post">
