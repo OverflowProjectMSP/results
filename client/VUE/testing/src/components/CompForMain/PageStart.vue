@@ -11,7 +11,7 @@ export default {
 <template>
     <div class="pagestart">
         <div class="greetings">
-            <h1 class="title">Форум по <span style="color: #2D72D9;">программированию</span></h1>
+            <h1 class="title">Форум по <span style="color: #5d9aff;">программированию</span></h1>
             <p class="title-desc">Здесь вы можете задать свой вопрос и вам обязательно <br> на него ответят!</p>
             <a href="#/Registration"><button class="btn-join user-select-none">Присоединиться</button></a>
         </div>
@@ -60,10 +60,10 @@ body {
 
 .btn-join {
     font-weight: 600;
-    background-color: #166AA7;
+    background: none;
     color: #fff;
-    box-shadow: 0px 0px 20px #166AA7;
-    border: none;
+    /* box-shadow: 0px 0px 20px #166AA7; */
+    border: 4px solid #3b82f6;
     margin-top: 25px;
     padding: 30px 70px;
     border-radius: 15px;
@@ -73,9 +73,10 @@ body {
 }
 
 .btn-join:hover {
-    background-color: #145482;
-    box-shadow: 0px 0px 40px #145482;
-    transform: scale(1.2);
+    background-color: #0054db;
+    border: 4px solid #0054db ;
+    /* box-shadow: 0px 0px 40px #145482; */
+    transform: scale(1.1);
 }
 
 @media (min-width: 100px) and (max-width: 600px) {
