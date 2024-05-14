@@ -12,7 +12,7 @@ export default {
 </script>
 
 <template>
-    <a :href="`#/QuestionItem?id=` + this.quetion.id">
+    <a :href="`#/QuestionItem?id=${this.quetion.id}&question=true`">
     <div class="vid">
         <div class="left">
             <div class="top-1">

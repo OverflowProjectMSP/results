@@ -70,10 +70,6 @@ export default createRouter({
       component: () => import("./components/СomponetsForPages/FAQ.vue"),
     },
     {
-      path: "/CommentsPost",
-      component: () => import("./components/CommentsForPost/CommentsPost.vue"),
-    },
-    {
       path: "/QuestionItem",
       component: () => import("./components/MainComponents/QuestionItem.vue"),
     },
@@ -104,6 +100,10 @@ export default createRouter({
     {
       path: "/EnterNewPassword",
       component: () => import("./components/login/EnterNewPassword.vue"),
+    },
+    {
+      path: "/StatesItem",
+      component: () => import("./components/MainComponents/StatesItem.vue"),
     },
   ],
 });

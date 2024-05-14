@@ -87,7 +87,10 @@ export default {
             </p>
         </div>
     </div>
-    <!-- <Form /> -->
+    <hr>
+    <div class="d-flex justify-content-center">
+        <Form />
+    </div>
 </template>
 
 <style scoped>

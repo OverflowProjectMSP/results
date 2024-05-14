@@ -49,9 +49,9 @@ export default {
                     vkProfile: `b13hbbr`,
                 },
                 {
-                    name: `nikit0_17`,
+                    name: `NEKIT`,
                     role: `Главный дизайнер`,
-                    imageProfileDS: `disainerImg.png`,
+                    imageProfileDS: `NeKit.jpg`,
                     dsProfile: `nikit0_17`
                 },
                 {

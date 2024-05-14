@@ -2,8 +2,8 @@
 export default {
     data() {
         return {
-            langueges: ['TS', 'PHP', 'Python', 'JS', 'C#', 'Ruby', 'C++', 'Go', 'Java', 'Kotlin'],
-            stylesLang: ['ts', 'php', 'py', 'js', 'cs', 'ruby', 'cpp', 'go', 'ja', 'ko'],
+            langueges: ['TS', 'PHP', 'Python', 'JS', 'C#', 'Ruby', 'C++', 'Go', 'Kotlin', 'Java'],
+            stylesLang: ['ts', 'php', 'py', 'js', 'cs', 'ruby', 'cpp', 'go', 'ko', 'ja'],
 
             index: 0,
             index1: 1,
@@ -190,7 +190,7 @@ hr {
 
 .py {
     background-color: #3773A5;
-    color: #000;
+    color: #ffffff;
     font-weight: 600;
 }
 
@@ -232,9 +232,8 @@ hr {
 
 .ruby {
     background-color: #A51501;
-    color: #F08E74;
+    color: #000000;
     font-weight: 600;
-    -webkit-text-stroke: 0.5px black;
 }
 
 .ruby:hover {
@@ -275,7 +274,7 @@ hr {
 
 .ja {
     background-color: #c00909;
-    color: #fff;
+    color: #000000;
     font-weight: 600;
 }
 

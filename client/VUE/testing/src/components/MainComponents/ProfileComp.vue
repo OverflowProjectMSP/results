@@ -8,50 +8,48 @@ export default {
     data() {
         return {
             quetionsUsers: [
-                {
-                    title: `Как создать переменную?`,
-                    subscribers: 50,
-                    hours: 43,
-                    views: 43,
-                    answers: 423,
-                    language: 'Python',
-                    complexity: 'Средне',
-                    id: 52
+                // {
+                //     title: `Как создать переменную?`,
+                //     subscribers: 50,
+                //     hours: 43,
+                //     views: 43,
+                //     answers: 423,
+                //     language: 'Python',
+                //     complexity: 'Средне',
+                //     id: 52
 
-                },
-                {
-                    title: `Как созопоодать переменную?`,
-                    subscribers: 50,
-                    hours: 43,
-                    views: 43,
-                    answers: 423,
-                    language: 'C++',
-                    complexity: 'Средне',
-                    id: 53
-                },
-                {
-                    title: `Как создать переменную?`,
-                    subscribers: 45,
-                    hours: 0,
-                    views: 43,
-                    answers: 423,
-                    language: 'Асембелер',
-                    complexity: 'Ебать тяжело',
-                    id: 54
-                },
+                // },
+                // {
+                //     title: `Как созопоодать переменную?`,
+                //     subscribers: 50,
+                //     hours: 43,
+                //     views: 43,
+                //     answers: 423,
+                //     language: 'C++',
+                //     complexity: 'Средне',
+                //     id: 53
+                // },
+                // {
+                //     title: `Как создать переменную?`,
+                //     subscribers: 45,
+                //     hours: 0,
+                //     views: 43,
+                //     answers: 423,
+                //     language: 'Асембелер',
+                //     complexity: 'Ебать тяжело',
+                //     id: 54
+                // },
             ],
             user: {},
         }
     }, 
     methods: {
         async allByHe(){
-            const id = this.$router.query.id;
-            res = await axios.get('/show-all-by-user', {
+            let res = await axios.get('/show-all-by-user', {
                 params: {
-                    id: id
+                    id: this.$router.query.id
                 }
             });
-            
             this.quetionsUsers = res.data.all;
         },
         async loadUser() {
@@ -73,32 +71,46 @@ export default {
 
 <template>
     <div class="profile" v-if="user">
-        <a href="#/ProfileSettings"><img src="../../assets/sh.svg" alt="" class="il"></a>
+        <a href="#/ProfileSettings"><img src="../../assets/sh.svg" alt="Настройки" class="il"></a>
         <div class="head">
 
-            <div class="circle t-alig-c"></div>
+            <div class="circle">
+                <img :src="user.avatar"> <!-- :alt="`Аватар пользователя ` + user.username" -->
+            </div>
 
-            <p class="nikname t-alig-c">@{{ user.name }}</p>
+            <p class="nikname t-alig-c">@{{ user.username }}</p>
             <div class="table t-alig-c">
                 <div class="cell">
-                    <p class="num">5</p>
+                    <p class="num">{{ user.qcnt }}</p>
                     <p class="info">Вопросов</p>
                 </div>
                 <div class="cell">
-                    <p class="num">7</p>
+                    <p class="num">{{ user.scnt }}</p>
                     <p class="info">Статей</p>
                 </div>
                 <div class="cell dis-r">
-                    <p class="num">15</p>
+                    <p class="num">{{ user.acnt }}</p>
                     <p class="info">Ответов</p>
                 </div>
             </div>
-            <div class="about">
-                <p><img src="../../assets/User.svg" alt="">Привет, я {{ user.name }}</p>
-                <p><img src="../../assets/SVGRepo_iconCarrier.svg" alt="">Я интересуюсь {интересы}</p>
-                <p><img src="../../assets/Frame.svg" alt="" class="u">Как со мной связаться? {соц. сети}</p>
-                <!-- <p><img src="../../assets/-.svg" alt="">{Описание пользователя}</p> -->
-            </div>
+                <div class="about rounded-5">
+                    <p v-if="this.user.name"><img src="../../assets/User.svg" alt="">Привет, я {{ user.name }}</p>
+                    <p v-else><img src="../../assets/User.svg" alt="">Привет, я {{ user.username }}</p>
+                    <p v-if="asd"><img src="../../assets/SVGRepo_iconCarrier.svg" alt="">Я интересуюсь {{ user.lang }}</p>
+                    <p><img src="../../assets/Frame.svg"><span class="fw-bold">Как со мной связаться?</span></p>
+                    <ul class="fs-5">
+                        <li v-if="user.email">Моя почта: {{ user.email }}</li>
+                        <li v-if="user.telegram">Мой telegram: {{ user.telegram }}</li>
+                        <li v-if="user.skype">Мой skype: {{ user.skype }}</li>
+                        <li v-if="user.discord">Мой discord: {{ user.discord }}</li>
+                        <li v-if="user.facebook">Мой facebook: {{ user.facebook }}</li>
+                    </ul>
+                    <p class="fs-5"><img src="../../assets/-.svg" alt="">{{ user.about }}</p>
+                    <p><span class="fw-bold">Мои интересы: </span></p>
+                    <ul class="fs-5 interes">
+                        <li class="interes" v-if="user.interestings">{{ user.interestings }}</li>
+                    </ul>
+                </div>
         </div>
 
     </div>
@@ -119,7 +131,6 @@ export default {
 @import url('https://fonts.cdnfonts.com/css/rubik');
 
 /* общее */
-
 :root {
     --size-20: 20px;
     --size-26: 26px;
@@ -145,9 +156,15 @@ body {
     text-align: center;
 }
 
+.interes {
+    word-break: break-word !important;
+}
+
 /* профиль с картинкой */
 .profile {
     background-image: url(../../assets/background.png);
+    background-repeat: no-repeat;
+    background-size: 1920px;
     border-radius: 8px;
     display: flex;
     justify-content: center;
@@ -170,7 +187,7 @@ body {
     height: 150px;
     width: 150px;
     border-radius: 100%;
-    background-color: aqua;
+    border: 1px solid #000;
 }
 
 .nikname {
@@ -209,10 +226,11 @@ body {
 
 /* Описание */
 .about {
-    padding: 10px 80px;
+    padding: 10px 60px;
     background: #FFF;
     box-shadow: 0px 4px 40px 5px rgba(45, 114, 217, 0.60);
     margin-bottom: 20px;
+    max-width: 650px;
 }
 
 .about p {
@@ -446,6 +464,14 @@ p .u {
 
     .info {
         font-size: var(--size-22);
+    }
+
+    .about {
+        padding: 10px 20px !important;
+    }
+
+    .interes {
+        font-size: 16px;
     }
 
     .about p {
