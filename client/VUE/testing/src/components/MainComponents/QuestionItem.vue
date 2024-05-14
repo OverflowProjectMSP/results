@@ -105,15 +105,15 @@ export default {
         },
 
         async addComment() {
-            // this.question.answers.push({
-            //     answerUserInfo: this.inputUserInfo,
-            //     answerInfo: {
-            //         text: this.inputAnswer.textAnswer,
-            //         comment: this.inputAnswer.comment,
-            //         likes: this.inputAnswer.likes,
-            //         dislike: this.inputAnswer.dislike,
-            //     },
-            // });
+            this.question.answers.push({
+                answerUserInfo: this.inputUserInfo,
+                answerInfo: {
+                    text: this.inputAnswer.textAnswer,
+                    comment: this.inputAnswer.comment,
+                    likes: this.inputAnswer.likes,
+                    dislike: this.inputAnswer.dislike,
+                },
+            });
             await axios.post(`/answers`,
                 {
                     id: this.$route.query.id,
@@ -144,7 +144,6 @@ export default {
     mounted() {
         this.loadQuestion();
         this.checkUser();
-        this.addComment()
         setInterval(() => {
             this.loadQuestion();
         }, 20000);
