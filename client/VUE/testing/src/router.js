@@ -69,10 +69,10 @@ export default createRouter({
       path: "/FAQ",
       component: () => import("./components/СomponetsForPages/FAQ.vue"),
     },
-    // {
-    //   path: "/CommentsPost",
-    //   component: () => import("./components/СomponetsForPages/"),
-    // },
+    {
+      path: "/CommentsPost",
+      component: () => import("./components/СomponetsForPages/"),
+    },
     {
       path: "/QuestionItem",
       component: () => import("./components/MainComponents/QuestionItem.vue"),
