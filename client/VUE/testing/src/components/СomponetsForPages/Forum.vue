@@ -123,9 +123,9 @@ export default {
                 <img width="30" :src="'src/assets/search.svg'" alt=""><input class="search" type="search">
             </div>
             <select class="sort-select form-select" name="sort" id="sort">
-                <option value="0">Сортировать</option>
+                <option selected>Сортировать</option>
                 <option value="1">Новые</option>
-                <option value="2">Старые</option>
+                <option value="-1">Старые</option>
             </select>
         </div>
         <!-- <div class="hr"></div> -->
