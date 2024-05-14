@@ -70,7 +70,7 @@ export default {
                 <div class="lang-item lang-item-col-1" :class="stylesLang[index]">{{ langueges[index] }}</div>
                 <div class="lang-item lang-item-col-2" :class="stylesLang[index1]">{{ langueges[index1] }}</div>
                 <div class="lang-item lang-item-col-3" :class="stylesLang[index2]">{{ langueges[index2] }}</div>
-                <div class="lang-item lang-item-col-4" :cla ss="stylesLang[index3]">{{ langueges[index3] }}</div>
+                <div class="lang-item lang-item-col-4" :class="stylesLang[index3]">{{ langueges[index3] }}</div>
                 <div class="lang-item lang-item-col-5" :class="stylesLang[index4]">{{ langueges[index4] }}</div>
                 <div class="lang-item lang-item-col-6" :class="stylesLang[index5]">{{ langueges[index5] }}</div>
             </div>

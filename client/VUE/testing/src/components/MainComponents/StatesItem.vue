@@ -1,5 +1,5 @@
 <script>
-import axios from 'axios';
+import axios, { all } from 'axios';
 
 export default {
     data() {
@@ -44,9 +44,11 @@ export default {
                 rang: `Решала`,
             },
 
-            states: {}, //главная хуйня
+            states: {}, //главная возня
             answers: [],
             text: ``,
+            
+            id_: null,
 
             symbols: 0,
             symbCount: false,
@@ -57,7 +59,12 @@ export default {
             countmin: 0,
 
             isCheck: null,
+            ava: ``,
 
+            name: ``,
+
+
+            avaComment: ````````````````````````````````````````````````,
         }
     },
     
@@ -69,7 +76,7 @@ export default {
                     q: false,
                 }
             });
-            this.questionInfo = responce.data.all.states;
+            this.states = responce.data.all.states;
             this.answers = responce.data.all.answers;
         },
         counterPlus(index) {
@@ -117,32 +124,53 @@ export default {
                 },
             );
             this.text = ``;
+            this.loadState();
         },
         async deleteState() {
             await axios.delete('/delete', {
                 params:{
                     id: this.$route.query.id,
-                    q: false,
+                    q: 'false',
                 }
             });
         },
 
+        async loadAvatar() {
+            let res = await axios.get('/avatarka', {
+                params: {
+                    id: this.$route.query.id,
+                }
+            });
+            this.ava = res.data.link;
+        },
         async checkUser() {
             let res = await axios.get('/check', {
                 params: {
-                    id: this.id_,
+                    id: this.states.id_u,
                 }
             });
-            this.isCheck = res.data.all;
+            this.isCheck = Boolean(res.data.isEdit);
+        },
+        async loadUser() {
+            let res = await axios.get('/user', {
+                params: {
+                    id: this.states.id_u,
+                }
+            });
+            this.name = res.data.all;
+        },
+
+        async loadAvatars() {
+            let trertrestrestrestrestrestrestrestrestrestres = await axios.hui('beckend-vojna-ta-eche');
         }
     },
-    // mounted() {
-    //     this.loadState();
-    //     this.checkUser();
-    //     setInterval(() => {
-    //         this.loadState();
-    //     }, 20000);
-    // },
+    mounted() {
+        this.loadState();
+        this.checkUser();
+        setInterval(() => {
+            this.loadState();
+        }, 20000);
+    },
 }
 
 </script>
@@ -152,15 +180,15 @@ export default {
         <div class="content-1">
             <div class="account justify-content-between">
                 <div class="creator-info d-flex flex-row align-items-center gap-3">
-                    <img class="accountIcon" :src="'src/assets/' + question.accountInfo.accountIcon" width="70px">
+                    <img class="accountIcon" :src="ava" :alt="questionInfo.author" width="70px">
                     <div class="name-ring">
                         <div>
-                            <a href="#!"><span class="name">{{ question.accountInfo.accountName }}</span></a>
+                            <a href="#!"><span class="name">{{ name }}</span></a>
                         </div>
-                        <p>Уровень: <span class="difficult">{{ question.questionInfo.level }}</span></p>
+                        <!-- <p>Уровень: <span class="difficult">{{ questionInfo.level }}</span></p> -->
                     </div>
                 </div>
-                <div class="action-select" v-if="isCheck == 'true'">
+                <div class="action-select" v-if="isCheck">
                     <div class="dropdown">
                         <button class="btn dropdown-toggle border">Дейсвие</button>
                         <ul class="dropdown-menu 52-da-sdravstvuet-sankt-piterburg-i-etot-gorod-nash-ya-kazhdiy">
@@ -171,33 +199,33 @@ export default {
                 </div>
             </div>
             <div class="title">
-                <h3>{{ question.questionInfo.title }}</h3>
+                <h3>{{ questionInfo.title }}</h3>
             </div>
             <div class="description">
-                <p v-html="breakLines(question.questionInfo.description)"></p>
-                <img class="user-select-none" :src="'src/assets/' + question.questionInfo.imageInQuetion + '.png'" 
+                <p v-html="breakLines(questionInfo.description)"></p>
+                <img class="user-select-none" :src="'src/assets/' + questionInfo.imageInQuetion + '.png'" 
                     v-if="states.image">
             </div>
             <div class="about">
-                <p>{{ question.questionInfo.data }}</p>
-                <p>{{ question.questionInfo.views }} просмотра</p>
+                <p>{{ questionInfo.data }}</p>
+                <p>{{ questionInfo.views }} просмотра</p>
             </div>
         </div>
         
         <div class="content-3">
             <div class="account">
-                <img class="accountIcon" :src="'src/assets/' + user.accountIcon" width="70px" alt="">
+                <img class="accountIcon" :src="avaComment" width="70px" alt="">
                 <div class="name-ring">
                     <div>
                         <a href="#!"><span class="name">{{ user.accountName }}</span></a>
                     </div>
-                    <p>Звание: <span class="difficult-ans">{{ user.rang }}</span></p>
+                    <!-- <p>Звание: <span class="difficult-ans">{{ user.rang }}</span></p> -->
                 </div>
             </div>
             <div class="content-3-without mb-3">
                 <textarea v-model="text" @input="symbolsCount" maxlength="2000" class="comm-input border-0"
                 placeholder="Оставь свой комментарий:"></textarea>
-                <p :class="{ 'red-text': this.question.symbCount }">{{ question.symbols }} / 2000</p>
+                <p :class="{ 'red-text': symbCount }">{{ symbols }} / 2000</p>
             </div>
             <div class="send-ans d-flex justify-content-end">
                 <button @click="addComment()" type="submit" class="toMain btgr p-4 fs-4">Отправить!</button>
@@ -208,25 +236,25 @@ export default {
     
         <div class="content-2 mt-2" v-for="answer in question.answers" v-if="this.question.answers.length != 0">
             <div class="account">
-                <img class="accountIcon" :src="'src/assets/' + answer.answerUserInfo.accountIcon" width="70px" alt="">
+                <img class="accountIcon" :src="'src/assets/' + answer.accountIcon" width="70px" alt="">
                 <div class="name-ring">
-                    <p><span class="name" role="button">{{ answer.answerUserInfo.accountName }}</span></p>
-                    <p>Звание: <span class="difficult-ans">{{ answer.answerUserInfo.rang }}</span></p>
+                    <p><span class="name" role="button">{{ answer.accountName }}</span></p>
+                    <p>Звание: <span class="difficult-ans">{{ answer.rang }}</span></p>
                 </div>
             </div>
             <div class="description mt-3">
-                <p v-html="breakLines(answer.answerInfo.text)"></p>
+                <p v-html="breakLines(answer.text)"></p>
             </div>
             <div class="btn-group">
                 <div class="left">
                     <button class="comm-add btgr">Добавить комментарий</button>
                     <div class="like-bc bc">
                         <button @click="counterPlus(index)" class="like btgr"><img :src="'src/assets/Like.svg'" alt=""></button>
-                        <p class="like-count user-select-none">{{ answer.answerInfo.likes }}</p>
+                        <p class="like-count user-select-none">{{ answer.likes }}</p>
                     </div>
                     <div class="dislike-bc bc">
                         <button @click="counterMinus(index)" class="dislike btgr"><img :src="'src/assets/Dislike.svg'" alt=""></button>
-                        <p class="dislike-count user-select-none">{{ answer.answerInfo.dislike }}</p>
+                        <p class="dislike-count user-select-none">{{ answer.dislike }}</p>
                     </div>
                 </div>
                 <div class="right">

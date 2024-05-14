@@ -135,11 +135,11 @@ export default {
         async checkUser() {
             let res = await axios.get('/check', {
                 params: {
-                    id: this.id_,
+                    id: this.questionInfo.id_u
                 }
             });
-            this.isCheck = res.data.all;
-        }
+            this.isCheck = Boolean(res.data.isEdit);
+        },
     },
     mounted() {
         this.loadQuestion();
