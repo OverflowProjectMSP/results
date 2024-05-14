@@ -71,7 +71,7 @@ export default createRouter({
     },
     {
       path: "/CommentsPost",
-      component: () => import("./components/CommentsForPost/CommentsPost.vue"),
+      component: () => import("./components/СomponetsForPages/"),
     },
     {
       path: "/QuestionItem",
