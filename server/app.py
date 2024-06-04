@@ -1009,7 +1009,7 @@ def show_user_info(id):
             pg.close
             logging.info("Соединение с PostgreSQL закрыто")
             return return_data
-
+ 
 
 
 

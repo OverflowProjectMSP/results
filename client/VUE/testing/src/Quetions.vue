@@ -50,7 +50,7 @@ export default {
                 type: "false",
                 dificulty: "false",
             },
-
+            filtrs: {},
             Show: false,
         }
     },
@@ -78,7 +78,7 @@ export default {
                     filters: this.filtrs
                 }
             });
-            this.quetions = res.data;
+            this.quetions = res.data.all;
             console.log(this.quetions)
         },
 
@@ -88,9 +88,6 @@ export default {
     },
     mounted() {
         this.loadQuestions();
-        setInterval(() => {
-            this.loadQuestions();
-        }, 10000);
     },
 }
 </script>
@@ -104,9 +101,9 @@ export default {
                 <div class="select-block d-flex border rounded-3 gap-1 py-0  me-2">
                     <img class="border-end pe-2 ps-2" src="./assets/image.png" alt="level">
                     <select class="form-select border-0" v-model="filters.dificulty">
-                        <option value="Легкие" selected>Лёгкие</option>
-                        <option value="Средние">Средние</option>
-                        <option value="Сложные">Сложные</option>
+                        <option value="Легкий" selected>Лёгкие</option>
+                        <option value="Средний">Средние</option>
+                        <option value="Сложный">Сложные</option>
                         <option value="false">Без фильтров</option>
                     </select>
                 </div>

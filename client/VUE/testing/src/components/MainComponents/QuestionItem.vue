@@ -147,6 +147,7 @@ export default {
         setInterval(() => {
             this.loadQuestion();
         }, 20000);
+
     },
 }
 
